@@ -1,0 +1,15 @@
+{
+	"auth": {
+		"rtmprtspstreamclient50a7af36": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": []
+		}
+	},
+	"storage": {
+		"s383946872": {
+			"service": "S3",
+			"providerPlugin": "awscloudformation"
+		}
+	}
+}
