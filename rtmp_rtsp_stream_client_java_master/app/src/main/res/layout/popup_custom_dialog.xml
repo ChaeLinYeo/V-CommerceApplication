@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="15dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="쿠폰 팝업창 생성"
+        android:textSize="22sp"
+        android:textAlignment="center"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="쿠폰 이름 : "
+        android:textSize="20sp"
+        android:layout_marginTop="10dp"
+        android:id="@+id/blabla01"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="쿠폰 상세 내용 : "
+        android:textSize="20sp"
+        android:layout_marginTop="10dp"
+        android:id="@+id/blabla02"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="팝업 지속 시간(초 단위로 입력) : "
+        android:textSize="20sp"
+        android:layout_marginTop="10dp"
+        android:inputType = "number"
+        android:id="@+id/blabla03"/>
+
+    <LinearLayout android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layoutDirection="ltr">
+
+        <!-- hour -->
+        <NumberPicker
+            android:id="@+id/hour"
+            android:layout_width="70dip"
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            />
+
+        <!-- minute -->
+        <NumberPicker
+            android:id="@+id/minute"
+            android:layout_width="70dip"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dip"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            />
+
+        <!-- seconds -->
+        <NumberPicker
+            android:id="@+id/seconds"
+            android:layout_width="70dip"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dip"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            />
+
+    </LinearLayout>
+
+<!--    <CheckBox-->
+<!--        android:id="@+id/checkbox01"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:textSize="20sp"-->
+<!--        android:text="시청자 전체에게 선물" />-->
+
+<!--    <CheckBox-->
+<!--        android:id="@+id/checkbox02"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:textSize="20sp"-->
+<!--        android:text="선택한 사람에게 선물" />-->
+
+<!--    <CheckBox-->
+<!--        android:id="@+id/checkbox03"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:textSize="20sp"-->
+<!--        android:text="팔로워에게만 선물" />-->
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="잠깐! 적용 전 다시 한번 내용을 꼼꼼하게 체크해주세요!"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        >
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/appColor"
+            android:text="닫기"
+            android:textColor="#fff"
+            android:textSize="18sp"
+            android:layout_weight="1"
+            android:layout_marginRight="2dp"
+            android:id="@+id/coupon_btn_cancel_02"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/appColor"
+            android:text="적용"
+            android:textColor="#fff"
+            android:textSize="18sp"
+            android:layout_weight="1"
+            android:layout_marginRight="2dp"
+            android:id="@+id/coupon_btn_ok_02"/>
+
+    </LinearLayout>
+
+</LinearLayout>

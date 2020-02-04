@@ -15,7 +15,7 @@ android {
 
     defaultConfig {
         applicationId "com.pedro.rtpstreamer"
-        minSdkVersion 17
+        minSdkVersion 18
         targetSdkVersion 29
         versionCode 172
         versionName "1.7.1"
@@ -74,4 +74,9 @@ dependencies {
     implementation 'com.amplifyframework:core:0.9.0'
     implementation 'com.amplifyframework:aws-storage-s3:0.9.0'
     implementation 'com.amazonaws:aws-android-sdk-mobile-client:2.16.7'
+
+    implementation 'com.airbnb.android:lottie:2.7.0'
+
+    //sendbird
+    implementation 'com.sendbird.sdk:sendbird-android-sdk:3.0.117'
 }

@@ -94,7 +94,7 @@ public class BroadcastManager
                 if (!rtmpCamera1.isStreaming()) startBroadcast();
                 else {
                     stopBroadcast();
-                    uploadFile();
+                    //uploadFile();
                 }
                 break;
 
