@@ -30,7 +30,8 @@ public class SendbirdConnection {
     private SendbirdConnection(){}
 
     /////////////////////////////////////////////////////////////////////////////
-    private SendbirdListner sendbirdListner;
+    private SendbirdListner.ForBroadcaster forBroadcaster;
+    private SendbirdListner.ForPlayer forPlayer;
     /////////////////////////////////////////////////////////////////////////////
     private List<User> operator = new ArrayList<>();
     private OpenChannel ctrl_channel;
@@ -41,10 +42,11 @@ public class SendbirdConnection {
 
     private List<User> UserList = new ArrayList<>();
 
-    public void setupSendbird(Context context, String USER_ID) {
+    public void setupSendbird(Context context, String USER_ID, int type) {
         //////////////////////////////////////////////
         //try catch
-        sendbirdListner = (SendbirdListner) context;
+        if(type == 0) forBroadcaster = (SendbirdListner.ForBroadcaster) context;
+        else if(type == 1) forPlayer = (SendbirdListner.ForPlayer) context;
         //////////////////////////////////////////////
         SendBird.init(context.getString(R.string.sendbird_app_id), context);
         SendBird.connect(USER_ID,
@@ -81,12 +83,12 @@ public class SendbirdConnection {
                 openChannel.getAllMetaData((Map<String, String> map, SendBirdException ex) -> {
                         for(int i = 0; i < 10; i++){
                             if(map.get(Integer.toString(i)).equals("true")){
-                                sendbirdListner.channelFounded(true);
+                                forBroadcaster.channelFounded(true);
                                 channelNum = i;
                                 return;
                             }
                         }
-                        sendbirdListner.channelFounded(false);
+                    forBroadcaster.channelFounded(false);
                     }
                 );
             }
@@ -125,13 +127,13 @@ public class SendbirdConnection {
                     );
                     getChannel(CHANNEL_URL);
                     getUserList(true);
-                    sendbirdListner.channelCreateComplete();
+                    forBroadcaster.channelCreateComplete();
                 }
         );
         SendBird.addChannelHandler(StaticVariable.CHANNEL_HANDLER_ID, new SendBird.ChannelHandler() {
             @Override
             public void onMessageReceived(BaseChannel baseChannel, BaseMessage baseMessage) {
-                sendbirdListner.messageReceived(baseMessage.getCustomType(), baseMessage.getData());
+                forBroadcaster.messageReceived(baseMessage.getCustomType(), baseMessage.getData());
             }
 
             @Override
@@ -149,7 +151,7 @@ public class SendbirdConnection {
             @Override
             public void onMetaCountersUpdated(BaseChannel channel, Map<String, Integer> metaCounterMap) {
                 super.onMetaCountersUpdated(channel, metaCounterMap);
-                sendbirdListner.metaCounterUpdated(metaCounterMap.get("heart"));
+                forBroadcaster.metaCounterUpdated(metaCounterMap.get("heart"));
             }
         });
     }
@@ -197,7 +199,7 @@ public class SendbirdConnection {
         userListQuery.next((List<User> list, SendBirdException e) -> {
                     if (e != null) return;
                     UserList = setUserList(list);
-                    sendbirdListner.getUserListComplete(Integer.toString(UserList.size()));
+            forBroadcaster.getUserListComplete(Integer.toString(UserList.size()));
                 }
         );
     }

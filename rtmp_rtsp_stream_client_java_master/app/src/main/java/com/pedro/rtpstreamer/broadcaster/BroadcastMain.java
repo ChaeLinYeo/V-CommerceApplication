@@ -122,7 +122,7 @@ public class BroadcastMain extends AppCompatActivity
 
         ///////////////////////
         sendbirdConnection = SendbirdConnection.getInstance();
-        sendbirdConnection.setupSendbird(this, USER_ID);
+        sendbirdConnection.setupSendbird(this, USER_ID, 0);
         ///////////////////////
 
         mExampleChatController = new ExampleChatController(this, findViewById(R.id.ChatListView), R.layout.chatline, R.id.chat_line_textview, R.id.chat_line_timeview);
