@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".player.VideoPlayer2">
+    tools:context=".player.FullVideoFragment"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
         <com.bambuser.broadcaster.SurfaceViewWithAutoAR
             android:id="@+id/VideoSurfaceView"
@@ -33,4 +34,298 @@
             android:textSize="20sp"
             android:visibility="gone" />
 
-</RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/rl_Live"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/system_notice"
+            android:layout_width="344dp"
+            android:layout_height="25dp"
+            android:layout_above="@+id/ChatListView"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="#66000000"
+            android:textColor="#fff"
+            android:text="각종 알림 : 집가고 싶은 사람? "
+            android:textSize="15sp"
+            android:gravity="center_vertical|left"
+            android:singleLine="true"
+            android:focusableInTouchMode="true"
+            android:focusable="true"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"/>
+
+        <ListView
+            android:id="@+id/ChatListView"
+            android:layout_width="400dp"
+            android:layout_height="150dp"
+            android:layout_above="@+id/broadcast_notice"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="#66000000"
+            android:cacheColorHint="@android:color/transparent"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="0px"
+            android:listSelector="@android:color/transparent"
+            android:stackFromBottom="true"
+            android:transcriptMode="alwaysScroll"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/broadcast_notice"
+            android:layout_width="344dp"
+            android:layout_height="50dp"
+            android:layout_above="@+id/layout_open_chat_chatbox"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="#66000000"
+            android:textColor="#fff"
+            android:text="공지사항 : 집가고 싶다!!"
+            android:textSize="15sp"
+            android:gravity="center_vertical|left"
+            android:singleLine="true"
+            android:focusableInTouchMode="true"
+            android:focusable="true"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"/>
+
+
+        <LinearLayout
+            android:id="@+id/layout_open_chat_chatbox"
+            android:layout_width="344dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="#fff"
+            android:minHeight="48dp"
+            android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/buy_button"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="bottom"
+                    app:srcCompat="@drawable/buyicon" />
+
+                <ImageButton
+                    android:id="@+id/button_open_channel_chat_upload"
+
+                    android:layout_width="10dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="bottom"
+                    android:background="?attr/selectableItemBackground"
+                    android:contentDescription="Upload file" />
+
+                <EditText
+                    android:id="@+id/edittext_chat_message"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:hint="Enter message"
+                    android:maxLines="6" />
+
+                <Button
+                    android:id="@+id/button_open_channel_chat_send"
+                    android:layout_width="64dp"
+                    android:layout_height="48dp"
+
+                    android:layout_gravity="bottom"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:text="SEND"
+                    android:textColor="#000000"
+                    android:textSize="14dp" />
+
+        </LinearLayout>
+
+                <View
+                    android:layout_width="344dp"
+                    android:layout_height="2dp"
+                    android:layout_above="@id/layout_open_chat_chatbox"
+                    android:background="#DfDfDf" />
+
+                <ImageView
+                    android:id="@+id/HeartIcon"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginEnd="0dp"
+                    android:layout_marginBottom="0dp"
+                    android:layout_toEndOf="@id/layout_open_chat_chatbox"
+                    app:srcCompat="@drawable/heart2" />
+
+                <Button
+                    android:id="@+id/followButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_below="@+id/nickname"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="10dp"
+                    android:background="#FF0000"
+                    android:text="팔로우"
+                    android:textColor="#fff"
+                    android:textSize="15sp" />
+
+                <Button
+                    android:id="@+id/declare"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_below="@+id/nickname"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_toEndOf="@+id/followButton"
+                    android:background="#FF0000"
+                    android:text="신고"
+                    android:textColor="#fff"
+                    android:textSize="15sp" />
+
+
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/button_song_like_animation"
+                    android:layout_width="131dp"
+                    android:layout_height="179dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginStart="282dp"
+                    android:layout_marginTop="440dp"
+                    android:layout_marginEnd="-30dp"
+                    android:layout_marginBottom="30dp"
+                    app:lottie_autoPlay="false"
+                    app:lottie_fileName="1851-like-02.json"
+                    app:lottie_loop="false"
+                    android:visibility="invisible"/>
+
+                <ImageButton
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginTop="5dp"
+                    android:id="@+id/menu_share"
+                    app:srcCompat="@drawable/share_icon" />
+
+                <TextView
+                    android:id="@+id/heartnum"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/followButton"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_toEndOf="@+id/imageView"
+                    android:text=" 0 "
+                    android:textColor="#fff"
+                    android:textSize="18sp" />
+
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="30dp"
+                    android:layout_height="24dp"
+                    android:layout_below="@+id/followButton"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginTop="10dp"
+                    app:srcCompat="@drawable/heart2" />
+
+                <TextView
+                    android:id="@+id/titleSpace"
+                    android:layout_width="234dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_toEndOf="@+id/imageButton3"
+                    android:gravity="center_vertical|left"
+                    android:text="방송 제목"
+                    android:textColor="#fff"
+                    android:textSize="20sp"
+                    android:singleLine="true"
+                    android:focusableInTouchMode="true"
+                    android:focusable="true"
+                    android:ellipsize="marquee"
+                    android:marqueeRepeatLimit="marquee_forever"/>
+
+                <TextView
+                    android:id="@+id/nickname"
+                    android:layout_width="234dp"
+                    android:layout_height="20dp"
+                    android:layout_below="@id/titleSpace"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_toEndOf="@+id/imageButton3"
+                    android:gravity="center_vertical|left"
+                    android:text="방송자 닉네임"
+                    android:textColor="#fff"
+                    android:textSize="15sp"
+                    android:singleLine="true"
+                    android:focusableInTouchMode="true"
+                    android:focusable="true"
+                    android:ellipsize="marquee"
+                    android:marqueeRepeatLimit="marquee_forever"/>
+
+                <TextView
+                    android:id="@+id/peoplenum"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/followButton"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_toEndOf="@+id/heartImage"
+                    android:text=" 0 "
+                    android:textColor="#fff"
+                    android:textSize="18sp" />
+
+                <ImageView
+                    android:id="@+id/heartImage"
+                    android:layout_width="28dp"
+                    android:layout_height="24dp"
+                    android:layout_below="@+id/followButton"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="0dp"
+                    android:layout_toEndOf="@+id/heartnum"
+                    app:srcCompat="@drawable/icon" />
+
+                <TextView
+                    android:id="@+id/timeleft"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/followButton"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_toEndOf="@id/peoplenum"
+                    android:background="#81FF0000"
+                    android:textColor="#fff"
+                    android:text=" 남은시간 "
+                    android:textSize="15sp" />
+
+                <ImageButton
+                    android:id="@+id/imageButton3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="10dp"
+                    android:background="#00FFFFFF"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/broadcaster" />
+
+        </RelativeLayout>
+
+</FrameLayout>

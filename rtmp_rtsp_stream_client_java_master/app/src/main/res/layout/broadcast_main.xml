@@ -1,88 +1,215 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/opengl_test_basicLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
 
     <!-- for background video -->
     <com.pedro.rtplibrary.view.OpenGlView
+        android:id="@+id/backGroundVideo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/backGroundVideo"
         app:keepAspectRatio="false"
         app:AAEnabled="false"
         app:numFilters="1"
         app:isFlipHorizontal="false"
         app:isFlipVertical="false" />
 
-    <!-- for server url -->
-    <EditText
-        android:textColor="@color/appColor"
-        android:textColorHint="@color/appColor"
-        android:inputType="textUri"
+    <!-- ui -->
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_margin="20dp"
-        android:id="@+id/et_rtp_url"
-        android:visibility="gone" />
+        android:layout_height="match_parent">
 
-    <!-- menu bar -->
-    <LinearLayout
-        android:id="@+id/menuBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="20dp"
-        android:gravity="center"
-        android:background="#0fff" >
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/button_song_like_animation"
+            android:layout_width="131dp"
+            android:layout_height="179dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="282dp"
+            android:layout_marginTop="440dp"
+            android:layout_marginEnd="-30dp"
+            android:layout_marginBottom="74dp"
+            app:lottie_autoPlay="false"
+            app:lottie_fileName="1851-like-02.json"
+            app:lottie_loop="false"
+            android:visibility="invisible"/>
 
-        <Button
-            android:text="start"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="5dp"
-            android:id="@+id/b_start_stop"
-            />
+        <!-- title -->
+        <TextView
+            android:id="@+id/titleText"
+            android:layout_width="258dp"
+            android:layout_height="51dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="20dp"
+            android:background="#fff"
+            android:text="터치하여 방송 제목을 수정하세요."
+            android:textAlignment="center"
+            android:textSize="20sp" />
 
-        <Button
-            android:text="switch"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+        <!-- heart num -->
+        <TextView
+            android:id="@+id/heart_num"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="5dp"
-            android:id="@+id/switchButton"
-            />
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="82dp"
+            android:layout_toEndOf="@id/heartImage"
+            android:textColor="#fff"
+            android:text=" 0 "
+            android:textSize="18sp" />
 
-        <Button
-            android:text="text"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+        <!-- view num -->
+        <TextView
+            android:id="@+id/participant"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
-            android:id="@+id/textButton"
-            />
-        <Button
-            android:text="img"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
-            android:id="@+id/imgButton"
-            />
-        <Button
-            android:text="uri"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:id="@+id/uriButton"
-            />
-    </LinearLayout>
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="82dp"
+            android:layout_toEndOf="@+id/eye"
+            android:textColor="#fff"
+            android:text="0"
+            android:textSize="18sp" />
 
+        <!-- heart image -->
+        <ImageView
+            android:id="@+id/heartImage"
+            android:layout_width="30dp"
+            android:layout_height="24dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="82dp"
+            app:srcCompat="@drawable/heart2" />
+
+        <!-- view image -->
+        <ImageView
+            android:id="@+id/eye"
+            android:layout_width="28dp"
+            android:layout_height="24dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="82dp"
+            android:layout_marginEnd="0dp"
+            android:layout_toEndOf="@id/heart_num"
+            app:srcCompat="@drawable/icon" />
+
+        <!-- system notice -->
+        <TextView
+            android:id="@+id/system_notice"
+            android:layout_width="344dp"
+            android:layout_height="25dp"
+            android:layout_above="@id/ChatListView"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="#66000000"
+            android:textColor="#fff"
+            android:text="각종 알림 "
+            android:textSize="15sp"
+            android:gravity="center_vertical|left"/>
+
+        <!-- chat -->
+        <ListView
+            android:id="@+id/ChatListView"
+            android:layout_width="400dp"
+            android:layout_height="150dp"
+            android:layout_above="@id/broadcast_notice"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="10dp"
+            android:background="#66000000"
+            android:cacheColorHint="@android:color/transparent"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="0px"
+            android:listSelector="@android:color/transparent"
+            android:stackFromBottom="true"
+            android:transcriptMode="alwaysScroll"
+            android:visibility="gone" />
+
+        <!-- broadcast notice -->
+        <TextView
+            android:id="@+id/broadcast_notice"
+            android:layout_width="344dp"
+            android:layout_height="50dp"
+            android:layout_above="@id/menuBar"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="#66000000"
+            android:gravity="center_vertical|start"
+            android:text="공지사항 : 터치하여 공지 수정"
+            android:textColor="#fff"
+            android:textSize="15sp" />
+
+        <!-- menu bar -->
+        <LinearLayout
+            android:id="@+id/menuBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="20dp"
+            android:gravity="center"
+            android:background="#0fff" >
+
+            <Button
+                android:text="start"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:id="@+id/b_start_stop"
+                />
+
+            <Button
+                android:text="switch"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:id="@+id/switchButton"
+                />
+            <Button
+                android:text="카테고리"
+                android:textSize="10dp"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:id="@+id/categoryButton"
+                />
+            <Button
+                android:text="text"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:id="@+id/textButton"
+                />
+            <Button
+                android:text="img"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:id="@+id/imgButton"
+                />
+            <Button
+                android:text="uri"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:id="@+id/uriButton"
+                />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <!-- uri player -->
     <org.videolan.libvlc.util.VLCVideoLayout
         android:id="@+id/video_layout"
         android:layout_width="200dp"
@@ -103,4 +230,4 @@
 
     </org.videolan.libvlc.util.VLCVideoLayout>
 
-</RelativeLayout>
+</FrameLayout>

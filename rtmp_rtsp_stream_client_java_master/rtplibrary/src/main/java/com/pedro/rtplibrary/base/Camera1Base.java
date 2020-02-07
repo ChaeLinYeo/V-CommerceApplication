@@ -195,6 +195,12 @@ public abstract class Camera1Base implements GetAacData, GetCameraData, GetVideo
         iFrameInterval, formatVideoEncoder);
   }
 
+  //////////////////////
+  public boolean prepareVideo(int width, int height){
+    int rotation = CameraHelper.getCameraOrientation(context);
+    return prepareVideo(width, height, 30, 1200 * 1024, false, rotation);
+  }
+
   /**
    * backward compatibility reason
    */

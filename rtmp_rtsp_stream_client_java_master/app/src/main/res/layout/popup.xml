@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="15dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="쿠폰이 도착했어요!"
+        android:background="@color/colorAccent"
+        android:textColor="#fff"
+        android:textSize="22sp"
+        android:textAlignment="center"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="쿠폰 이름"
+        android:textSize="22sp"
+        android:textAlignment="center"
+        android:id="@+id/blabla011"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="쿠폰 상세 내용"
+        android:textSize="22sp"
+        android:textAlignment="center"
+        android:id="@+id/blabla022"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="n초 뒤 사라짐 "
+        android:textSize="22sp"
+        android:textAlignment="center"
+        android:id="@+id/blabla033"/>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        >
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/colorAccent"
+            android:text="닫기"
+            android:textColor="#fff"
+            android:textSize="18sp"
+            android:layout_weight="1"
+            android:id="@+id/coupon_btn_cancel_01"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/colorAccent"
+            android:text="쿠폰 받기"
+            android:textColor="#fff"
+            android:textSize="18sp"
+            android:layout_weight="1"
+            android:id="@+id/coupon_btn_ok_01"/>
+
+    </LinearLayout>
+
+</LinearLayout>

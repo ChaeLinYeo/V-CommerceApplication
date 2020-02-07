@@ -1,5 +1,7 @@
 package com.pedro.rtpstreamer.player;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,12 +12,19 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.pedro.rtpstreamer.R;
 import com.pedro.rtpstreamer.utils.StaticVariable;
+import com.sendbird.android.BaseChannel;
+import com.sendbird.android.OpenChannel;
+import com.sendbird.android.SendBird;
+import com.sendbird.android.SendBirdException;
+import com.sendbird.android.User;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.Random;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -30,17 +39,66 @@ public class PlayerMain extends AppCompatActivity
 
     private ArrayList<String> resourceUri = new ArrayList<>();
     private ArrayList<String> previewUri = new ArrayList<>();
+    private ArrayList<String> sendUrl = new ArrayList<>();
+    private ArrayList<Integer> channelNumList = new ArrayList<>();
 
     private int curBroad = 0;
     private int fragNum = -1;
 
     private boolean full_ing = false;
 
+    //랜덤영문 +숫자
+    private Random r = new Random();
+    private int f = r.nextInt(26);
+    private String f2 = Character.toString((char) (f+65));
+    private int d = r.nextInt(26);
+    private String d2 = Character.toString((char) (d+65));
+    private int num = r.nextInt(10000);
+    private int num2 = r.nextInt(10000);
+    public static String USER_ID;
+
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.player_main);
+
+        USER_ID = f2 + d2 + num + num2;
+
+        SendBird.init(getString(R.string.sendbird_app_id), this);
+        SendBird.connect(USER_ID,
+                (User user, SendBirdException e) -> {
+                    if (e != null) {    // Error.
+                        Log.d("connect error","connect : 1" );
+                        return;
+                    }
+                    updateCurrentUserInfo(USER_ID);
+                }
+        );
+
+        Intent intent = getIntent();
+        if(intent.getAction() == null){
+            Log.d("action","null");
+
+        } else if(intent.getAction().equals(Intent.ACTION_VIEW)) {
+            Log.d("action","action view");
+            Uri uri = intent.getData();
+            if(uri != null) {
+                String data = uri.getQueryParameter("board_id");
+                int channelNum = Integer.parseInt(""+data);
+                Log.d("channel","channel num : "+channelNum);
+                getSendbird(channelNum);
+            }
+        }
+
         initBtn();
+    }
+
+    private void updateCurrentUserInfo(final String userNickname) {
+        SendBird.updateCurrentUserInfo(userNickname, null,
+                (SendBirdException e) -> {
+                    if (e != null) Log.e("nickname",e.getMessage()+" : "+e.getCode());
+                }
+        );
     }
 
     @Override
@@ -109,29 +167,69 @@ public class PlayerMain extends AppCompatActivity
                 return;
         }
 
-        if(isBroadcasting(channelNum)) showBroadcast(channelNum);
-        else Toast.makeText(this, "This channel is not on air.", Toast.LENGTH_SHORT).show();
+        getSendbird(channelNum);
     }
 
-    /////////////////구현 필요 @민아
-    //channelNum은 선택한 채널
-    //해당 채널이 방송중인지를 true/false로 리턴
-    public boolean isBroadcasting(int channelNum){
-        //test용. 지우고 해주세연
-        return channelNum == 0 || channelNum == 2;
+//    public void startBroadcast(int channelNum){
+//        if(isBroadcasting(channelNum)) showBroadcast(channelNum);
+//        else Toast.makeText(this, "This channel is not on air.", Toast.LENGTH_SHORT).show();
+//    }
+//
+//    /////////////////구현 필요 @민아
+//    //channelNum은 선택한 채널
+//    //해당 채널이 방송중인지를 true/false로 리턴
+//    public boolean isBroadcasting(int channelNum){
+//        //test용. 지우고 해주세연
+//        return channelNum == 0 || channelNum == 2;
+//    }
+
+    public void getSendbird(int channelNum){
+        OpenChannel.getChannel(getString(R.string.sendbird_ctrlChannel),
+                (OpenChannel openChannel, SendBirdException e) -> {
+                    if (e != null) {    // Error.
+                        Log.d("getchannelerror1", ""+e.getMessage());
+                        e.printStackTrace();
+                        return;
+                    }
+                    //////////////////////////////
+                    openChannel.getAllMetaData(new BaseChannel.MetaDataHandler() {
+                        @Override
+                        public void onResult(Map<String, String> map, SendBirdException e) {
+                            sendUrl.clear();
+                            channelNumList.clear();
+                            for(String key : map.keySet()) {
+                                if (!map.get(key).equals("true")){
+                                    sendUrl.add(map.get(key));
+                                    channelNumList.add(Integer.parseInt(key));
+                                }
+                                else{
+                                    if(key.equals(Integer.toString(channelNum))){
+                                        sendUrl.clear();
+                                        channelNumList.clear();
+                                        Toast.makeText(getApplicationContext(), "This channel is not on air.", Toast.LENGTH_SHORT).show();
+                                        return;
+                                    }
+                                }
+                            }
+                            showBroadcast(channelNum);
+                        }
+                    });
+                }
+        );
     }
 
     public int setBroadcast(int channelNum){
         resourceUri.clear();
         previewUri.clear();
-        curBroad=0;
+        curBroad=channelNumList.size();
         int res = -1;
-        for(int i=0; i<StaticVariable.numChannel; i++){
-            if(isBroadcasting(i)) {
-                getBroadcast(i);
-                curBroad++;
-                if(channelNum >= i) res++;
-            }
+        for(int i=0; i<curBroad; i++){
+            resourceUri.add(null);
+            previewUri.add(null);
+        }
+        for(int i=0; i<curBroad; i++){
+            getBroadcast(channelNumList.get(i),i);
+            if(channelNum == channelNumList.get(i)) res = i;
         }
 
         return res;
@@ -152,9 +250,9 @@ public class PlayerMain extends AppCompatActivity
         fvf.startFull(fragNum);
     }
 
-    private void getBroadcast(int channelNum){
+    private void getBroadcast(int channelNum, int position){
         Request request = new Request.Builder()
-                .url("https://api.bambuser.com/broadcasts?byAuthors="+StaticVariable.defaultUrl+""+ StaticVariable.broadcastAuthor[channelNum])
+                .url("https://api.bambuser.com/broadcasts?byAuthors="+StaticVariable.bambuserDefaultUrl +""+ StaticVariable.broadcastAuthor[channelNum])
                 .addHeader("Accept", "application/vnd.bambuser.v1+json")
                 .addHeader("Content-Type", "application/json")
                 .addHeader("Authorization", "Bearer " + getString(R.string.application_key))
@@ -177,8 +275,8 @@ public class PlayerMain extends AppCompatActivity
                     JSONArray results = json.getJSONArray("results");
                     JSONObject latestBroadcast = results.optJSONObject(0);
                     resource = latestBroadcast.optString("resourceUri");
-                    resourceUri.add(resource);
-                    previewUri.add(latestBroadcast.optString("preview"));
+                    resourceUri.set(position, resource);
+                    previewUri.set(position, latestBroadcast.optString("preview"));
                     Log.d("request","add complete");
                 } catch (Exception ignored) {}
                 curBroad--;
@@ -190,7 +288,7 @@ public class PlayerMain extends AppCompatActivity
     public void setFull(){
         Log.d("setFull", ""+resourceUri.size());
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        FullVideoFragment frag = new FullVideoFragment(resourceUri, previewUri);
+        FullVideoFragment frag = new FullVideoFragment(resourceUri, previewUri, channelNumList, sendUrl);
         fragmentTransaction.add(R.id.fullVideo, frag, "fullFragment");
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();

@@ -25,21 +25,33 @@ public class StaticVariable {
 
     public static final String[] broadcastAuthor = new String[]{
             "9478bfc47a346c37321e735506d3c10f5f42dda8",
-            "9478bfc47a346c37321e735506d3c10f5felakdf",
             "9478bfc4dwa346ca7321e735506d3c10f5felakdf",
+            "9478bfc47a346c37321e735506d3c10f5felakdf",
             "94214adc47a346c37321e735506d3c10f5felakdf",
-            "9478bfc47a346c3732alwekfjwehr329ds"
+            "9478bfc47a346c3732alwekfjwehr329ds",
+            "9478bfc47a346cdagshe735506d3c10f5f42dda8",
+            "9478bsdkfjlfefwffjwehr329ds",
+            "9478bfc47a346alsdkjawaehr329ds",
+            "9478bfc4dalksdjflwf0f5felakdf",
+            "94daljdflafwfc10f5felakdf"
     };
 
     public static final String[] broadcastUrl = new String[]{
-            "f91d39f8095317d3b01e139691b4aa91c8fc447a",
-            "41c85459798f6ebab6546816a86711feb47fbfac",
-            "e078de7f60088af4219f7da44ac936ad79365dda",
-            "8de0286bbf8be3116d9006cf9dc5658b52b37367",
-            "1faa82c517b3e5d6e82e31aba6b04397b92fb582"
+            "9ps2NHuM3FlgvIfZQOBs4w",
+            "JXVa1xwGa2sPOLFRGgqkYg",
+            "xk87jakTO3ee6azCJZgbpw",
+            "5dX10WBLqNvBZiLzrn9EaA",
+            "tbGsBYNOjwPKOLFED3VH5Q",
+            "yYnbg9oyYqY2FiY00bAmrw",
+            "bDdg6d8EZoq47q4dEwLH2g",
+            "m1AYUqSTCfEXkdIrV6zjdg",
+            "vboOakEcKWdYE0K0wMLYMA",
+            "JZPrP7OrLMjZyAn4mfYb4Q"
     };
 
-    public static final String defaultUrl = "rtmp://ingest.bambuser.io/b-fme/";
+    public static final String bambuserDefaultUrl = "rtmp://ingest.bambuser.io/b-fme/";
 
     public static final String stoargeUrl = "https://rtmprtspstreamclientec4408a7ba95486ebe7ba8f169495201-dev.s3.us-east-2.amazonaws.com/public/";
+
+    public static final String CHANNEL_HANDLER_ID = "CHANNEL_HANDLER_OPEN_CHAT";
 }

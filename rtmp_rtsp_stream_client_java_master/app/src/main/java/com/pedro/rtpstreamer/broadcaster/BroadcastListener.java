@@ -1,5 +1,7 @@
 package com.pedro.rtpstreamer.broadcaster;
 
+import java.io.IOException;
+
 public interface BroadcastListener {
     public void onUriLoading();
     public void offUriLoading();
@@ -11,4 +13,5 @@ public interface BroadcastListener {
     public void broadcastStop();
 
     public void setToast(String message);
+    public void setText();
 }

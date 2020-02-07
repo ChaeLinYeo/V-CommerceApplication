@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="15dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="신고항목"
+        android:textSize="22sp"
+        android:textAlignment="center"/>
+
+    <Button
+        android:id="@+id/txt_input1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:hint="음란물"
+        android:background="#C5C5C5"
+        android:textSize="20sp" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="욕설"
+        android:textSize="20sp"
+        android:layout_marginTop="5dp"
+        android:background="#C5C5C5"
+        android:id="@+id/txt_input2"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="폭력"
+        android:textSize="20sp"
+        android:layout_marginTop="5dp"
+        android:background="#C5C5C5"
+        android:id="@+id/txt_input3"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="부적절한 상품"
+        android:textSize="20sp"
+        android:layout_marginTop="5dp"
+        android:background="#C5C5C5"
+        android:id="@+id/txt_input4"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="저작권"
+        android:textSize="20sp"
+        android:layout_marginTop="5dp"
+        android:background="#C5C5C5"
+        android:id="@+id/txt_input5"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="기타"
+        android:textSize="20sp"
+        android:layout_marginTop="5dp"
+        android:background="#C5C5C5"
+        android:id="@+id/txt_input6"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        >
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/colorAccent"
+            android:text="닫기"
+            android:textColor="#fff"
+            android:textSize="18sp"
+            android:layout_weight="1"
+            android:id="@+id/btn_cancel1"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/colorAccent"
+            android:text="다음"
+            android:textColor="#fff"
+            android:textSize="18sp"
+            android:layout_weight="1"
+            android:id="@+id/btn_ok1"/>
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -7,12 +7,15 @@
     <string name="replayer">Replay</string>
 
     <string name="default_rtmp_url">rtmp://ingest.bambuser.io/b-fme/</string>
-    <string name="application_id">KclqOIaqzhY2yNbIDjpG5Q</string>
-    <string name="application_key">5w6lkobizb2skk93jluy2fb2q</string>
+    <string name="application_id">c1YvmxQBiPHu63RaZ8GD8g</string>
+    <string name="application_key">6tyvnkccg1e0d1iplbgre0i5f</string>
+
+    <string name="sendbird_app_id">2651701A-6EE0-4519-A94D-F2286E7AAB01</string>
+    <string name="sendbird_ctrlChannel">sendbird_Ctrl</string>
 
     <string name="start_button">Start stream</string>
     <string name="stop_button">Stop stream</string>
     <string name="switch_camera_button">Switch camera</string>
-
+    <string name="getText">보여줄 말을 입력하세요</string>
     <string name="tv_select">Select your streamer</string>
 </resources>

@@ -4,16 +4,16 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
+import android.hardware.Camera;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 
@@ -42,11 +42,22 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
-@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
+@RequiresApi(api = Build.VERSION_CODES.P)
 public class BroadcastManager
     implements ConnectCheckerRtmp {
+
+    private static final BroadcastManager ourInstance = new BroadcastManager();
+
+    public static BroadcastManager getInstance() {
+        return ourInstance;
+    }
+
+    private BroadcastManager(){
+
+    }
 
     private Context pContext;
     private Resources pResources;
@@ -74,8 +85,12 @@ public class BroadcastManager
 
     private int broadcastChannel = -1;
     private String broadcastPath = "";
+    private String broadcastName = "";
 
-    public BroadcastManager(Context context, Resources resources, OpenGlView openGlView){
+    private int cW = 640;
+    private int cH = 480;
+
+    public void setBroadcastManager(Context context, Resources resources, OpenGlView openGlView){
         pContext = context;
         pResources = resources;
 
@@ -86,6 +101,51 @@ public class BroadcastManager
         }
 
         this.rtmpCamera1 = new RtmpCamera1(openGlView, this);
+        List<Camera.Size> s = rtmpCamera1.getResolutionsBack();
+        DisplayMetrics dm = pContext.getResources().getDisplayMetrics();
+        int width = dm.widthPixels;
+        int height = dm.heightPixels;
+        Camera.Size ss = getPreviewSize(s, width, height);
+        cW = ss.width;
+        cH = ss.height;
+        Log.d("resolution", ""+width+"/"+height+"/"+cW+"/"+cH);
+    }
+
+    public Camera.Size getPreviewSize(List<Camera.Size> sizes, int w, int h) {
+
+        final double ASPECT_TOLERANCE = 0.1;
+        double targetRatio = (double) h / w;
+
+        if (sizes == null)
+            return null;
+
+        Camera.Size optimalSize = null;
+        double minDiff = Double.MAX_VALUE;
+
+        int targetHeight = h;
+
+        for (Camera.Size size : sizes) {
+            double ratio = (double) size.width / size.height;
+            if (Math.abs(ratio - targetRatio) > ASPECT_TOLERANCE)
+                continue;
+
+            if (Math.abs(size.height - targetHeight) < minDiff) {
+                optimalSize = size;
+                minDiff = Math.abs(size.height - targetHeight);
+            }
+        }
+
+        if (optimalSize == null) {
+            minDiff = Double.MAX_VALUE;
+            for (Camera.Size size : sizes) {
+                if (Math.abs(size.height - targetHeight) < minDiff) {
+                    optimalSize = size;
+                    minDiff = Math.abs(size.height - targetHeight);
+                }
+            }
+        }
+
+        return optimalSize;
     }
     ////////////////////////////////////////////////////////////////////////
     public void manageBroadcast(int i){
@@ -93,8 +153,8 @@ public class BroadcastManager
             case 0:
                 if (!rtmpCamera1.isStreaming()) startBroadcast();
                 else {
-                    stopBroadcast();
                     uploadFile();
+                    stopBroadcast();
                 }
                 break;
 
@@ -109,21 +169,18 @@ public class BroadcastManager
     }
 
     public void startBroadcast(){
-        broadcastChannel = getAvailableChannel();
+//        broadcastChannel = getAvailableChannel();
         if(broadcastChannel == -1){
             broadcastListener.setToast("All broadcast channels are in use");
             return;
         }
-        if(rtmpCamera1.prepareAudio() && rtmpCamera1.prepareVideo()){
+        if(rtmpCamera1.prepareAudio() && rtmpCamera1.prepareVideo(cW, cH)){
             broadcastListener.broadcastStart();
-            rtmpCamera1.startStream(StaticVariable.defaultUrl+""+ StaticVariable.broadcastUrl[broadcastChannel]);
-            recordVideo();
+            rtmpCamera1.startStream(StaticVariable.bambuserDefaultUrl +""+ StaticVariable.broadcastUrl[broadcastChannel]);
         } else broadcastListener.setToast("Error preparing stream, This device cant do it");
     }
 
     public void stopBroadcast(){
-        freeChannel(broadcastChannel);
-        broadcastChannel = -1;
         broadcastListener.broadcastStop();
         rtmpCamera1.stopStream();
         if(rtmpCamera1.isRecording()) {
@@ -132,20 +189,8 @@ public class BroadcastManager
         }
     }
 
-    ////////////////구현 필요 @민아
-    //리턴 값은 사용할 채널번호
-    //해당 채널 번호는 리턴 하기 전에 이 함수 내에서 사용중으로 상태를 변경해야 함
-    //만약 사용 가능한 채널이 없으면(모든 채널이 사용 중이면) -1을 리턴함
-    public int getAvailableChannel(){
-
-        return 2;
-    }
-
-    ///////////////구현 필요 @민아
-    //channelNum은 사용이 끝난 방송 채널번호
-    //해당 채널을 사용 가능한 상태로 변경
-    public void freeChannel(int channelNum){
-
+    public void setBroadcastChannel(int i){
+        broadcastChannel = i;
     }
 
     public void recordVideo(){
@@ -157,6 +202,7 @@ public class BroadcastManager
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault());
             currentDateAndTime = sdf.format(new Date());
             broadcastPath=folder.getAbsolutePath() + "/" + currentDateAndTime + ".mp4";
+            broadcastName = broadcastChannel + "/" + currentDateAndTime + ".mp4";
             rtmpCamera1.startRecord(broadcastPath);
             Log.d("rv","recording / "+folder.getAbsolutePath());
         } catch (IOException e) {
@@ -166,28 +212,62 @@ public class BroadcastManager
     }
 
     private void uploadFile() {
-        Amplify.Storage.uploadFile(
-                "test/myUploadedFileName.mp4",
-                broadcastPath,
-                new ResultListener<StorageUploadFileResult>() {
-                    @Override
-                    public void onResult(StorageUploadFileResult result) {
-                        Log.i("StorageQuickStart", "Successfully uploaded: " + result.getKey());
-                    }
+        if(rtmpCamera1.isRecording()) {
+            rtmpCamera1.stopRecord();
+            currentDateAndTime = "";
 
-                    @Override
-                    public void onError(Throwable error) {
-                        Log.e("StorageQuickstart", "Upload error.", error);
+            Amplify.Storage.uploadFile(
+//                    broadcastName,
+                    "test/myUploadedFileName.mp4",
+                    broadcastPath,
+                    new ResultListener<StorageUploadFileResult>() {
+                        @Override
+                        public void onResult(StorageUploadFileResult result) {
+                            Log.i("StorageQuickStart", "Successfully uploaded: " + result.getKey());
+//                            updateLogList();
+                        }
+
+                        @Override
+                        public void onError(Throwable error) {
+                            Log.e("StorageQuickstart", "Upload error.", error);
+                        }
                     }
-                }
-        );
+            );
+        }
     }
+
+//    private void updateLogList() {
+//        String logListPath = folder.getAbsolutePath() + "/logList.txt";
+//        Log.d("update", "start");
+//        Amplify.Storage.downloadFile(
+//                broadcastChannel + "/logList.txt",
+//                logListPath,
+//                new ResultListener<StorageDownloadFileResult>() {
+//                    @Override
+//                    public void onResult(StorageDownloadFileResult result) {
+//                        Log.i("StorageQuickStart", "Successfully downloaded: " + result.getFile().getName());
+////                        try {
+////                            Files.write(Paths.get(logListPath), broadcastName.getBytes(), StandardOpenOption.APPEND);
+////                        }catch (IOException e) {
+////                            //exception handling left as an exercise for the reader
+////                        }
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable error) {
+//                        Log.e("StorageQuickStart", error.getMessage());
+//                    }
+//                }
+//        );
+//    }
 
     ///////////////////////////////////////////////////////////////////////////////
     public void setTexture(int i){
         switch(i){
             case 0:
-                if(!onText) setText();
+                if(!onText) {
+                    broadcastListener.setText();
+                }
                 else {
                     rtmpCamera1.getGlInterface().removeFilter(0);
                     spriteGestureControllerText.setBaseObjectFilterRender(null);
@@ -211,11 +291,11 @@ public class BroadcastManager
         }
     }
 
-    public void setText(){
+    public void setText(String text, int color){
         TextObjectFilterRender textObjectFilterRender = new TextObjectFilterRender();
         rtmpCamera1.getGlInterface().setFilterT(0, textObjectFilterRender);
 
-        textObjectFilterRender.setText("Hello world", 30, Color.BLUE);
+        textObjectFilterRender.setText(text, 30, color);
         textObjectFilterRender.setDefaultScale(rtmpCamera1.getStreamWidth(), rtmpCamera1.getStreamHeight());
         textObjectFilterRender.setPosition(TranslateTo.CENTER);
 
@@ -346,7 +426,7 @@ public class BroadcastManager
     }
 
     public void surfaceChange(){
-        rtmpCamera1.startPreview();
+        rtmpCamera1.startPreview(cW, cH);
     }
 
     public void surfaceDestroy(){
@@ -372,6 +452,7 @@ public class BroadcastManager
     //ConnectCheckerRtmp
     @Override
     public void onConnectionSuccessRtmp() {
+        recordVideo();
         broadcastListener.setToast("Connection success");
     }
 

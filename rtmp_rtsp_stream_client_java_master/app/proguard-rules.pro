@@ -25,6 +25,8 @@
 #-renamesourcefileattribute SourceFile
 
 -keep class org.videolan.libvlc.**                      { *; }
+#####################
+-keep class com.bambuser.broadcaster.** { *; }
 
 # These options are the minimal options for a functioning application
 # using Proguard and the AWS SDK 2.1.5 for Android

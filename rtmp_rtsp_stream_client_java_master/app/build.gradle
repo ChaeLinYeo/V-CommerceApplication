@@ -49,10 +49,11 @@ android {
 }
 
 
-//repositories {
-//    maven { url "https://raw.githubusercontent.com/sendbird/SendBird-SDK-Android/master/" }
-//    google()
-//}
+repositories {
+    maven { url 'http://devrepo.kakao.com:8088/nexus/content/groups/public/' }
+    maven { url "https://raw.githubusercontent.com/sendbird/SendBird-SDK-Android/master/" }
+    google()
+}
 
 dependencies {
     implementation project(':rtplibrary')
@@ -74,4 +75,20 @@ dependencies {
     implementation 'com.amplifyframework:core:0.9.0'
     implementation 'com.amplifyframework:aws-storage-s3:0.9.0'
     implementation 'com.amazonaws:aws-android-sdk-mobile-client:2.16.7'
+
+    // SendBird
+    implementation 'com.sendbird.sdk:sendbird-android-sdk:3.0.107'
+    implementation 'com.squareup.picasso:picasso:2.5.2'
+    implementation 'org.videolan.android:libvlc-all:3.1.12'
+
+    // 로티애니메이션
+    // 2.8 이상 버전부터는 안드로이드 x를 지원하기 때문에 2.7.0으로 추가.
+    implementation 'com.airbnb.android:lottie:2.7.0'
+
+    // 카카오링크 sdk를 사용하기 위해 필요.
+    implementation group: 'com.kakao.sdk', name: 'kakaolink', version: project.KAKAO_SDK_VERSION
+
+    //bumptech
+    implementation 'com.github.bumptech.glide:glide:4.9.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
 }

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <resources>
+        <string android:name="kakao_app_key">b941d0436b5a88e86867c97af193cc09</string>
+        <string android:name="kakao_scheme">kakaob941d0436b5a88e86867c97af193cc09</string>
+        <string android:name="kakaolink_host">kakaolink</string>
+    </resources>
+
+</LinearLayout>

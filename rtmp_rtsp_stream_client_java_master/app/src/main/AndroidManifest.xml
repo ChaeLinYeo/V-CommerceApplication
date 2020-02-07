@@ -40,12 +40,28 @@
         <activity
             android:name=".player.PlayerMain"
             android:label="@string/player"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="@string/kakao_scheme"
+                    android:host="@string/kakaolink_host" />
+            </intent-filter>
+        </activity>
+
+        <meta-data
+            android:name="com.kakao.sdk.AppKey"
+            android:value="@string/kakao_app_key" />
+
         <activity
             android:name=".replayer.Replayer"
             android:label="@string/replayer"
             android:screenOrientation="portrait" />
         <service android:name=".backgroundexample.RtpService" />
+
+        <service android:name=".utils.UnCatchTaskService"
+            android:stopWithTask="false" />
     </application>
 
 </manifest>

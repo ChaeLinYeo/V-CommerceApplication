@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="15dp">
+
+    <TextView
+        android:id="@+id/textviewtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Set a Text"
+        android:textAlignment="center"
+        android:textSize="22sp" />
+
+    <EditText
+        android:id="@+id/newText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textviewtitle"
+        android:layout_marginTop="30dp"
+        android:hint="@string/getText"
+        />
+    <TextView
+        android:id="@+id/colortitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/newText"
+        android:layout_marginTop="40dp"
+        android:text="색 선택"
+        android:textSize="20sp"/>
+
+    <LinearLayout
+        android:id="@+id/colorpp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/colortitle">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="빨강"
+            android:textSize="20sp"
+            android:layout_marginTop="5dp"
+            android:background="@color/red"
+            android:id="@+id/select_red"/>
+        <Button
+            android:id="@+id/select_blue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/blue"
+            android:text="파랑"
+            android:textSize="20sp" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="초록"
+            android:textSize="20sp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/green"
+            android:id="@+id/select_green"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="검정"
+            android:textSize="20sp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/black"
+            android:id="@+id/select_black"/>
+    </LinearLayout>
+    <Button
+        android:id="@+id/btnAccept"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/colorpp"
+        android:layout_marginTop="30dp"
+        android:layout_weight="1"
+        android:backgroundTint="@color/colorAccent"
+        android:text="적용하기"
+        android:textColor="#fff"
+        android:textSize="18sp" />
+    <Button
+        android:id="@+id/btnExit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/btnAccept"
+        android:layout_marginTop="30dp"
+        android:layout_weight="1"
+        android:backgroundTint="@color/colorAccent"
+        android:text="닫기"
+        android:textColor="#fff"
+        android:textSize="18sp" />
+
+</RelativeLayout>
