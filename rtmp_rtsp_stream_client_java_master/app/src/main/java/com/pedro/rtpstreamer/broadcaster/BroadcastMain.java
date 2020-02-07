@@ -301,6 +301,7 @@ public class BroadcastMain extends AppCompatActivity
         sendbirdConnection.broadcastfinish();
         canStart = true;
         LM.LMEnd();
+        LM_time.LMEnd();
         category_items.clear();
     }
 
