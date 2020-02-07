@@ -11,12 +11,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.pedro.rtpstreamer.R;
+import com.pedro.rtpstreamer.server.SendbirdConnection;
 import com.pedro.rtpstreamer.utils.StaticVariable;
 import com.sendbird.android.BaseChannel;
 import com.sendbird.android.OpenChannel;
-import com.sendbird.android.SendBird;
 import com.sendbird.android.SendBirdException;
-import com.sendbird.android.User;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -57,6 +56,8 @@ public class PlayerMain extends AppCompatActivity
     private int num2 = r.nextInt(10000);
     public static String USER_ID;
 
+    private SendbirdConnection sendbirdConnection;
+
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -64,16 +65,21 @@ public class PlayerMain extends AppCompatActivity
 
         USER_ID = f2 + d2 + num + num2;
 
-        SendBird.init(getString(R.string.sendbird_app_id), this);
-        SendBird.connect(USER_ID,
-                (User user, SendBirdException e) -> {
-                    if (e != null) {    // Error.
-                        Log.d("connect error","connect : 1" );
-                        return;
-                    }
-                    updateCurrentUserInfo(USER_ID);
-                }
-        );
+//        SendBird.init(getString(R.string.sendbird_app_id), this);
+//        SendBird.connect(USER_ID,
+//            (User user, SendBirdException e) -> {
+//                if (e != null) {    // Error.
+//                    Log.d("connect error","connect : 1" );
+//                    return;
+//                }
+//                updateCurrentUserInfo(USER_ID);
+//            }
+//        );
+        ////////////////////////////////////////////////
+        sendbirdConnection = SendbirdConnection.getInstance();
+        sendbirdConnection.setupSendbird(this, USER_ID);
+        ////////////////////////////////////////////////
+
 
         Intent intent = getIntent();
         if(intent.getAction() == null){
@@ -93,13 +99,13 @@ public class PlayerMain extends AppCompatActivity
         initBtn();
     }
 
-    private void updateCurrentUserInfo(final String userNickname) {
-        SendBird.updateCurrentUserInfo(userNickname, null,
-                (SendBirdException e) -> {
-                    if (e != null) Log.e("nickname",e.getMessage()+" : "+e.getCode());
-                }
-        );
-    }
+//    private void updateCurrentUserInfo(final String userNickname) {
+//        SendBird.updateCurrentUserInfo(userNickname, null,
+//                (SendBirdException e) -> {
+//                    if (e != null) Log.e("nickname",e.getMessage()+" : "+e.getCode());
+//                }
+//        );
+//    }
 
     @Override
     public void onBackPressed(){
@@ -130,7 +136,7 @@ public class PlayerMain extends AppCompatActivity
     //방송정보로 각 버튼 내용 설정하기
     @Override
     public void onClick(View view){
-        int channelNum = -1;
+        int channelNum;
         switch(view.getId()){
             case R.id.btn1:
                 channelNum = 0;
@@ -170,51 +176,36 @@ public class PlayerMain extends AppCompatActivity
         getSendbird(channelNum);
     }
 
-//    public void startBroadcast(int channelNum){
-//        if(isBroadcasting(channelNum)) showBroadcast(channelNum);
-//        else Toast.makeText(this, "This channel is not on air.", Toast.LENGTH_SHORT).show();
-//    }
-//
-//    /////////////////구현 필요 @민아
-//    //channelNum은 선택한 채널
-//    //해당 채널이 방송중인지를 true/false로 리턴
-//    public boolean isBroadcasting(int channelNum){
-//        //test용. 지우고 해주세연
-//        return channelNum == 0 || channelNum == 2;
-//    }
-
     public void getSendbird(int channelNum){
         OpenChannel.getChannel(getString(R.string.sendbird_ctrlChannel),
-                (OpenChannel openChannel, SendBirdException e) -> {
-                    if (e != null) {    // Error.
-                        Log.d("getchannelerror1", ""+e.getMessage());
-                        e.printStackTrace();
-                        return;
-                    }
-                    //////////////////////////////
-                    openChannel.getAllMetaData(new BaseChannel.MetaDataHandler() {
-                        @Override
-                        public void onResult(Map<String, String> map, SendBirdException e) {
-                            sendUrl.clear();
-                            channelNumList.clear();
-                            for(String key : map.keySet()) {
-                                if (!map.get(key).equals("true")){
-                                    sendUrl.add(map.get(key));
-                                    channelNumList.add(Integer.parseInt(key));
-                                }
-                                else{
-                                    if(key.equals(Integer.toString(channelNum))){
-                                        sendUrl.clear();
-                                        channelNumList.clear();
-                                        Toast.makeText(getApplicationContext(), "This channel is not on air.", Toast.LENGTH_SHORT).show();
-                                        return;
-                                    }
+            (OpenChannel openChannel, SendBirdException e) -> {
+                if (e != null) {    // Error.
+                    Log.d("getchannelerror1", ""+e.getMessage());
+                    e.printStackTrace();
+                    return;
+                }
+                //////////////////////////////
+                openChannel.getAllMetaData((Map<String, String> map, SendBirdException ex) -> {
+                        sendUrl.clear();
+                        channelNumList.clear();
+                        for(String key : map.keySet()) {
+                            if (!map.get(key).equals("true")){
+                                sendUrl.add(map.get(key));
+                                channelNumList.add(Integer.parseInt(key));
+                            }
+                            else{
+                                if(key.equals(Integer.toString(channelNum))){
+                                    sendUrl.clear();
+                                    channelNumList.clear();
+                                    Toast.makeText(getApplicationContext(), "This channel is not on air.", Toast.LENGTH_SHORT).show();
+                                    return;
                                 }
                             }
-                            showBroadcast(channelNum);
                         }
-                    });
-                }
+                        showBroadcast(channelNum);
+                    }
+                );
+            }
         );
     }
 

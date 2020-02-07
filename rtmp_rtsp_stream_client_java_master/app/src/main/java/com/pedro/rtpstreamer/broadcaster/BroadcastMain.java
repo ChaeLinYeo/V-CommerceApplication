@@ -55,7 +55,7 @@ import java.util.TimerTask;
 @RequiresApi(api = Build.VERSION_CODES.P)
 public class BroadcastMain extends AppCompatActivity
         implements View.OnClickListener, View.OnTouchListener, SurfaceHolder.Callback,
-                    BroadcastListener, SendbirdListner {
+                    BroadcastListener, SendbirdListner.ForBroadcaster {
 
     Context context;
     private BroadcastManager broadcastManager = BroadcastManager.getInstance();
@@ -106,6 +106,7 @@ public class BroadcastMain extends AppCompatActivity
     ////////////////////////////////////////////////
     private SendbirdConnection sendbirdConnection;
     private LocalfileManager LM;
+    private LocalfileManager LM_time;
 
     private AlertDialog alertDialog;
 
