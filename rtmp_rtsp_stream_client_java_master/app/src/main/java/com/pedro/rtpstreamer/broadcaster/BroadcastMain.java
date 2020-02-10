@@ -13,9 +13,13 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
+
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -44,6 +48,7 @@ import com.pedro.rtpstreamer.utils.PopupManager;
 import com.pedro.rtpstreamer.utils.UnCatchTaskService;
 import com.sendbird.android.User;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -111,10 +116,13 @@ public class BroadcastMain extends AppCompatActivity
     private int heart_final;
     private AlertDialog alertDialog;
 
+    //갤러리에서 이미지 선택용 변수
+    private int PICK_IMAGE_REQUEST = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        startService(new Intent(this, UnCatchTaskService.class));
+//        startService(new Intent(this, UnCatchTaskService.class));
         context = this;
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.broadcast_main);
@@ -181,7 +189,13 @@ public class BroadcastMain extends AppCompatActivity
                 break;
 
             case R.id.imgButton:
-                broadcastManager.setTexture(1);
+                //핸드폰 갤러리 열음
+                Intent intent = new Intent();
+                // Show only images, no videos or anything else
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                // Always show the chooser (if there are multiple options available)
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
                 break;
 
             case R.id.uriButton:
@@ -204,6 +218,22 @@ public class BroadcastMain extends AppCompatActivity
                 sendbirdConnection.getAllCategory(PM);
                 PM.btn_Category(getLayoutInflater(), LM_time);
                 break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            Uri uri = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                // Log.d(TAG, String.valueOf(bitmap));
+                broadcastManager.setImage(bitmap);
+                //broadcastManager.setTexture(1);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

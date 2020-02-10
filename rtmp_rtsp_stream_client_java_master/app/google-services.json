@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "182672134662",
+    "firebase_url": "https://montblanc-7567e.firebaseio.com",
+    "project_id": "montblanc-7567e",
+    "storage_bucket": "montblanc-7567e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:182672134662:android:c98e19ad9bfaf5cef5a987",
+        "android_client_info": {
+          "package_name": "com.pedro.rtpstreamer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "182672134662-n113jl09b131e49taeds823e303p5nc6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDTfYZXmZB_zwBKwuepjaOZv9IQorCY3hQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "182672134662-n113jl09b131e49taeds823e303p5nc6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -2,7 +2,9 @@ package com.pedro.rtpstreamer.utils;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -12,6 +14,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import androidx.annotation.RequiresApi;
 
 import com.kakao.kakaolink.v2.KakaoLinkResponse;
 import com.kakao.kakaolink.v2.KakaoLinkService;
@@ -158,39 +162,54 @@ public class PopupManager {
 
     //카카오 공유기능
     public void btn(int channelNum) {
-        FeedTemplate params = FeedTemplate
-                .newBuilder(ContentObject.newBuilder("bambuser수신 앱 공유!",
-                        "https://hanyang.web.app/img/big-hanyang.png",
-                        LinkObject.newBuilder().setWebUrl("https://developers.kakao.com")
-                                .setMobileWebUrl("https://developers.kakao.com").build())
-                        .setDescrption("클릭해서 지금 라이브 방송을 시청하세요")
-                        .build())
-                .setSocial(SocialObject.newBuilder().setLikeCount(10).setCommentCount(20)
-                        .setSharedCount(30).setViewCount(40).build())
-                .addButton(new ButtonObject("웹에서 보기", LinkObject.newBuilder().setWebUrl("'https://developers.kakao.com").setMobileWebUrl("'https://developers.kakao.com").build()))
-                .addButton(new ButtonObject("앱에서 보기", LinkObject.newBuilder()
-                        .setWebUrl("'https://developers.kakao.com")
-                        .setMobileWebUrl("'https://developers.kakao.com")
-                        .setAndroidExecutionParams("board_id="+channelNum)
-                        .setIosExecutionParams("key1=value1")
-                        .build()))
-                .build();
+//        FeedTemplate params = FeedTemplate
+//                .newBuilder(ContentObject.newBuilder("bambuser수신 앱 공유!",
+//                        "https://hanyang.web.app/img/big-hanyang.png",
+//                        LinkObject.newBuilder().setWebUrl("https://developers.kakao.com")
+//                                .setMobileWebUrl("https://developers.kakao.com").build())
+//                        .setDescrption("클릭해서 지금 라이브 방송을 시청하세요")
+//                        .build())
+//                .setSocial(SocialObject.newBuilder().setLikeCount(10).setCommentCount(20)
+//                        .setSharedCount(30).setViewCount(40).build())
+//                .addButton(new ButtonObject("웹에서 보기", LinkObject.newBuilder().setWebUrl("'https://developers.kakao.com").setMobileWebUrl("'https://developers.kakao.com").build()))
+//                .addButton(new ButtonObject("앱에서 보기", LinkObject.newBuilder()
+//                        .setWebUrl("'https://developers.kakao.com")
+//                        .setMobileWebUrl("'https://developers.kakao.com")
+//                        .setAndroidExecutionParams("board_id="+channelNum)
+//                        .setIosExecutionParams("key1=value1")
+//                        .build()))
+//                .build();
+//
+//        Map<String, String> serverCallbackArgs = new HashMap<>();
+//        serverCallbackArgs.put("user_id", "${current_user_id}");
+//        serverCallbackArgs.put("product_id", "${shared_product_id}");
+//
+//        KakaoLinkService.getInstance().sendDefault(mContext, params, serverCallbackArgs, new ResponseCallback<KakaoLinkResponse>() {
+//            @Override
+//            public void onFailure(ErrorResult errorResult) {
+//                Logger.e(errorResult.toString());
+//            }
+//
+//            @Override
+//            public void onSuccess(KakaoLinkResponse result) {
+//                // 템플릿 밸리데이션과 쿼터 체크가 성공적으로 끝남. 톡에서 정상적으로 보내졌는지 보장은 할 수 없다. 전송 성공 유무는 서버콜백 기능을 이용하여야 한다.
+//            }
+//        });
 
-        Map<String, String> serverCallbackArgs = new HashMap<>();
-        serverCallbackArgs.put("user_id", "${current_user_id}");
-        serverCallbackArgs.put("product_id", "${shared_product_id}");
+        Intent intent = new Intent(Intent.ACTION_SEND);
 
-        KakaoLinkService.getInstance().sendDefault(mContext, params, serverCallbackArgs, new ResponseCallback<KakaoLinkResponse>() {
-            @Override
-            public void onFailure(ErrorResult errorResult) {
-                Logger.e(errorResult.toString());
-            }
+        intent.setType("text/plain");
 
-            @Override
-            public void onSuccess(KakaoLinkResponse result) {
-                // 템플릿 밸리데이션과 쿼터 체크가 성공적으로 끝남. 톡에서 정상적으로 보내졌는지 보장은 할 수 없다. 전송 성공 유무는 서버콜백 기능을 이용하여야 한다.
-            }
-        });
+        // Set default text message
+        // 카톡, 이메일, MMS 다 이걸로 설정 가능
+        //String subject = "문자의 제목";
+        String text = "https://chaelin.page.link/eNh4" +
+                "\n"+"설치시 앱 or 미설치시 구글 플레이스토어로 이동";
+        intent.putExtra(Intent.EXTRA_TEXT, text);
+
+        // Title of intent
+        Intent chooser = Intent.createChooser(intent, "친구에게 공유하기");
+        mContext.startActivity(chooser);
     }
 
     private View.OnTouchListener declareSelectListener = (View view, MotionEvent motionEvent) -> {
@@ -325,6 +344,7 @@ public class PopupManager {
         alertDialog.show();
     }
     int color;
+    @RequiresApi(api = Build.VERSION_CODES.P)
     public void btn_Text(LayoutInflater inflater, BroadcastManager BM) {
         View mView = inflater.inflate(R.layout.text_setup, null);
         final androidx.appcompat.app.AlertDialog.Builder alert05 = new androidx.appcompat.app.AlertDialog.Builder(mContext);
