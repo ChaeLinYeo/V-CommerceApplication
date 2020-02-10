@@ -426,6 +426,7 @@ public class BroadcastMain extends AppCompatActivity
         btn_Exit.setOnClickListener((View view) -> {
             for (String item : category_items){
                 sendbirdConnection.addCategory(item);
+                PM.addCategoryI(item);
             }
             adapter1.notifyDataSetChanged();
             alertDialog.dismiss();
