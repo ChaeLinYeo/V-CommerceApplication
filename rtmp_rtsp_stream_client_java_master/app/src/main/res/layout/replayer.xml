@@ -16,7 +16,7 @@
         android:layout_height="30dp"
         android:layout_marginStart="5dp"
         android:layout_marginTop="10dp"
-        android:text="방송 제목"
+        android:text="@string/noinfo"
         android:textColor="#fff"
         android:textSize="20sp"
         android:singleLine="true"
@@ -37,7 +37,7 @@
         android:gravity="start"
         android:marqueeRepeatLimit="marquee_forever"
         android:singleLine="true"
-        android:text="방송자 닉네임"
+        android:text="@string/noinfo"
         android:textColor="#fff"
         android:textSize="15sp" />
 
@@ -64,11 +64,11 @@
         android:layout_marginTop="680dp"
         android:orientation="horizontal">
 
-        <Button
+        <ImageButton
             android:id="@+id/playBtn"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:text="start"/>
+            android:layout_height="30dp"/>
+
         <SeekBar
             android:id="@+id/seekBar"
             android:layout_width="match_parent"

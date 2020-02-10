@@ -107,7 +107,8 @@ public class BroadcastMain extends AppCompatActivity
     private SendbirdConnection sendbirdConnection;
     private LocalfileManager LM;
     private LocalfileManager LM_time;
-
+    private LocalfileManager LM_subinfo;
+    private int heart_final;
     private AlertDialog alertDialog;
 
     @Override
@@ -303,6 +304,8 @@ public class BroadcastMain extends AppCompatActivity
         //awsManager.uploadfile(LM.getFileName);
         LM.LMEnd();
         LM_time.LMEnd();
+        LM_subinfo.saveheartfinal(heart_final);
+        LM_subinfo.LMEnd();
         category_items.clear();
     }
 
@@ -316,6 +319,7 @@ public class BroadcastMain extends AppCompatActivity
     /////////////////////////////////////////////////////////////
     public void LikePlayer(int num){
         if(toggleSongLikeAnimButton())  {
+            heart_final = num;
             heart.setText(Integer.toString(num));
         }
     }
@@ -372,7 +376,6 @@ public class BroadcastMain extends AppCompatActivity
                 if(text.length()!=0){
                     category_items.add(text);
                     editText.setText("");
-                    sendbirdConnection.addCategory(text);
                     adapter1.notifyDataSetChanged();
                 }
             }
@@ -382,8 +385,6 @@ public class BroadcastMain extends AppCompatActivity
                 int pos;
                 pos = listView.getCheckedItemPosition();
                 if(pos != ListView.INVALID_POSITION){
-                    sendbirdConnection.sendUserMessage("delete:"+category_items.get(pos), "category");
-                    sendbirdConnection.removeCategory(category_items.get(pos));
                     category_items.remove(pos);
                     listView.clearChoices();
                     adapter1.notifyDataSetChanged();
@@ -392,10 +393,12 @@ public class BroadcastMain extends AppCompatActivity
         );
 
         btn_Exit.setOnClickListener((View view) -> {
-                adapter1.notifyDataSetChanged();
-                alertDialog.dismiss();
+            for (String item : category_items){
+                sendbirdConnection.addCategory(item);
             }
-        );
+            adapter1.notifyDataSetChanged();
+            alertDialog.dismiss();
+        });
 
         btn_Select.setOnClickListener((View view) ->
             Toast.makeText(getApplicationContext(), "방송 시작 후 해당 상품을 판매할 때 눌러주세요.", Toast.LENGTH_LONG).show()
@@ -425,7 +428,8 @@ public class BroadcastMain extends AppCompatActivity
             (View view) -> {
                 init_t = newtitle.getText().toString();
                 sendbirdConnection.createChannel(init_t);
-                title_text.setText(newtitle.getText().toString());
+                title_text.setText(init_t);
+                LM_subinfo.savetitle(init_t);
             }
         );
         Toast.makeText(getApplicationContext(), "방송 시작 전, 방송의 제목을 입력해주세요.", Toast.LENGTH_LONG).show();
@@ -450,8 +454,9 @@ public class BroadcastMain extends AppCompatActivity
 
         btn_ok.setOnClickListener((View view) -> {
                 init_t = txt_inputText.getText().toString();
-                title_text.setText(txt_inputText.getText().toString());
+                title_text.setText(init_t);
                 sendbirdConnection.updateTitle(init_t);
+                LM_subinfo.savetitle(init_t);
                 alertDialog.dismiss();
             }
         );
@@ -832,6 +837,7 @@ public class BroadcastMain extends AppCompatActivity
         broadcastManager.manageBroadcast(0);
         LM = new LocalfileManager(USER_ID+":"+System.currentTimeMillis()+":"+sendbirdConnection.getChannelNum()+".txt");
         LM_time = new LocalfileManager(USER_ID+":"+System.currentTimeMillis()+":"+sendbirdConnection.getChannelNum()+"_timeline.txt");
+        LM_subinfo = new LocalfileManager(USER_ID+":"+System.currentTimeMillis()+":"+sendbirdConnection.getChannelNum()+"_subinfo.txt");
         Log.d("channel complete",""+sendbirdConnection.getChannelNum());
         create_Category();
     }

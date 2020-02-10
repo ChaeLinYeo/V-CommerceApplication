@@ -13,9 +13,11 @@
     <string name="sendbird_app_id">2651701A-6EE0-4519-A94D-F2286E7AAB01</string>
     <string name="sendbird_ctrlChannel">sendbird_Ctrl</string>
 
-    <string name="start_button">Start stream</string>
-    <string name="stop_button">Stop stream</string>
-    <string name="switch_camera_button">Switch camera</string>
+    <string name="start_button">Start</string>
+    <string name="stop_button">Stop</string>
+    <string name="switch_camera_button">Switch</string>
     <string name="getText">보여줄 말을 입력하세요</string>
-    <string name="tv_select">Select your streamer</string>
+    <string name="tv_select">Select the option</string>
+    <string name="noinfo">NULL</string>
+    <string name="touchtorevise">터치하여 수정하세요.</string>
 </resources>

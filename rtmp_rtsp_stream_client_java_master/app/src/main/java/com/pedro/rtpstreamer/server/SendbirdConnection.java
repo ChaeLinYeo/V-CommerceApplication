@@ -236,7 +236,6 @@ public class SendbirdConnection {
 
     public List<User> getUserList(boolean renewal) {{
         if(renewal) getUserListFromServer();
-
         return UserList;
     }}
 
@@ -274,7 +273,6 @@ public class SendbirdConnection {
     }
 
     public void broadcastfinish(){
-        //방송 종료시 방송 채널 삭제, not yet: control채널에게 방송 채널이 비었음을 알림
         HashMap<String, String> map = new HashMap<>();
         map.put(Integer.toString(channelNum), "true");
         ctrl_channel.updateMetaData(map, (Map<String, String> pMap, SendBirdException e) -> {
