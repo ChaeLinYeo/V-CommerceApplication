@@ -1,5 +1,8 @@
 package com.pedro.rtpstreamer.replayer;
-
+/*
+* 로그에 있는 채팅은 ECC.add
+* like는 하트 애니메이션 play
+*/
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
@@ -11,12 +14,16 @@ import android.util.Log;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.pedro.rtpstreamer.R;
+import com.pedro.rtpstreamer.utils.ExampleChatController;
 import com.pedro.rtpstreamer.utils.StaticVariable;
 
 import org.videolan.libvlc.LibVLC;
@@ -37,8 +44,15 @@ public class Replayer extends AppCompatActivity
 
     private Button playBtn;
     private SeekBar seekBar;
+    private ListView listView;
 
     private int mediaState=0;
+
+    // 다시보기 화면 구성용
+    TextView streamer_nickname;
+    TextView title;
+    private ExampleChatController ECC;
+    private LottieAnimationView songLikeAnimButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -48,10 +62,14 @@ public class Replayer extends AppCompatActivity
 
         playBtn = findViewById(R.id.playBtn);
         seekBar = findViewById(R.id.seekBar);
+        title = findViewById(R.id.replaytitle);
+        streamer_nickname = findViewById(R.id.nickname);
 
         playBtn.setOnClickListener(this);
         seekBar.setOnSeekBarChangeListener(seekBarChangeListener);
-
+        ECC = new ExampleChatController(context, listView, R.layout.chatline, R.id.chat_line_textview, R.id.chat_line_timeview);
+        ECC.show();
+        ECC.add("재방송 채팅입니다.");
         setUri();
     }
 

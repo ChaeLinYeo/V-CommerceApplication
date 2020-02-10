@@ -829,8 +829,8 @@ public class BroadcastMain extends AppCompatActivity
         canStart = false;
         broadcastManager.setBroadcastChannel(sendbirdConnection.getChannelNum());
         broadcastManager.manageBroadcast(0);
-        LM = new LocalfileManager(USER_ID+":"+System.currentTimeMillis()+".txt");
-        LM_time = new LocalfileManager(USER_ID+":"+System.currentTimeMillis()+"_timeline.txt");
+        LM = new LocalfileManager(USER_ID+":"+System.currentTimeMillis()+":"+sendbirdConnection.getChannelNum()+".txt");
+        LM_time = new LocalfileManager(USER_ID+":"+System.currentTimeMillis()+":"+sendbirdConnection.getChannelNum()+"_timeline.txt");
         Log.d("channel complete",""+sendbirdConnection.getChannelNum());
         create_Category();
     }

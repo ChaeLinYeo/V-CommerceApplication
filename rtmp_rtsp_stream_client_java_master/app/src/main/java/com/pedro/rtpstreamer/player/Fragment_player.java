@@ -187,7 +187,7 @@ public class Fragment_player extends Fragment
 
         mExampleChatController = new ExampleChatController(mContext, listView, R.layout.chatline, R.id.chat_line_textview, R.id.chat_line_timeview);
         mExampleChatController.show();
-        mExampleChatController.add("test");
+        mExampleChatController.add("생방송 채팅에 참여하세요!");
 
         //////////////////////
         FragmentActivity fa = getActivity();
