@@ -64,10 +64,25 @@ public class LocalfileManager {
             writer.append(data);
             writer.flush();
         }catch(IOException e){
-            Log.d("eror",""+e.getMessage());
+            Log.d("error",""+e.getMessage());
         }
     }
-
+    public void savetitle(String title){
+        try{
+            writer.append(title +"\n");
+            writer.flush();
+        }catch(IOException e){
+            Log.d("error",""+e.getMessage());
+        }
+    }
+    public void saveheartfinal(int Data){
+        try{
+            writer.append("finalheart" + Data+"\n");
+            writer.flush();
+        }catch(IOException e){
+            Log.d("error",""+e.getMessage());
+        }
+    }
     public void LMEnd(){
         try {
             writer.close();
