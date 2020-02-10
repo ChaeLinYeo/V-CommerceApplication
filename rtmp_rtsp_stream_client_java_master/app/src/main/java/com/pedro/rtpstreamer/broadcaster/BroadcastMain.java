@@ -193,6 +193,8 @@ public class BroadcastMain extends AppCompatActivity
             case R.id.imgButton:
                 //핸드폰 갤러리 열음
                 Intent intent = new Intent();
+                //백그라운드 서비스 실행
+                startService(intent);
                 // Show only images, no videos or anything else
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
