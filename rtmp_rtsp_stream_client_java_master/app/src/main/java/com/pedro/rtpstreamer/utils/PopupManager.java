@@ -39,7 +39,7 @@ public class PopupManager {
 
     private Context mContext;
 
-    private ArrayList<String> category_items = new ArrayList<>();//카테고리 아이템들
+    private ArrayList<String> category_items  = new ArrayList<>();//카테고리 아이템들
 
     //신고 선택 구분용 변수
     //0은 선택 안된 것, 1은 선택 된 것.
@@ -297,6 +297,7 @@ public class PopupManager {
     public void addCategoryI(String item){
         category_items.add(item);
     }
+
     //공지 수정 팝업창
     public void btn_showDialog2(LayoutInflater inflater, TextView broadcast_notice) {
         final androidx.appcompat.app.AlertDialog.Builder alert03 = new androidx.appcompat.app.AlertDialog.Builder(mContext);

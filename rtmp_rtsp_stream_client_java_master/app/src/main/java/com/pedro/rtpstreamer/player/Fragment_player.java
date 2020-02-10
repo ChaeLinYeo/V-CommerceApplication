@@ -194,6 +194,7 @@ public class Fragment_player extends Fragment
         if(fa != null) mIMM = (InputMethodManager) fa.getSystemService(Context.INPUT_METHOD_SERVICE);
         else return;
 
+
         mMessageSendButton.setOnClickListener( (View v) -> {
             String text = USER_ID+" : "+mMessageEditText.getText().toString();
             mExampleChatController.add(text);
@@ -455,6 +456,8 @@ public class Fragment_player extends Fragment
     }
 
     public void connect(){
+
+
         SendBird.addChannelHandler(CHANNEL_HANDLER_ID, new SendBird.ChannelHandler() {
             @Override
             public void onMessageReceived(BaseChannel baseChannel, BaseMessage baseMessage) {
@@ -544,6 +547,16 @@ public class Fragment_player extends Fragment
                         loadInitialMessageList(20);
                         title.setText(mChannel.getName());
                         streamer_nickname.setText(mChannel.getOperators().get(0).getNickname());
+                        mChannel.getAllMetaData(new BaseChannel.MetaDataHandler() {
+                            @Override
+                            public void onResult(Map<String, String> map, SendBirdException e) {
+                                for(Map.Entry<String, String> entry : map.entrySet()){
+                                    if(!entry.getKey().equals("empty")){
+                                        pm.addCategoryI(entry.getKey());
+                                    }
+                                }
+                            }
+                        });
                     }
                 });
             }
