@@ -300,6 +300,7 @@ public class BroadcastMain extends AppCompatActivity
         broadcastBtn.setText(R.string.start_button);
         sendbirdConnection.broadcastfinish();
         canStart = true;
+        //awsManager.uploadfile(LM.getFileName);
         LM.LMEnd();
         LM_time.LMEnd();
         category_items.clear();

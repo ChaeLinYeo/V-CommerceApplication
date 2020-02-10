@@ -11,8 +11,11 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 
 public class LocalfileManager {
+
     private BufferedWriter writer;
     private FileOutputStream output;
+
+    private String fileName;
 
     public LocalfileManager(String filename){
         try {
@@ -22,7 +25,8 @@ public class LocalfileManager {
             if (!dir.exists()) {
                 dir.mkdir();
             }
-            output = new FileOutputStream(foldername + "/" + filename);
+            fileName = foldername + "/" + filename;
+            output = new FileOutputStream(fileName);
             writer = new BufferedWriter(new OutputStreamWriter(output));
         } catch(FileNotFoundException e){
             Log.e("error",""+e.getMessage());
@@ -77,4 +81,7 @@ public class LocalfileManager {
         }
     }
 
+    public String getFileName(){
+        return fileName;
+    }
 }
