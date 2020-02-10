@@ -1,10 +1,5 @@
 package com.pedro.rtpstreamer.broadcaster;
-/* 해야할 일
- * 이펙트 적용
- * 텍스트 수정 후 보여주기
- * 이미지 선택 후 보여주기
- * 동영상 선택 후 보여주기
-*/
+
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;

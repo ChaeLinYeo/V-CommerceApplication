@@ -267,6 +267,7 @@ public class SendbirdConnection {
     }
 
     public void getAllCategory(PopupManager PM){
+        PM.clearCategoryI();
         mOpenChannel.getAllMetaData(new BaseChannel.MetaDataHandler() {
             @Override
             public void onResult(Map<String, String> map, SendBirdException e) {
