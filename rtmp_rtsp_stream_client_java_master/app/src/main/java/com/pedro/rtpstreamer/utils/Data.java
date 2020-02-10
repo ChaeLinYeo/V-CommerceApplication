@@ -6,6 +6,7 @@ import android.util.Log;
 import com.amazonaws.mobile.client.AWSMobileClient;
 import com.amazonaws.mobile.client.Callback;
 import com.amazonaws.mobile.client.UserStateDetails;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferNetworkLossHandler;
 import com.amplifyframework.core.Amplify;
 import com.amplifyframework.storage.s3.AWSS3StoragePlugin;
 
@@ -32,6 +33,7 @@ public class Data {
                 try {
                     Amplify.addPlugin(new AWSS3StoragePlugin());
                     Amplify.configure(mContext);
+                    TransferNetworkLossHandler.getInstance(mContext);
                     Log.i("StorageQuickstart", "All set and ready to go!");
                 } catch (Exception e) {
                     Log.e("StorageQuickstart", e.getMessage());
