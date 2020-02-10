@@ -375,7 +375,6 @@ public class BroadcastMain extends AppCompatActivity
                 if(text.length()!=0){
                     category_items.add(text);
                     editText.setText("");
-                    sendbirdConnection.addCategory(text);
                     adapter1.notifyDataSetChanged();
                 }
             }
@@ -385,8 +384,6 @@ public class BroadcastMain extends AppCompatActivity
                 int pos;
                 pos = listView.getCheckedItemPosition();
                 if(pos != ListView.INVALID_POSITION){
-                    sendbirdConnection.sendUserMessage("delete:"+category_items.get(pos), "category");
-                    sendbirdConnection.removeCategory(category_items.get(pos));
                     category_items.remove(pos);
                     listView.clearChoices();
                     adapter1.notifyDataSetChanged();
@@ -395,10 +392,12 @@ public class BroadcastMain extends AppCompatActivity
         );
 
         btn_Exit.setOnClickListener((View view) -> {
-                adapter1.notifyDataSetChanged();
-                alertDialog.dismiss();
+            for (String item : category_items){
+                sendbirdConnection.addCategory(item);
             }
-        );
+            adapter1.notifyDataSetChanged();
+            alertDialog.dismiss();
+        });
 
         btn_Select.setOnClickListener((View view) ->
             Toast.makeText(getApplicationContext(), "방송 시작 후 해당 상품을 판매할 때 눌러주세요.", Toast.LENGTH_LONG).show()
