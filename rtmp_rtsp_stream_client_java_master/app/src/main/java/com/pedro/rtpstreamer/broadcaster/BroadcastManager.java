@@ -3,6 +3,7 @@ package com.pedro.rtpstreamer.broadcaster;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 import android.net.Uri;
@@ -282,7 +283,9 @@ public class BroadcastManager
                 break;
 
             case 1:
-                if(!onImage) setImage();
+                if(!onImage) {
+                    //setImage(bitmap);
+                }
                 else {
                     rtmpCamera1.getGlInterface().removeFilter(1);
                     spriteGestureControllerImg.setBaseObjectFilterRender(null);
@@ -312,21 +315,28 @@ public class BroadcastManager
         onText=true;
     }
 
-    public void setImage(){
-        ImageObjectFilterRender imageObjectFilterRender = new ImageObjectFilterRender();
-        rtmpCamera1.getGlInterface().setFilterT(1,imageObjectFilterRender);
+    public void setImage(Bitmap bitmap){
+        if(!onImage) {
+            ImageObjectFilterRender imageObjectFilterRender = new ImageObjectFilterRender();
+            rtmpCamera1.getGlInterface().setFilterT(1,imageObjectFilterRender);
 
-        //set image and default setting
-        imageObjectFilterRender.setImage(BitmapFactory.decodeResource(pResources, R.mipmap.homiimg));
-        imageObjectFilterRender.setDefaultScale(rtmpCamera1.getStreamWidth(), rtmpCamera1.getStreamHeight());
-        imageObjectFilterRender.setScale(50f, 33.3f);
-        imageObjectFilterRender.setPosition(TranslateTo.RIGHT);
+            //set image and default setting
+            imageObjectFilterRender.setImage(bitmap);
+            imageObjectFilterRender.setDefaultScale(rtmpCamera1.getStreamWidth(), rtmpCamera1.getStreamHeight());
+            imageObjectFilterRender.setScale(50f, 33.3f);
+            imageObjectFilterRender.setPosition(TranslateTo.RIGHT);
 
-        //move,scale
-        spriteGestureControllerImg.setBaseObjectFilterRender(imageObjectFilterRender); //Optional
-        spriteGestureControllerImg.setPreventMoveOutside(false); //
+            //move,scale
+            spriteGestureControllerImg.setBaseObjectFilterRender(imageObjectFilterRender); //Optional
+            spriteGestureControllerImg.setPreventMoveOutside(false); //
 
-        onImage = true;
+            onImage = true;
+        }
+        else {
+            rtmpCamera1.getGlInterface().removeFilter(1);
+            spriteGestureControllerImg.setBaseObjectFilterRender(null);
+            onImage = false;
+        }
     }
 
     public void setUri(){
