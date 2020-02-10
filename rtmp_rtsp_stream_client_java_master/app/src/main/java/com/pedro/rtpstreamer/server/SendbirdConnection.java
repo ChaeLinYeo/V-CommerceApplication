@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.pedro.rtpstreamer.R;
+import com.pedro.rtpstreamer.utils.PopupManager;
 import com.pedro.rtpstreamer.utils.StaticVariable;
 import com.sendbird.android.BaseChannel;
 import com.sendbird.android.BaseMessage;
@@ -262,6 +263,19 @@ public class SendbirdConnection {
     public void updateCategory(HashMap<String, String> map){
         mOpenChannel.updateMetaData(map, (Map<String, String> pMap, SendBirdException e) -> {
             if(e!= null) Log.e("updateCategory", e.getMessage() + e.getCode());
+        });
+    }
+
+    public void getAllCategory(PopupManager PM){
+        mOpenChannel.getAllMetaData(new BaseChannel.MetaDataHandler() {
+            @Override
+            public void onResult(Map<String, String> map, SendBirdException e) {
+                for(Map.Entry<String, String> entry : map.entrySet()){
+                    if(!entry.getKey().equals("empty")){
+                        PM.addCategoryI(entry.getKey());
+                    }
+                }
+            }
         });
     }
 

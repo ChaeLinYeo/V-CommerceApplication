@@ -13,8 +13,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
+
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -24,7 +24,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.util.SparseBooleanArray;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -109,7 +108,6 @@ public class BroadcastMain extends AppCompatActivity
     PopupManager PM;
     boolean canStart = true;
 
-//    OpenChannel ctrl_channel;
     ////////////////////////////////////////////////
     private SendbirdConnection sendbirdConnection;
     private LocalfileManager LM;
@@ -219,6 +217,7 @@ public class BroadcastMain extends AppCompatActivity
                 break;
 
             case R.id.categoryButton:
+                sendbirdConnection.getAllCategory(PM);
                 PM.btn_Category(getLayoutInflater(), LM_time);
                 break;
         }
