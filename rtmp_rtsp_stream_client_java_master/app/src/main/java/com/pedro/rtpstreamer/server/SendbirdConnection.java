@@ -32,6 +32,7 @@ public class SendbirdConnection {
     /////////////////////////////////////////////////////////////////////////////
     private SendbirdListner.ForBroadcaster forBroadcaster;
     private SendbirdListner.ForPlayer forPlayer;
+//    private SendbirdListner.
     /////////////////////////////////////////////////////////////////////////////
     private List<User> operator = new ArrayList<>();
     private OpenChannel ctrl_channel;
@@ -79,7 +80,7 @@ public class SendbirdConnection {
                     return;
                 }
                 ctrl_channel = openChannel;
-                //////////////////////////////
+                ////////////////////////////
                 openChannel.getAllMetaData((Map<String, String> map, SendBirdException ex) -> {
                         for(int i = 0; i < 10; i++){
                             if(map.get(Integer.toString(i)).equals("true")){
@@ -93,6 +94,25 @@ public class SendbirdConnection {
                 );
             }
         );
+    }
+
+    public void getBroadcastChannel(){
+        ctrl_channel.getAllMetaData(
+            (Map<String, String> map, SendBirdException ex) -> {
+                for(int i = 0; i < 10; i++){
+                    if(map.get(Integer.toString(i)).equals("true")){
+                        forBroadcaster.channelFounded(true);
+                        channelNum = i;
+                        return;
+                    }
+                }
+                forBroadcaster.channelFounded(false);
+            }
+        );
+    }
+
+    public void getBroadcastChannelList(){
+
     }
 
     public void createChannel(String title){
