@@ -187,7 +187,7 @@ public class BroadcastMain extends AppCompatActivity
                 //핸드폰 갤러리 열음
                 Intent intent = new Intent();
                 //백그라운드 서비스 실행
-                startService(intent);
+                //startService(intent);
                 // Show only images, no videos or anything else
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -330,11 +330,12 @@ public class BroadcastMain extends AppCompatActivity
         broadcastBtn.setText(R.string.start_button);
         sendbirdConnection.broadcastfinish();
         canStart = true;
-        AWSConnection.uploadFile(broadcastManager.getBroadcastName()+".txt", LM.getFileName());
-        AWSConnection.uploadFile(broadcastManager.getBroadcastName()+"_timeLine.txt", LM_time.getFileName());
+        LM_subinfo.saveheartfinal(heart_final);
+        AWSConnection.uploadFile(broadcastManager.getBroadcastName()+".txt", LM.getFileName(), this);
+        AWSConnection.uploadFile(broadcastManager.getBroadcastName()+"_timeLine.txt", LM_time.getFileName(), this);
+        AWSConnection.uploadFile(broadcastManager.getBroadcastName()+"_subinfo.txt", LM_subinfo.getFileName(), this);
         LM.LMEnd();
         LM_time.LMEnd();
-        LM_subinfo.saveheartfinal(heart_final);
         LM_subinfo.LMEnd();
         category_items.clear();
     }

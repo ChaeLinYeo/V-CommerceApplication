@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -64,6 +65,7 @@ public class Replayer extends AppCompatActivity
         seekBar = findViewById(R.id.seekBar);
         title = findViewById(R.id.replaytitle);
         streamer_nickname = findViewById(R.id.nickname);
+        listView = findViewById(R.id.ChatListView);
 
         playBtn.setOnClickListener(this);
         seekBar.setOnSeekBarChangeListener(seekBarChangeListener);

@@ -171,7 +171,6 @@ public class BroadcastManager
     }
 
     public void startBroadcast(){
-//        broadcastChannel = getAvailableChannel();
         if(broadcastChannel == -1){
             broadcastListener.setToast("All broadcast channels are in use");
             return;
@@ -235,7 +234,7 @@ public class BroadcastManager
 //                        }
 //                    }
 //            );
-            AWSConnection.uploadFile(broadcastName+".mp4", broadcastPath);
+            AWSConnection.uploadFile(broadcastName+".mp4", broadcastPath, pContext);
         }
     }
 
