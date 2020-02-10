@@ -41,13 +41,13 @@ import com.pedro.rtpstreamer.server.LocalfileManager;
 import com.pedro.rtpstreamer.server.SendbirdConnection;
 import com.pedro.rtpstreamer.server.SendbirdListner;
 import com.pedro.rtpstreamer.utils.ExampleChatController;
+import com.pedro.rtpstreamer.utils.PopupManager;
 import com.pedro.rtpstreamer.utils.UnCatchTaskService;
 import com.sendbird.android.User;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -62,9 +62,10 @@ public class BroadcastMain extends AppCompatActivity
     private Button broadcastBtn;
 
     ////////////////////////////////////////////////
-    //sendbird APP ID
-    // for sendbird connect
-    private String USER_ID = "broadcaster";
+    //sendbird USER_ID
+    private Random r = new Random();
+    private int usernumber = r.nextInt(10000);
+    private String USER_ID = "broadcaster_"+usernumber;
 
     //init title
     String init_t = null;
@@ -100,6 +101,7 @@ public class BroadcastMain extends AppCompatActivity
 
     //examplechatcontroller
     ExampleChatController mExampleChatController;
+    PopupManager PM;
     boolean canStart = true;
 
 //    OpenChannel ctrl_channel;
@@ -128,7 +130,7 @@ public class BroadcastMain extends AppCompatActivity
 
         mExampleChatController = new ExampleChatController(this, findViewById(R.id.ChatListView), R.layout.chatline, R.id.chat_line_textview, R.id.chat_line_timeview);
         mExampleChatController.show();
-
+        PM = new PopupManager(context);
         // 로티 애니메이션뷰 리소스 아이디연결
         songLikeAnimButton = findViewById(R.id.button_song_like_animation);
 
@@ -167,6 +169,7 @@ public class BroadcastMain extends AppCompatActivity
 
         broadcastBtn = findViewById(R.id.b_start_stop);
         broadcastBtn.setOnClickListener(this);
+
     }
 
     ///////////////////////////////////////////////////////////////////////
@@ -200,7 +203,7 @@ public class BroadcastMain extends AppCompatActivity
                 break;
 
             case R.id.categoryButton:
-                btn_Category();
+                PM.btn_Category(getLayoutInflater(), LM_time);
                 break;
         }
     }
@@ -221,7 +224,7 @@ public class BroadcastMain extends AppCompatActivity
                 break;
 
             case R.id.broadcast_notice:
-                btn_showDialog2();
+                PM.btn_showDialog2(getLayoutInflater(), broadcast_notice);
                 break;
 
             case R.id.custom_event:
@@ -326,7 +329,9 @@ public class BroadcastMain extends AppCompatActivity
     public void AlarmPlayer(String data){
         system_notice.setText(data);
     }
-
+    public void NotiPlayer(String data){
+        broadcast_notice.setText(data);
+    }
     // 좋아요 로띠 애니메이션을 실행 시키는 메소드
     private boolean toggleSongLikeAnimButton(){
         // 애니메이션을 한번 실행시킨다.
@@ -342,7 +347,6 @@ public class BroadcastMain extends AppCompatActivity
         );
         animator.start();
         return true;
-
     }
 
     //방송 시작 시 카테고리 설정하는 팝업창
@@ -411,6 +415,7 @@ public class BroadcastMain extends AppCompatActivity
     public void create_title() {
         final AlertDialog.Builder alert = new AlertDialog.Builder(BroadcastMain.this);
         View mView = getLayoutInflater().inflate(R.layout.init_channel, null);
+        LM_subinfo = new LocalfileManager(USER_ID+":"+System.currentTimeMillis()+":"+sendbirdConnection.getChannelNum()+"_subinfo.txt");
 
         final EditText newtitle = mView.findViewById(R.id.init_title);
         Button btn_cancel = mView.findViewById(R.id.init_cancel);
@@ -559,31 +564,7 @@ public class BroadcastMain extends AppCompatActivity
         alertDialog.show();
     }
 
-    //공지 수정 팝업창
-    public void btn_showDialog2() {
-        final AlertDialog.Builder alert03 = new AlertDialog.Builder(BroadcastMain.this);
-        View mView = getLayoutInflater().inflate(R.layout.notification_custom_dialog, null);
 
-        final EditText txt_inputText2 = mView.findViewById(R.id.txt_input2);
-        Button btn_cancel2 = mView.findViewById(R.id.btn_cancel2);
-        Button btn_ok2 = mView.findViewById(R.id.btn_ok2);
-
-        alert03.setView(mView);
-
-        final AlertDialog alertDialog = alert03.create();
-        alertDialog.setCanceledOnTouchOutside(false);
-
-        btn_cancel2.setOnClickListener((View view) -> alertDialog.dismiss());
-
-        btn_ok2.setOnClickListener((View view) -> {
-                broadcast_notice.setText(txt_inputText2.getText().toString());
-                sendbirdConnection.sendUserMessage(txt_inputText2.getText().toString(), "notice");
-                alertDialog.dismiss();
-            }
-        );
-
-        alertDialog.show();
-    }
     //시청자 목록 보는 팝업창
     public void btn_showPeople() {
         View mView = getLayoutInflater().inflate(R.layout.popup_people, null);
@@ -612,14 +593,7 @@ public class BroadcastMain extends AppCompatActivity
         SwipeRefreshLayout mSwipeRefreshLayout = mView.findViewById(R.id.swipeRefresh);
         mSwipeRefreshLayout.setOnRefreshListener(() -> {
                 mSwipeRefreshLayout.setRefreshing(true);
-                //3초후에 해당 adapter를 갱신하고 동글뱅이를 닫아준다.setRefreshing(false);
-                //핸들러를 사용하는 이유는 일반쓰레드는 메인쓰레드가 가진 UI에 접근할 수 없기 때문에 핸들러를 이용해서
-                //메시지큐에 메시지를 전달하고 루퍼를 이용하여 순서대로 UI에 접근한다.
-
-                //반대로 메인쓰레드에서 일반 쓰레드에 접근하기 위해서는 루퍼를 만들어야 한다.
                 new Handler().postDelayed(() -> {
-                        //해당 어댑터를 서버와 통신한 값이 나오면 됨
-                        //초기에 세팅한 리스트는 모두 사라지고 랜덤이름 3개가 뜸
                         List<User> reuserList = sendbirdConnection.getUserList(true);
                         for(User user : reuserList){
                             ShowList.add(user.getUserId() + "(" + user.getNickname() + ")");
@@ -714,115 +688,25 @@ public class BroadcastMain extends AppCompatActivity
         A.notifyDataSetChanged();
     }
 
-    //카테고리 설정하는 팝업창
-    public void btn_Category() {
-        View mView_c = getLayoutInflater().inflate(R.layout.popup_category, null);
-
-        // ArrayAdapter 생성. 아이템 View를 선택(multiple choice)가능하도록 만듦.
-        adapter1 = new ArrayAdapter<>(this, android.R.layout.simple_list_item_multiple_choice, category_items) ;
-
-        // listview 생성 및 adapter 지정.
-        ListView listView = mView_c.findViewById(R.id.listView) ;
-        listView.setAdapter(adapter1);
-        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-
-        final AlertDialog.Builder alert05 = new AlertDialog.Builder(BroadcastMain.this);
-
-        EditText editText = mView_c.findViewById(R.id.editText);
-        Button btn_Add = mView_c.findViewById(R.id.btnAdd);
-        Button btn_Del = mView_c.findViewById(R.id.btnDel);
-        Button btn_Exit = mView_c.findViewById(R.id.btnExit);
-        Button btn_Select = mView_c.findViewById(R.id.btnSelect);
-
-        alert05.setView(mView_c);
-
-        final AlertDialog alertDialog = alert05.create();
-        alertDialog.setCanceledOnTouchOutside(false);
-
-        btn_Add.setOnClickListener((View view) -> {
-                String text = editText.getText().toString();
-                if(text.length()!=0){
-                    sendbirdConnection.addCategory(text);
-                    category_items.add(text);
-                    editText.setText("");
-                    adapter1.notifyDataSetChanged();
-                }
-            }
-        );
-
-        btn_Del.setOnClickListener((View view) -> {
-                int pos;
-                pos = listView.getCheckedItemPosition();
-                if(pos != ListView.INVALID_POSITION){
-                    sendbirdConnection.removeCategory(category_items.get(pos));
-                    category_items.remove(pos);
-                    listView.clearChoices();
-                    adapter1.notifyDataSetChanged();
-                }
-            }
-        );
-
-        btn_Exit.setOnClickListener((View view) -> {
-                adapter1.notifyDataSetChanged();
-                alertDialog.dismiss();
-            }
-        );
-
-        btn_Select.setOnClickListener((View view) -> {
-                int pos2;
-                pos2 = listView.getCheckedItemPosition();
-                if(pos2 != ListView.INVALID_POSITION){
-                    String current_item = category_items.get(pos2);
-                    LM_time.savetimeline(System.currentTimeMillis()+":"+current_item+"\n");
-                }
-            }
-        );
-        alertDialog.show();
-    }
-
-    /////////////////////////////////////////////////////////////////////////////////////
-    int color;
-
-    public void btn_Text(LayoutInflater inflater) {
-        View mView = inflater.inflate(R.layout.text_setup, null);
-        final AlertDialog.Builder alert05 = new AlertDialog.Builder(BroadcastMain.this);
-        color = Color.BLACK;
-        EditText text = mView.findViewById(R.id.newText);
-        Button btn_Exit = mView.findViewById(R.id.btnExit);
-        Button btn_Accept = mView.findViewById(R.id.btnAccept);
-        Button red = mView.findViewById(R.id.select_red);
-        Button green = mView.findViewById(R.id.select_green);
-        Button blue = mView.findViewById(R.id.select_blue);
-        Button black = mView.findViewById(R.id.select_black);
-
-        alert05.setView(mView);
-        final AlertDialog alertDialog = alert05.create();
-        alertDialog.setCanceledOnTouchOutside(false);
-
-        btn_Exit.setOnClickListener((View view) -> alertDialog.dismiss());
-        red.setOnClickListener((View view) -> {color = Color.RED;});
-        black.setOnClickListener((View view) -> {color = Color.BLACK;});
-        blue.setOnClickListener((View view) -> {color = Color.BLUE;});
-        green.setOnClickListener((View view) -> {color = Color.GREEN;});
-        btn_Accept.setOnClickListener((View view) -> {
-            if(!text.getText().toString().equals("")){
-                broadcastManager.setText(text.getText().toString(), color);
-            }
-            alertDialog.dismiss();
-        });
-        alertDialog.show();
+//    @Override
+//    public void getCate(){
+//        PM.btn_Category(getLayoutInflater(), sendbirdConnection, LM_time);
+//    }
+    @Override
+    public void setText(){
+        PM.btn_Text(getLayoutInflater(), broadcastManager);
     }
 
     @Override
-    public void setText(){
-        btn_Text(getLayoutInflater());
+    public void setNoti(){
+        PM.btn_showDialog2(getLayoutInflater(),broadcast_notice);
     }
 
-    ////////////////////////////////////////////////////////
     @Override
     public void channelFounded(boolean possible){
         if(possible){
             create_title();
+
         } else{
             Toast.makeText(getApplicationContext(), "모든 방송 채널이 사용중입니다.", Toast.LENGTH_LONG).show();
         }
@@ -836,7 +720,6 @@ public class BroadcastMain extends AppCompatActivity
         broadcastManager.manageBroadcast(0);
         LM = new LocalfileManager(USER_ID+":"+System.currentTimeMillis()+":"+sendbirdConnection.getChannelNum()+".txt");
         LM_time = new LocalfileManager(USER_ID+":"+System.currentTimeMillis()+":"+sendbirdConnection.getChannelNum()+"_timeline.txt");
-        LM_subinfo = new LocalfileManager(USER_ID+":"+System.currentTimeMillis()+":"+sendbirdConnection.getChannelNum()+"_subinfo.txt");
         Log.d("channel complete",""+sendbirdConnection.getChannelNum());
         create_Category();
     }

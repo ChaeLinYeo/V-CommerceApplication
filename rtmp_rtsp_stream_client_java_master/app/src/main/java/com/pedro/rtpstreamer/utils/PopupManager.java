@@ -24,6 +24,10 @@ import com.kakao.network.ErrorResult;
 import com.kakao.network.callback.ResponseCallback;
 import com.kakao.util.helper.log.Logger;
 import com.pedro.rtpstreamer.R;
+import com.pedro.rtpstreamer.broadcaster.BroadcastMain;
+import com.pedro.rtpstreamer.broadcaster.BroadcastManager;
+import com.pedro.rtpstreamer.server.LocalfileManager;
+import com.pedro.rtpstreamer.server.SendbirdConnection;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,7 +49,6 @@ public class PopupManager {
     private boolean is_declare_4 = false;	//부적절한 상품
     private boolean is_declare_5 = false;	//저작권
     private boolean is_declare_6 = false;	//기타
-
     //신고 사유 기술용 변수
     private String txt_dummy_save;
 
@@ -293,5 +296,128 @@ public class PopupManager {
 
     public void addCategoryI(String item){
         category_items.add(item);
+    }
+    //공지 수정 팝업창
+    public void btn_showDialog2(LayoutInflater inflater, TextView broadcast_notice) {
+        final androidx.appcompat.app.AlertDialog.Builder alert03 = new androidx.appcompat.app.AlertDialog.Builder(mContext);
+        SendbirdConnection sendbirdConnection = SendbirdConnection.getInstance();
+
+        View mView = inflater.inflate(R.layout.notification_custom_dialog, null);
+        final EditText txt_inputText2 = mView.findViewById(R.id.txt_input2);
+        Button btn_cancel2 = mView.findViewById(R.id.btn_cancel2);
+        Button btn_ok2 = mView.findViewById(R.id.btn_ok2);
+
+        alert03.setView(mView);
+
+        final androidx.appcompat.app.AlertDialog alertDialog = alert03.create();
+        alertDialog.setCanceledOnTouchOutside(false);
+
+        btn_cancel2.setOnClickListener((View view) -> alertDialog.dismiss());
+
+        btn_ok2.setOnClickListener((View view) -> {
+                    broadcast_notice.setText(txt_inputText2.getText().toString());
+                    sendbirdConnection.sendUserMessage(txt_inputText2.getText().toString(), "notice");
+                    alertDialog.dismiss();
+                }
+        );
+
+        alertDialog.show();
+    }
+    int color;
+    public void btn_Text(LayoutInflater inflater, BroadcastManager BM) {
+        View mView = inflater.inflate(R.layout.text_setup, null);
+        final androidx.appcompat.app.AlertDialog.Builder alert05 = new androidx.appcompat.app.AlertDialog.Builder(mContext);
+        color = Color.BLACK;
+        EditText text = mView.findViewById(R.id.newText);
+        Button btn_Exit = mView.findViewById(R.id.btnExit);
+        Button btn_Accept = mView.findViewById(R.id.btnAccept);
+        Button red = mView.findViewById(R.id.select_red);
+        Button green = mView.findViewById(R.id.select_green);
+        Button blue = mView.findViewById(R.id.select_blue);
+        Button black = mView.findViewById(R.id.select_black);
+
+        alert05.setView(mView);
+        final androidx.appcompat.app.AlertDialog alertDialog = alert05.create();
+        alertDialog.setCanceledOnTouchOutside(false);
+
+        btn_Exit.setOnClickListener((View view) -> alertDialog.dismiss());
+        red.setOnClickListener((View view) -> {color = Color.RED;});
+        black.setOnClickListener((View view) -> {color = Color.BLACK;});
+        blue.setOnClickListener((View view) -> {color = Color.BLUE;});
+        green.setOnClickListener((View view) -> {color = Color.GREEN;});
+        btn_Accept.setOnClickListener((View view) -> {
+            if(!text.getText().toString().equals("")){
+                BM.setText(text.getText().toString(), color);
+            }
+            alertDialog.dismiss();
+        });
+        alertDialog.show();
+    }
+
+    //카테고리 설정하는 팝업창
+    public void btn_Category(LayoutInflater inflater, LocalfileManager LM_time) {
+        SendbirdConnection sendbirdConnection = SendbirdConnection.getInstance();
+        View mView_c = inflater.inflate(R.layout.popup_category, null);
+
+        // ArrayAdapter 생성. 아이템 View를 선택(multiple choice)가능하도록 만듦.
+        ArrayAdapter<String> adapter1 = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_multiple_choice, category_items) ;
+
+        // listview 생성 및 adapter 지정.
+        ListView listView = mView_c.findViewById(R.id.listView) ;
+        listView.setAdapter(adapter1);
+        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+
+        final androidx.appcompat.app.AlertDialog.Builder alert05 = new androidx.appcompat.app.AlertDialog.Builder(mContext);
+
+        EditText editText = mView_c.findViewById(R.id.editText);
+        Button btn_Add = mView_c.findViewById(R.id.btnAdd);
+        Button btn_Del = mView_c.findViewById(R.id.btnDel);
+        Button btn_Exit = mView_c.findViewById(R.id.btnExit);
+        Button btn_Select = mView_c.findViewById(R.id.btnSelect);
+
+        alert05.setView(mView_c);
+
+        final androidx.appcompat.app.AlertDialog alertDialog = alert05.create();
+        alertDialog.setCanceledOnTouchOutside(false);
+
+        btn_Add.setOnClickListener((View view) -> {
+                    String text = editText.getText().toString();
+                    if(text.length()!=0){
+                        sendbirdConnection.addCategory(text);
+                        category_items.add(text);
+                        editText.setText("");
+                        adapter1.notifyDataSetChanged();
+                    }
+                }
+        );
+
+        btn_Del.setOnClickListener((View view) -> {
+                    int pos;
+                    pos = listView.getCheckedItemPosition();
+                    if(pos != ListView.INVALID_POSITION){
+                        sendbirdConnection.removeCategory(category_items.get(pos));
+                        category_items.remove(pos);
+                        listView.clearChoices();
+                        adapter1.notifyDataSetChanged();
+                    }
+                }
+        );
+
+        btn_Exit.setOnClickListener((View view) -> {
+                    adapter1.notifyDataSetChanged();
+                    alertDialog.dismiss();
+                }
+        );
+
+        btn_Select.setOnClickListener((View view) -> {
+                    int pos2;
+                    pos2 = listView.getCheckedItemPosition();
+                    if(pos2 != ListView.INVALID_POSITION){
+                        String current_item = category_items.get(pos2);
+                        LM_time.savetimeline(System.currentTimeMillis()+":"+current_item+"\n");
+                    }
+                }
+        );
+        alertDialog.show();
     }
 }
