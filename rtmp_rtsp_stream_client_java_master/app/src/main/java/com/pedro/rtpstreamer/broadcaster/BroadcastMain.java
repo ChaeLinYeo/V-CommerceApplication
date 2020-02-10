@@ -37,6 +37,7 @@ import android.widget.Button;
 import com.airbnb.lottie.LottieAnimationView;
 import com.pedro.rtplibrary.view.OpenGlView;
 import com.pedro.rtpstreamer.R;
+import com.pedro.rtpstreamer.server.AWSConnection;
 import com.pedro.rtpstreamer.server.LocalfileManager;
 import com.pedro.rtpstreamer.server.SendbirdConnection;
 import com.pedro.rtpstreamer.server.SendbirdListner;
@@ -301,7 +302,8 @@ public class BroadcastMain extends AppCompatActivity
         broadcastBtn.setText(R.string.start_button);
         sendbirdConnection.broadcastfinish();
         canStart = true;
-        //awsManager.uploadfile(LM.getFileName);
+        AWSConnection.uploadFile(broadcastManager.getBroadcastName()+".txt", LM.getFileName());
+        AWSConnection.uploadFile(broadcastManager.getBroadcastName()+"_timeLine.txt", LM_time.getFileName());
         LM.LMEnd();
         LM_time.LMEnd();
         LM_subinfo.saveheartfinal(heart_final);
@@ -412,6 +414,8 @@ public class BroadcastMain extends AppCompatActivity
     public void create_title() {
         final AlertDialog.Builder alert = new AlertDialog.Builder(BroadcastMain.this);
         View mView = getLayoutInflater().inflate(R.layout.init_channel, null);
+
+        LM_subinfo = new LocalfileManager(USER_ID+":"+System.currentTimeMillis()+":"+sendbirdConnection.getChannelNum()+"_subinfo.txt");
 
         final EditText newtitle = mView.findViewById(R.id.init_title);
         Button btn_cancel = mView.findViewById(R.id.init_cancel);
@@ -837,7 +841,6 @@ public class BroadcastMain extends AppCompatActivity
         broadcastManager.manageBroadcast(0);
         LM = new LocalfileManager(USER_ID+":"+System.currentTimeMillis()+":"+sendbirdConnection.getChannelNum()+".txt");
         LM_time = new LocalfileManager(USER_ID+":"+System.currentTimeMillis()+":"+sendbirdConnection.getChannelNum()+"_timeline.txt");
-        LM_subinfo = new LocalfileManager(USER_ID+":"+System.currentTimeMillis()+":"+sendbirdConnection.getChannelNum()+"_subinfo.txt");
         Log.d("channel complete",""+sendbirdConnection.getChannelNum());
         create_Category();
     }

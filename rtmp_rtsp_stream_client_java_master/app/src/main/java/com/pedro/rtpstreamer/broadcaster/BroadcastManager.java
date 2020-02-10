@@ -29,6 +29,7 @@ import com.pedro.encoder.utils.gl.TranslateTo;
 import com.pedro.rtplibrary.rtmp.RtmpCamera1;
 import com.pedro.rtplibrary.view.OpenGlView;
 import com.pedro.rtpstreamer.R;
+import com.pedro.rtpstreamer.server.AWSConnection;
 import com.pedro.rtpstreamer.utils.StaticVariable;
 
 import net.ossrs.rtmp.ConnectCheckerRtmp;
@@ -202,7 +203,7 @@ public class BroadcastManager
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault());
             currentDateAndTime = sdf.format(new Date());
             broadcastPath=folder.getAbsolutePath() + "/" + currentDateAndTime + ".mp4";
-            broadcastName = broadcastChannel + "/" + currentDateAndTime + ".mp4";
+            broadcastName = "test/myUploadedFileName";
             rtmpCamera1.startRecord(broadcastPath);
             Log.d("rv","recording / "+folder.getAbsolutePath());
         } catch (IOException e) {
@@ -216,24 +217,29 @@ public class BroadcastManager
             rtmpCamera1.stopRecord();
             currentDateAndTime = "";
 
-            Amplify.Storage.uploadFile(
-//                    broadcastName,
-                    "test/myUploadedFileName.mp4",
-                    broadcastPath,
-                    new ResultListener<StorageUploadFileResult>() {
-                        @Override
-                        public void onResult(StorageUploadFileResult result) {
-                            Log.i("StorageQuickStart", "Successfully uploaded: " + result.getKey());
-//                            updateLogList();
-                        }
-
-                        @Override
-                        public void onError(Throwable error) {
-                            Log.e("StorageQuickstart", "Upload error.", error);
-                        }
-                    }
-            );
+//            Amplify.Storage.uploadFile(
+////                    broadcastName,
+//                    "test/myUploadedFileName.mp4",
+//                    broadcastPath,
+//                    new ResultListener<StorageUploadFileResult>() {
+//                        @Override
+//                        public void onResult(StorageUploadFileResult result) {
+//                            Log.i("StorageQuickStart", "Successfully uploaded: " + result.getKey());
+////                            updateLogList();
+//                        }
+//
+//                        @Override
+//                        public void onError(Throwable error) {
+//                            Log.e("StorageQuickstart", "Upload error.", error);
+//                        }
+//                    }
+//            );
+            AWSConnection.uploadFile(broadcastName+".mp4", broadcastPath);
         }
+    }
+
+    public String getBroadcastName(){
+        return broadcastName;
     }
 
 //    private void updateLogList() {
