@@ -509,6 +509,7 @@ public class Fragment_player extends Fragment
             @Override
             public void onMetaDataCreated(BaseChannel channel, Map<String, String> metaDataMap) {
                 super.onMetaDataCreated(channel, metaDataMap);
+                pm.clearCategoryI();
                 for(String key : metaDataMap.keySet()){
                     pm.addCategoryI(key);
                 }
