@@ -14,7 +14,7 @@ import java.io.UnsupportedEncodingException;
 public class LocalfileManager {
 
     private BufferedWriter writer;
-    private FileOutputStream output;
+//    private FileOutputStream output;
 
     private String fileName;
 
@@ -94,7 +94,7 @@ public class LocalfileManager {
     public void LMEnd(){
         try {
             writer.close();
-            output.close();
+//            output.close();
         } catch(IOException e){
             Log.d("eror",""+e.getMessage());
         }

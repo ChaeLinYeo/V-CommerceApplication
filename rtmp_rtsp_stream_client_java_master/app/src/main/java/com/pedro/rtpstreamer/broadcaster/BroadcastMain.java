@@ -184,15 +184,20 @@ public class BroadcastMain extends AppCompatActivity
                 break;
 
             case R.id.imgButton:
-                //핸드폰 갤러리 열음
-                Intent intent = new Intent();
-                //백그라운드 서비스 실행
-                //startService(intent);
-                // Show only images, no videos or anything else
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                // Always show the chooser (if there are multiple options available)
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+//                if(!broadcastManager.isImage()) {
+//                    //핸드폰 갤러리 열음
+//                    Intent intent = new Intent();
+//                    //백그라운드 서비스 실행
+//                    //startService(intent);
+//                    // Show only images, no videos or anything else
+//                    intent.setType("image/*");
+//                    intent.setAction(Intent.ACTION_GET_CONTENT);
+//                    // Always show the chooser (if there are multiple options available)
+//                    startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+//                } else{
+//                    broadcastManager.setTexture(1);
+//                }
+                broadcastManager.setTexture(1);
                 break;
 
             case R.id.uriButton:
@@ -218,21 +223,21 @@ public class BroadcastMain extends AppCompatActivity
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            Uri uri = data.getData();
-            try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-                // Log.d(TAG, String.valueOf(bitmap));
-                broadcastManager.setImage(bitmap);
-                //broadcastManager.setTexture(1);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+//            Uri uri = data.getData();
+//            try {
+//                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+//                // Log.d(TAG, String.valueOf(bitmap));
+//                broadcastManager.setImage(bitmap);
+//                //broadcastManager.setTexture(1);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
 
     //For Broadcast info
     public View.OnClickListener broadcastClickListner = (View view) -> {
@@ -327,16 +332,17 @@ public class BroadcastMain extends AppCompatActivity
 
     @Override
     public void broadcastStop(){
+        Log.d("PKR","broadcast stop");
         broadcastBtn.setText(R.string.start_button);
         sendbirdConnection.broadcastfinish();
         canStart = true;
         LM_subinfo.saveheartfinal(heart_final);
-        AWSConnection.uploadFile(broadcastManager.getBroadcastName()+".txt", LM.getFileName(), this);
-        AWSConnection.uploadFile(broadcastManager.getBroadcastName()+"_timeLine.txt", LM_time.getFileName(), this);
-        AWSConnection.uploadFile(broadcastManager.getBroadcastName()+"_subinfo.txt", LM_subinfo.getFileName(), this);
         LM.LMEnd();
         LM_time.LMEnd();
         LM_subinfo.LMEnd();
+        AWSConnection.uploadFile(broadcastManager.getBroadcastName()+".txt", LM.getFileName(), this);
+        AWSConnection.uploadFile(broadcastManager.getBroadcastName()+"_timeLine.txt", LM_time.getFileName(), this);
+        AWSConnection.uploadFile(broadcastManager.getBroadcastName()+"_subinfo.txt", LM_subinfo.getFileName(), this);
         category_items.clear();
     }
 
@@ -724,6 +730,7 @@ public class BroadcastMain extends AppCompatActivity
 //    public void getCate(){
 //        PM.btn_Category(getLayoutInflater(), sendbirdConnection, LM_time);
 //    }
+
     @Override
     public void setText(){
         PM.btn_Text(getLayoutInflater(), broadcastManager);
@@ -753,6 +760,7 @@ public class BroadcastMain extends AppCompatActivity
         LM = new LocalfileManager(USER_ID+":"+System.currentTimeMillis()+":"+sendbirdConnection.getChannelNum()+".txt");
         LM_time = new LocalfileManager(USER_ID+":"+System.currentTimeMillis()+":"+sendbirdConnection.getChannelNum()+"_timeline.txt");
         Log.d("channel complete",""+sendbirdConnection.getChannelNum());
+        if(LM == null) Log.e("PKR","LM is null");
         create_Category();
     }
 
