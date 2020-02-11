@@ -9,6 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 
 public class LocalfileManager {
 
@@ -26,10 +27,13 @@ public class LocalfileManager {
                 dir.mkdir();
             }
             fileName = foldername + "/" + filename;
-            output = new FileOutputStream(fileName);
-            writer = new BufferedWriter(new OutputStreamWriter(output));
+            // BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filepath),"UTF8"));
+            writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName),"UTF8"));
         } catch(FileNotFoundException e){
             Log.e("error",""+e.getMessage());
+        } catch (UnsupportedEncodingException e) {
+            Log.e("error2", e.getMessage());
+            e.printStackTrace();
         }
     }
 

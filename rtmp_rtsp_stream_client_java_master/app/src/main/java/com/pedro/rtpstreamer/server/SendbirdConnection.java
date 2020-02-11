@@ -273,6 +273,7 @@ public class SendbirdConnection {
             public void onResult(Map<String, String> map, SendBirdException e) {
                 for(Map.Entry<String, String> entry : map.entrySet()){
                     if(!entry.getKey().equals("empty")){
+                        Log.d("allcate", entry.getKey());
                         PM.addCategoryI(entry.getKey());
                     }
                 }

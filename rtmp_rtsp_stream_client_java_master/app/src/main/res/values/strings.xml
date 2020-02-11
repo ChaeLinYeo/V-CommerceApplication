@@ -18,6 +18,6 @@
     <string name="switch_camera_button">Switch</string>
     <string name="getText">보여줄 말을 입력하세요</string>
     <string name="tv_select">Select the option</string>
-    <string name="noinfo">NULL</string>
+    <string name="noinfo">NULL</string>@string/noinfo
     <string name="touchtorevise">터치하여 수정하세요.</string>
 </resources>
