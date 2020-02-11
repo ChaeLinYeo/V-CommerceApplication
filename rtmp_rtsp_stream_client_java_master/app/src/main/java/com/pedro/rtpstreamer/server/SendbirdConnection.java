@@ -154,7 +154,7 @@ public class SendbirdConnection {
         SendBird.addChannelHandler(StaticVariable.CHANNEL_HANDLER_ID, new SendBird.ChannelHandler() {
             @Override
             public void onMessageReceived(BaseChannel baseChannel, BaseMessage baseMessage) {
-                forBroadcaster.messageReceived(baseMessage.getCustomType(), baseMessage.getData());
+                forBroadcaster.messageReceived(baseMessage.getCustomType(), baseMessage.getData(), baseMessage.getCreatedAt());
             }
 
             @Override

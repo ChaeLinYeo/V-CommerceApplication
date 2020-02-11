@@ -74,11 +74,8 @@ public class BroadcastMain extends AppCompatActivity
 
     //제목 수정 팝업용 변수
     TextView title_text;
-
     TextView heart;
     TextView people;
-
-    //공지 수정 팝업용 변수
     TextView broadcast_notice;
     TextView system_notice;
 
@@ -102,7 +99,7 @@ public class BroadcastMain extends AppCompatActivity
     ExampleChatController mExampleChatController;
     PopupManager PM;
     boolean canStart = true;
-
+    long systemtime;
     ////////////////////////////////////////////////
     private SendbirdConnection sendbirdConnection;
     private LocalfileManager LM;
@@ -328,6 +325,7 @@ public class BroadcastMain extends AppCompatActivity
     @Override
     public void broadcastStart(){
         broadcastBtn.setText(R.string.stop_button);
+        systemtime = System.currentTimeMillis();
     }
 
     @Override
@@ -363,9 +361,6 @@ public class BroadcastMain extends AppCompatActivity
 
     public void AlarmPlayer(String data){
         system_notice.setText(data);
-    }
-    public void NotiPlayer(String data){
-        broadcast_notice.setText(data);
     }
     // 좋아요 로띠 애니메이션을 실행 시키는 메소드
     private boolean toggleSongLikeAnimButton(){
@@ -451,10 +446,7 @@ public class BroadcastMain extends AppCompatActivity
     public void create_title() {
         final AlertDialog.Builder alert = new AlertDialog.Builder(BroadcastMain.this);
         View mView = getLayoutInflater().inflate(R.layout.init_channel, null);
-        LM_subinfo = new LocalfileManager(USER_ID+":"+System.currentTimeMillis()+":"+sendbirdConnection.getChannelNum()+"_subinfo.txt");
-
-        LM_subinfo = new LocalfileManager(USER_ID+":"+System.currentTimeMillis()+":"+sendbirdConnection.getChannelNum()+"_subinfo.txt");
-
+        LM_subinfo = new LocalfileManager(USER_ID+":"+systemtime+":"+sendbirdConnection.getChannelNum()+"_subinfo.txt");
         final EditText newtitle = mView.findViewById(R.id.init_title);
         Button btn_cancel = mView.findViewById(R.id.init_cancel);
         Button btn_ok = mView.findViewById(R.id.init_ok);
@@ -469,9 +461,10 @@ public class BroadcastMain extends AppCompatActivity
         btn_ok.setOnClickListener(
             (View view) -> {
                 init_t = newtitle.getText().toString();
+                long time = System.currentTimeMillis() - systemtime;
                 sendbirdConnection.createChannel(init_t);
                 title_text.setText(init_t);
-                LM_subinfo.savetitle(init_t);
+                LM_subinfo.savetitle(time + "/" +init_t);
             }
         );
         Toast.makeText(getApplicationContext(), "방송 시작 전, 방송의 제목을 입력해주세요.", Toast.LENGTH_LONG).show();
@@ -496,9 +489,10 @@ public class BroadcastMain extends AppCompatActivity
 
         btn_ok.setOnClickListener((View view) -> {
                 init_t = txt_inputText.getText().toString();
+                long time = System.currentTimeMillis() - systemtime;
                 title_text.setText(init_t);
                 sendbirdConnection.updateTitle(init_t);
-                LM_subinfo.savetitle(init_t);
+                LM_subinfo.savetitle(time + "/"+init_t);
                 alertDialog.dismiss();
             }
         );
@@ -757,8 +751,8 @@ public class BroadcastMain extends AppCompatActivity
         canStart = false;
         broadcastManager.setBroadcastChannel(sendbirdConnection.getChannelNum());
         broadcastManager.manageBroadcast(0);
-        LM = new LocalfileManager(USER_ID+":"+System.currentTimeMillis()+":"+sendbirdConnection.getChannelNum()+".txt");
-        LM_time = new LocalfileManager(USER_ID+":"+System.currentTimeMillis()+":"+sendbirdConnection.getChannelNum()+"_timeline.txt");
+        LM = new LocalfileManager(USER_ID+":"+systemtime+":"+sendbirdConnection.getChannelNum()+".txt");
+        LM_time = new LocalfileManager(USER_ID+":"+systemtime+":"+sendbirdConnection.getChannelNum()+"_timeline.txt");
         Log.d("channel complete",""+sendbirdConnection.getChannelNum());
         if(LM == null) Log.e("PKR","LM is null");
         create_Category();
@@ -770,20 +764,19 @@ public class BroadcastMain extends AppCompatActivity
     }
 
     @Override
-    public void messageReceived(String customType, String data){
+    public void messageReceived(String customType, String data, long messagetime){
+        long time = messagetime - systemtime;
         switch(customType) {
             case "alarm":
                 AlarmPlayer(data);
-                LM.savealarm(data);
                 break;
-
             case "chat" :
                 mExampleChatController.add(data);
-                LM.savechat(data);
+                LM.savechat(time, data);
                 break;
 
             case "like":
-                LM.saveheart();
+                LM.saveheart(time);
                 break;
         }
     }
