@@ -9,6 +9,7 @@ import com.amazonaws.mobile.client.UserStateDetails;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferNetworkLossHandler;
 import com.amplifyframework.core.Amplify;
 import com.amplifyframework.storage.s3.AWSS3StoragePlugin;
+import com.pedro.rtpstreamer.server.AWSConnection;
 
 public class Data {
     private static final Data ourInstance = new Data();
@@ -35,6 +36,7 @@ public class Data {
                     Amplify.configure(mContext);
                     TransferNetworkLossHandler.getInstance(mContext);
                     Log.i("StorageQuickstart", "All set and ready to go!");
+                    AWSConnection.downloadFile(mContext);
                 } catch (Exception e) {
                     Log.e("StorageQuickstart", e.getMessage());
                 }
