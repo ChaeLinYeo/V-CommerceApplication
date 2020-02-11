@@ -366,6 +366,7 @@ public class Fragment_player extends Fragment
                 break;
         }
     }
+
     public void EventPlayer(String data) {
         // "cn="+e_n+"ci="+e_a+"\nTimeLimit="+e_t_h+":"+e_t_m+":"+e_t_s;
         Log.d("event",""+data);

@@ -36,7 +36,6 @@ public class Data {
                     Amplify.configure(mContext);
                     TransferNetworkLossHandler.getInstance(mContext);
                     Log.i("StorageQuickstart", "All set and ready to go!");
-                    AWSConnection.downloadFile(mContext);
                 } catch (Exception e) {
                     Log.e("StorageQuickstart", e.getMessage());
                 }
