@@ -83,9 +83,9 @@ public class AWSConnection {
         Log.d("YourActivity", "Bytes Total: " + uploadObserver.getBytesTotal());
     }
 
-    public static void downloadFile(Context context) {
+    public static void downloadFile(String fileName, String localPath, Context context) {
 
-        String localPath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/chatDown/subinfo.txt";
+        //String localPath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/chatDown/subinfo.txt";
 
         TransferUtility transferUtility =
                 TransferUtility.builder()
@@ -96,7 +96,7 @@ public class AWSConnection {
 
         TransferObserver downloadObserver =
                 transferUtility.download(
-                        "public/test/myUploadedFileName_subinfo.txt",
+                        "public/test/"+fileName+".txt",
                         new File(localPath));
 
         // Attach a listener to the observer to get notified of the

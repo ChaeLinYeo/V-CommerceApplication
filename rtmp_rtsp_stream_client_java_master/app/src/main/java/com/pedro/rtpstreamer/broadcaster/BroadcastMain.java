@@ -104,7 +104,6 @@ public class BroadcastMain extends AppCompatActivity
     private SendbirdConnection sendbirdConnection;
     private LocalfileManager LM;
     private LocalfileManager LM_time;
-    private LocalfileManager LM_subinfo;
     private int heart_final;
     private AlertDialog alertDialog;
 
@@ -334,13 +333,11 @@ public class BroadcastMain extends AppCompatActivity
         broadcastBtn.setText(R.string.start_button);
         sendbirdConnection.broadcastfinish();
         canStart = true;
-        LM_subinfo.saveheartfinal(heart_final);
+        LM.saveheartfinal(heart_final);
         LM.LMEnd();
         LM_time.LMEnd();
-        LM_subinfo.LMEnd();
         AWSConnection.uploadFile(broadcastManager.getBroadcastName()+".txt", LM.getFileName(), this);
         AWSConnection.uploadFile(broadcastManager.getBroadcastName()+"_timeLine.txt", LM_time.getFileName(), this);
-        AWSConnection.uploadFile(broadcastManager.getBroadcastName()+"_subinfo.txt", LM_subinfo.getFileName(), this);
         category_items.clear();
     }
 
@@ -446,7 +443,6 @@ public class BroadcastMain extends AppCompatActivity
     public void create_title() {
         final AlertDialog.Builder alert = new AlertDialog.Builder(BroadcastMain.this);
         View mView = getLayoutInflater().inflate(R.layout.init_channel, null);
-        LM_subinfo = new LocalfileManager(USER_ID+":"+systemtime+":"+sendbirdConnection.getChannelNum()+"_subinfo.txt");
         final EditText newtitle = mView.findViewById(R.id.init_title);
         Button btn_cancel = mView.findViewById(R.id.init_cancel);
         Button btn_ok = mView.findViewById(R.id.init_ok);
@@ -464,7 +460,7 @@ public class BroadcastMain extends AppCompatActivity
                 long time = System.currentTimeMillis() - systemtime;
                 sendbirdConnection.createChannel(init_t);
                 title_text.setText(init_t);
-                LM_subinfo.savetitle(time + "/" +init_t);
+                LM.savetitle(time , init_t);
             }
         );
         Toast.makeText(getApplicationContext(), "방송 시작 전, 방송의 제목을 입력해주세요.", Toast.LENGTH_LONG).show();
@@ -492,7 +488,7 @@ public class BroadcastMain extends AppCompatActivity
                 long time = System.currentTimeMillis() - systemtime;
                 title_text.setText(init_t);
                 sendbirdConnection.updateTitle(init_t);
-                LM_subinfo.savetitle(time + "/"+init_t);
+                LM.savetitle(time, init_t);
                 alertDialog.dismiss();
             }
         );
