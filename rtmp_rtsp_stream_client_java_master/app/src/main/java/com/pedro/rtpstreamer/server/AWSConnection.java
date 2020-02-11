@@ -12,7 +12,6 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amplifyframework.core.Amplify;
 import com.amplifyframework.core.ResultListener;
-import com.amplifyframework.storage.result.StorageDownloadFileResult;
 import com.amplifyframework.storage.result.StorageUploadFileResult;
 
 import java.io.File;
@@ -72,7 +71,6 @@ public class AWSConnection {
                 // Handle errors
                 Log.e("error", ""+ ex.getMessage());
             }
-
         });
 
         // If you prefer to poll for the data, instead of attaching a
