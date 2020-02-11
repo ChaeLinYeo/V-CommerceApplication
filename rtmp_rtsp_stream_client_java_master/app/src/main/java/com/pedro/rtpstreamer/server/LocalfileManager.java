@@ -14,8 +14,6 @@ import java.io.UnsupportedEncodingException;
 public class LocalfileManager {
 
     private BufferedWriter writer;
-    private FileOutputStream output;
-
     private String fileName;
 
     public LocalfileManager(String filename){
@@ -27,7 +25,6 @@ public class LocalfileManager {
                 dir.mkdir();
             }
             fileName = foldername + "/" + filename;
-            // BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filepath),"UTF8"));
             writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName),"UTF8"));
         } catch(FileNotFoundException e){
             Log.e("error",""+e.getMessage());
@@ -37,9 +34,9 @@ public class LocalfileManager {
         }
     }
 
-    public void savechat(String data){
+    public void savechat(long time, String data){
         try{
-            String chatlog = System.currentTimeMillis()+"/chat/"+data+"\n";
+            String chatlog = time+"/chat/"+data+"\n";
             writer.append(chatlog);
             writer.flush();
         } catch(IOException e){
@@ -47,9 +44,9 @@ public class LocalfileManager {
         }
     }
 
-    public void saveheart(){
+    public void saveheart(long time){
         try{
-            String likelog = System.currentTimeMillis()+"/like\n";
+            String likelog = time+"/like\n";
             writer.append(likelog);
             writer.flush();
         } catch(IOException e){
@@ -57,16 +54,6 @@ public class LocalfileManager {
         }
     }
 
-    public void savealarm(String data){
-        try {
-            String alarmlog = System.currentTimeMillis() + "/alarm/" + data +"\n";
-            writer.append(alarmlog);
-            writer.flush();
-        } catch(IOException e){
-            Log.d("eror",""+e.getMessage());
-        }
-    }
-    
     public void savetimeline(String data){
         try{
             writer.append(data);
@@ -77,7 +64,7 @@ public class LocalfileManager {
     }
     public void savetitle(String title){
         try{
-            writer.append(title +"\n");
+            writer.append(System.currentTimeMillis() +"/"+title +"\n");
             writer.flush();
         }catch(IOException e){
             Log.d("error",""+e.getMessage());
@@ -85,7 +72,8 @@ public class LocalfileManager {
     }
     public void saveheartfinal(int Data){
         try{
-            writer.append("finalheart" + Data+"\n");
+            String fh = "finalheart/" + Data+"\n";
+            writer.write(fh, 0 ,fh.length());
             writer.flush();
         }catch(IOException e){
             Log.d("error",""+e.getMessage());
@@ -94,7 +82,6 @@ public class LocalfileManager {
     public void LMEnd(){
         try {
             writer.close();
-            output.close();
         } catch(IOException e){
             Log.d("eror",""+e.getMessage());
         }

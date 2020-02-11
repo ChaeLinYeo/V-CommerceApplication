@@ -9,7 +9,7 @@ public interface SendbirdListner {
 
         public void getUserListComplete(String peopleNum);
 
-        public void messageReceived(String customType, String data);
+        public void messageReceived(String customType, String data, long time);
 
         public void metaCounterUpdated(int heart);
     }
