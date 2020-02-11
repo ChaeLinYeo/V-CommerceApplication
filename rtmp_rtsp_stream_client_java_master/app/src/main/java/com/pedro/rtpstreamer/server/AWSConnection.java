@@ -1,6 +1,7 @@
 package com.pedro.rtpstreamer.server;
 
 import android.content.Context;
+import android.os.Environment;
 import android.util.Log;
 
 import com.amazonaws.mobile.client.AWSMobileClient;
@@ -84,20 +85,73 @@ public class AWSConnection {
         Log.d("YourActivity", "Bytes Total: " + uploadObserver.getBytesTotal());
     }
 
-    public static void downloadFile(String fileName, String localPath){
-        Amplify.Storage.downloadFile(
-            fileName, localPath,
-            new ResultListener<StorageDownloadFileResult>() {
-                @Override
-                public void onResult(StorageDownloadFileResult result) {
-                    Log.i("StorageQuickStart", "Successfully downloaded: " + result.getFile().getName());
-                }
+    public static void downloadFile(Context context) {
 
-                @Override
-                public void onError(Throwable error) {
-                    Log.e("StorageQuickStart", error.getMessage());
+        String localPath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/chatDown/subinfo.txt";
+
+        TransferUtility transferUtility =
+                TransferUtility.builder()
+                        .context(context)
+                        .awsConfiguration(AWSMobileClient.getInstance().getConfiguration())
+                        .s3Client(new AmazonS3Client(AWSMobileClient.getInstance().getCredentials()))
+                        .build();
+
+        TransferObserver downloadObserver =
+                transferUtility.download(
+                        "public/test/myUploadedFileName_subinfo.txt",
+                        new File(localPath));
+
+        // Attach a listener to the observer to get notified of the
+        // updates in the state and the progress
+        downloadObserver.setTransferListener(new TransferListener() {
+
+            @Override
+            public void onStateChanged(int id, TransferState state) {
+                if (TransferState.COMPLETED == state) {
+                    // Handle a completed upload.
                 }
             }
-        );
+
+            @Override
+            public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+                float percentDonef = ((float)bytesCurrent/(float)bytesTotal) * 100;
+                int percentDone = (int)percentDonef;
+
+                Log.d("MainActivity", "   ID:" + id + "   bytesCurrent: " + bytesCurrent + "   bytesTotal: " + bytesTotal + " " + percentDone + "%");
+            }
+
+            @Override
+            public void onError(int id, Exception ex) {
+                // Handle errors
+            }
+
+        });
+
+        // If you do not want to attach a listener and poll for the data
+        // from the observer, you can check for the state and the progress
+        // in the observer.
+        if (TransferState.COMPLETED == downloadObserver.getState()) {
+            // Handle a completed upload.
+        }
+
+        Log.d("YourActivity", "Bytes Transferred: " + downloadObserver.getBytesTransferred());
+        Log.d("YourActivity", "Bytes Total: " + downloadObserver.getBytesTotal());
     }
+
+//    public static void downloadFile(String fileName, String localPath){
+//        Amplify.Storage.downloadFile(
+//            fileName, localPath,
+//            new ResultListener<StorageDownloadFileResult>() {
+//                @Override
+//                public void onResult(StorageDownloadFileResult result) {
+//                    Log.i("StorageQuickStart", "Successfully downloaded: " + result.getFile().getName());
+//                }
+//
+//                @Override
+//                public void onError(Throwable error) {
+//                    Log.e("StorageQuickStart", error.getMessage());
+//                }
+//            }
+//        );
+//    }
 }

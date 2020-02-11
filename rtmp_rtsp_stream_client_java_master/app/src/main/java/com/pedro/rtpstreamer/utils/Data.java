@@ -9,6 +9,7 @@ import com.amazonaws.mobile.client.UserStateDetails;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferNetworkLossHandler;
 import com.amplifyframework.core.Amplify;
 import com.amplifyframework.storage.s3.AWSS3StoragePlugin;
+import com.pedro.rtpstreamer.server.AWSConnection;
 
 public class Data {
     private static final Data ourInstance = new Data();

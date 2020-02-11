@@ -154,7 +154,7 @@ public class SendbirdConnection {
         SendBird.addChannelHandler(StaticVariable.CHANNEL_HANDLER_ID, new SendBird.ChannelHandler() {
             @Override
             public void onMessageReceived(BaseChannel baseChannel, BaseMessage baseMessage) {
-                forBroadcaster.messageReceived(baseMessage.getCustomType(), baseMessage.getData());
+                forBroadcaster.messageReceived(baseMessage.getCustomType(), baseMessage.getData(), baseMessage.getCreatedAt());
             }
 
             @Override
@@ -273,6 +273,7 @@ public class SendbirdConnection {
             public void onResult(Map<String, String> map, SendBirdException e) {
                 for(Map.Entry<String, String> entry : map.entrySet()){
                     if(!entry.getKey().equals("empty")){
+                        Log.d("allcate", entry.getKey());
                         PM.addCategoryI(entry.getKey());
                     }
                 }

@@ -387,9 +387,6 @@ public class Fragment_player extends Fragment
                 mExampleChatController.add(Data);
                 break;
             case "event" :
-                //방송자가 이벤트를 시작하겠다고 이벤트버트을 눌렀을때?(송출부 시작)
-                //타입(Type)을 설정하고, 내용(이벤트 정보, 지속시간 : text1)을 정해서 보내면
-                // ex. "eventonoff=on\nType=Pop\nTimeLimit=1:20:30\nEventInfo=AB23:PlaneText";
                 EventPlayer(Data);
                 break;
             case "effect" :
@@ -402,6 +399,7 @@ public class Fragment_player extends Fragment
                 break;
         }
     }
+
     public void EventPlayer(String data) {
         // "cn="+e_n+"ci="+e_a+"\nTimeLimit="+e_t_h+":"+e_t_m+":"+e_t_s;
         Log.d("event",""+data);

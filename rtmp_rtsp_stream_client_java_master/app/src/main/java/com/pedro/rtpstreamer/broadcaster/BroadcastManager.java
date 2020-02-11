@@ -216,24 +216,6 @@ public class BroadcastManager
         if(rtmpCamera1.isRecording()) {
             rtmpCamera1.stopRecord();
             currentDateAndTime = "";
-
-//            Amplify.Storage.uploadFile(
-////                    broadcastName,
-//                    "test/myUploadedFileName.mp4",
-//                    broadcastPath,
-//                    new ResultListener<StorageUploadFileResult>() {
-//                        @Override
-//                        public void onResult(StorageUploadFileResult result) {
-//                            Log.i("StorageQuickStart", "Successfully uploaded: " + result.getKey());
-////                            updateLogList();
-//                        }
-//
-//                        @Override
-//                        public void onError(Throwable error) {
-//                            Log.e("StorageQuickstart", "Upload error.", error);
-//                        }
-//                    }
-//            );
             AWSConnection.uploadFile(broadcastName+".mp4", broadcastPath, pContext);
         }
     }
@@ -241,31 +223,6 @@ public class BroadcastManager
     public String getBroadcastName(){
         return broadcastName;
     }
-
-//    private void updateLogList() {
-//        String logListPath = folder.getAbsolutePath() + "/logList.txt";
-//        Log.d("update", "start");
-//        Amplify.Storage.downloadFile(
-//                broadcastChannel + "/logList.txt",
-//                logListPath,
-//                new ResultListener<StorageDownloadFileResult>() {
-//                    @Override
-//                    public void onResult(StorageDownloadFileResult result) {
-//                        Log.i("StorageQuickStart", "Successfully downloaded: " + result.getFile().getName());
-////                        try {
-////                            Files.write(Paths.get(logListPath), broadcastName.getBytes(), StandardOpenOption.APPEND);
-////                        }catch (IOException e) {
-////                            //exception handling left as an exercise for the reader
-////                        }
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable error) {
-//                        Log.e("StorageQuickStart", error.getMessage());
-//                    }
-//                }
-//        );
-//    }
 
     ///////////////////////////////////////////////////////////////////////////////
     public void setTexture(int i){
@@ -283,7 +240,7 @@ public class BroadcastManager
 
             case 1:
                 if(!onImage) {
-                    //setImage(bitmap);
+                    setImage();
                 }
                 else {
                     rtmpCamera1.getGlInterface().removeFilter(1);
@@ -298,6 +255,8 @@ public class BroadcastManager
                 break;
         }
     }
+
+//    public boolean isImage(){return onImage;}
 
     public void setText(String text, int color){
         TextObjectFilterRender textObjectFilterRender = new TextObjectFilterRender();
@@ -314,28 +273,21 @@ public class BroadcastManager
         onText=true;
     }
 
-    public void setImage(Bitmap bitmap){
-        if(!onImage) {
-            ImageObjectFilterRender imageObjectFilterRender = new ImageObjectFilterRender();
-            rtmpCamera1.getGlInterface().setFilterT(1,imageObjectFilterRender);
+    public void setImage(){
+        ImageObjectFilterRender imageObjectFilterRender = new ImageObjectFilterRender();
+        rtmpCamera1.getGlInterface().setFilterT(1,imageObjectFilterRender);
 
-            //set image and default setting
-            imageObjectFilterRender.setImage(bitmap);
-            imageObjectFilterRender.setDefaultScale(rtmpCamera1.getStreamWidth(), rtmpCamera1.getStreamHeight());
-            imageObjectFilterRender.setScale(50f, 33.3f);
-            imageObjectFilterRender.setPosition(TranslateTo.RIGHT);
+        //set image and default setting
+        imageObjectFilterRender.setImage(BitmapFactory.decodeResource(pResources, R.mipmap.homiimg));
+        imageObjectFilterRender.setDefaultScale(rtmpCamera1.getStreamWidth(), rtmpCamera1.getStreamHeight());
+        imageObjectFilterRender.setScale(50f, 33.3f);
+        imageObjectFilterRender.setPosition(TranslateTo.RIGHT);
 
-            //move,scale
-            spriteGestureControllerImg.setBaseObjectFilterRender(imageObjectFilterRender); //Optional
-            spriteGestureControllerImg.setPreventMoveOutside(false); //
+        //move,scale
+        spriteGestureControllerImg.setBaseObjectFilterRender(imageObjectFilterRender); //Optional
+        spriteGestureControllerImg.setPreventMoveOutside(false); //
 
-            onImage = true;
-        }
-        else {
-            rtmpCamera1.getGlInterface().removeFilter(1);
-            spriteGestureControllerImg.setBaseObjectFilterRender(null);
-            onImage = false;
-        }
+        onImage = true;
     }
 
     public void setUri(){

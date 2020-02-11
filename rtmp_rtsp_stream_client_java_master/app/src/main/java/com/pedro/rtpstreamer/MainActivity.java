@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.pedro.rtpstreamer.player.PlayerMain;
 import com.pedro.rtpstreamer.broadcaster.BroadcastMain;
 import com.pedro.rtpstreamer.replayer.Replayer;
+import com.pedro.rtpstreamer.server.AWSConnection;
 import com.pedro.rtpstreamer.utils.ActivityLink;
 import com.pedro.rtpstreamer.utils.Data;
 import com.pedro.rtpstreamer.utils.ImageAdapter;
@@ -71,7 +72,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         data.setContext(this);
         data.setAws();
-
     }
 
     ////////////////////////////////////////////////////////////////////////////////

@@ -32,6 +32,7 @@ import org.videolan.libvlc.Media;
 import org.videolan.libvlc.MediaPlayer;
 
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
 public class Replayer extends AppCompatActivity
@@ -119,7 +120,40 @@ public class Replayer extends AppCompatActivity
 
         }
     }
+    public void ChatLogParser(String Log){
+        String[] data = new String[3];// [0]시간 / [1]타입 / [2]content (chat제외 무시하는 값)
+        int i = 0;
+        StringTokenizer st = new StringTokenizer(Log, "/");
+        while(st.hasMoreTokens()) {
+            data[i] = st.nextToken();
+            i++;
+        }
+        if(data[1].equals("chat")){
+            ECC.add2(data[0] + ":" +data[2]);
+        }else if(data[1].equals("like")){
+            //좋아요 애니메이션 실행
+        }else{
+            //Log.d("d","d");
+            //Log.e("sthwrong",data[1]);
+            return;
+        }
+    }
 
+    public void SubParser(String subinfo){
+        String[] data = new String[2];// [0]시간 / [1]바뀐 제목
+        StringTokenizer st = new StringTokenizer(subinfo, "/");
+        data[0] = st.nextToken();
+        data[1] = st.nextToken();
+
+    }
+
+    public void TimeParser(String timeline){
+        String[] data = new String[2];// [0]시간 / [1]방송중인 상품
+        StringTokenizer st = new StringTokenizer(timeline, "/");
+        data[0] = st.nextToken();
+        data[1] = st.nextToken();
+
+    }
     //////////////////////////////////////////////
     //handler for play uri
     @SuppressLint("HandlerLeak")

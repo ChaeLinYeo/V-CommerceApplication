@@ -74,11 +74,8 @@ public class BroadcastMain extends AppCompatActivity
 
     //제목 수정 팝업용 변수
     TextView title_text;
-
     TextView heart;
     TextView people;
-
-    //공지 수정 팝업용 변수
     TextView broadcast_notice;
     TextView system_notice;
 
@@ -102,7 +99,7 @@ public class BroadcastMain extends AppCompatActivity
     ExampleChatController mExampleChatController;
     PopupManager PM;
     boolean canStart = true;
-
+    long systemtime;
     ////////////////////////////////////////////////
     private SendbirdConnection sendbirdConnection;
     private LocalfileManager LM;
@@ -184,15 +181,20 @@ public class BroadcastMain extends AppCompatActivity
                 break;
 
             case R.id.imgButton:
-                //핸드폰 갤러리 열음
-                Intent intent = new Intent();
-                //백그라운드 서비스 실행
-                //startService(intent);
-                // Show only images, no videos or anything else
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                // Always show the chooser (if there are multiple options available)
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+//                if(!broadcastManager.isImage()) {
+//                    //핸드폰 갤러리 열음
+//                    Intent intent = new Intent();
+//                    //백그라운드 서비스 실행
+//                    //startService(intent);
+//                    // Show only images, no videos or anything else
+//                    intent.setType("image/*");
+//                    intent.setAction(Intent.ACTION_GET_CONTENT);
+//                    // Always show the chooser (if there are multiple options available)
+//                    startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+//                } else{
+//                    broadcastManager.setTexture(1);
+//                }
+                broadcastManager.setTexture(1);
                 break;
 
             case R.id.uriButton:
@@ -218,21 +220,21 @@ public class BroadcastMain extends AppCompatActivity
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            Uri uri = data.getData();
-            try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-                // Log.d(TAG, String.valueOf(bitmap));
-                broadcastManager.setImage(bitmap);
-                //broadcastManager.setTexture(1);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+//            Uri uri = data.getData();
+//            try {
+//                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+//                // Log.d(TAG, String.valueOf(bitmap));
+//                broadcastManager.setImage(bitmap);
+//                //broadcastManager.setTexture(1);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
 
     //For Broadcast info
     public View.OnClickListener broadcastClickListner = (View view) -> {
@@ -323,20 +325,22 @@ public class BroadcastMain extends AppCompatActivity
     @Override
     public void broadcastStart(){
         broadcastBtn.setText(R.string.stop_button);
+        systemtime = System.currentTimeMillis();
     }
 
     @Override
     public void broadcastStop(){
+        Log.d("PKR","broadcast stop");
         broadcastBtn.setText(R.string.start_button);
         sendbirdConnection.broadcastfinish();
         canStart = true;
         LM_subinfo.saveheartfinal(heart_final);
-        AWSConnection.uploadFile(broadcastManager.getBroadcastName()+".txt", LM.getFileName(), this);
-        AWSConnection.uploadFile(broadcastManager.getBroadcastName()+"_timeLine.txt", LM_time.getFileName(), this);
-        AWSConnection.uploadFile(broadcastManager.getBroadcastName()+"_subinfo.txt", LM_subinfo.getFileName(), this);
         LM.LMEnd();
         LM_time.LMEnd();
         LM_subinfo.LMEnd();
+        AWSConnection.uploadFile(broadcastManager.getBroadcastName()+".txt", LM.getFileName(), this);
+        AWSConnection.uploadFile(broadcastManager.getBroadcastName()+"_timeLine.txt", LM_time.getFileName(), this);
+        AWSConnection.uploadFile(broadcastManager.getBroadcastName()+"_subinfo.txt", LM_subinfo.getFileName(), this);
         category_items.clear();
     }
 
@@ -357,9 +361,6 @@ public class BroadcastMain extends AppCompatActivity
 
     public void AlarmPlayer(String data){
         system_notice.setText(data);
-    }
-    public void NotiPlayer(String data){
-        broadcast_notice.setText(data);
     }
     // 좋아요 로띠 애니메이션을 실행 시키는 메소드
     private boolean toggleSongLikeAnimButton(){
@@ -427,6 +428,7 @@ public class BroadcastMain extends AppCompatActivity
         btn_Exit.setOnClickListener((View view) -> {
             for (String item : category_items){
                 sendbirdConnection.addCategory(item);
+                PM.addCategoryI(item);
             }
             adapter1.notifyDataSetChanged();
             alertDialog.dismiss();
@@ -444,10 +446,7 @@ public class BroadcastMain extends AppCompatActivity
     public void create_title() {
         final AlertDialog.Builder alert = new AlertDialog.Builder(BroadcastMain.this);
         View mView = getLayoutInflater().inflate(R.layout.init_channel, null);
-        LM_subinfo = new LocalfileManager(USER_ID+":"+System.currentTimeMillis()+":"+sendbirdConnection.getChannelNum()+"_subinfo.txt");
-
-        LM_subinfo = new LocalfileManager(USER_ID+":"+System.currentTimeMillis()+":"+sendbirdConnection.getChannelNum()+"_subinfo.txt");
-
+        LM_subinfo = new LocalfileManager(USER_ID+":"+systemtime+":"+sendbirdConnection.getChannelNum()+"_subinfo.txt");
         final EditText newtitle = mView.findViewById(R.id.init_title);
         Button btn_cancel = mView.findViewById(R.id.init_cancel);
         Button btn_ok = mView.findViewById(R.id.init_ok);
@@ -462,9 +461,10 @@ public class BroadcastMain extends AppCompatActivity
         btn_ok.setOnClickListener(
             (View view) -> {
                 init_t = newtitle.getText().toString();
+                long time = System.currentTimeMillis() - systemtime;
                 sendbirdConnection.createChannel(init_t);
                 title_text.setText(init_t);
-                LM_subinfo.savetitle(init_t);
+                LM_subinfo.savetitle(time + "/" +init_t);
             }
         );
         Toast.makeText(getApplicationContext(), "방송 시작 전, 방송의 제목을 입력해주세요.", Toast.LENGTH_LONG).show();
@@ -489,9 +489,10 @@ public class BroadcastMain extends AppCompatActivity
 
         btn_ok.setOnClickListener((View view) -> {
                 init_t = txt_inputText.getText().toString();
+                long time = System.currentTimeMillis() - systemtime;
                 title_text.setText(init_t);
                 sendbirdConnection.updateTitle(init_t);
-                LM_subinfo.savetitle(init_t);
+                LM_subinfo.savetitle(time + "/"+init_t);
                 alertDialog.dismiss();
             }
         );
@@ -723,6 +724,7 @@ public class BroadcastMain extends AppCompatActivity
 //    public void getCate(){
 //        PM.btn_Category(getLayoutInflater(), sendbirdConnection, LM_time);
 //    }
+
     @Override
     public void setText(){
         PM.btn_Text(getLayoutInflater(), broadcastManager);
@@ -749,9 +751,10 @@ public class BroadcastMain extends AppCompatActivity
         canStart = false;
         broadcastManager.setBroadcastChannel(sendbirdConnection.getChannelNum());
         broadcastManager.manageBroadcast(0);
-        LM = new LocalfileManager(USER_ID+":"+System.currentTimeMillis()+":"+sendbirdConnection.getChannelNum()+".txt");
-        LM_time = new LocalfileManager(USER_ID+":"+System.currentTimeMillis()+":"+sendbirdConnection.getChannelNum()+"_timeline.txt");
+        LM = new LocalfileManager(USER_ID+":"+systemtime+":"+sendbirdConnection.getChannelNum()+".txt");
+        LM_time = new LocalfileManager(USER_ID+":"+systemtime+":"+sendbirdConnection.getChannelNum()+"_timeline.txt");
         Log.d("channel complete",""+sendbirdConnection.getChannelNum());
+        if(LM == null) Log.e("PKR","LM is null");
         create_Category();
     }
 
@@ -761,20 +764,19 @@ public class BroadcastMain extends AppCompatActivity
     }
 
     @Override
-    public void messageReceived(String customType, String data){
+    public void messageReceived(String customType, String data, long messagetime){
+        long time = messagetime - systemtime;
         switch(customType) {
             case "alarm":
                 AlarmPlayer(data);
-                LM.savealarm(data);
                 break;
-
             case "chat" :
                 mExampleChatController.add(data);
-                LM.savechat(data);
+                LM.savechat(time, data);
                 break;
 
             case "like":
-                LM.saveheart();
+                LM.saveheart(time);
                 break;
         }
     }
