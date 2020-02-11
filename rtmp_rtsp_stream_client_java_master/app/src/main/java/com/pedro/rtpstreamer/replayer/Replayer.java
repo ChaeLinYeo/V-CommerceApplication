@@ -8,6 +8,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -24,6 +25,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.pedro.rtpstreamer.R;
+import com.pedro.rtpstreamer.server.AWSConnection;
+import com.pedro.rtpstreamer.server.AWSfileManager;
+import com.pedro.rtpstreamer.server.Pair;
 import com.pedro.rtpstreamer.utils.ExampleChatController;
 import com.pedro.rtpstreamer.utils.StaticVariable;
 
@@ -31,6 +35,7 @@ import org.videolan.libvlc.LibVLC;
 import org.videolan.libvlc.Media;
 import org.videolan.libvlc.MediaPlayer;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
@@ -56,23 +61,37 @@ public class Replayer extends AppCompatActivity
     private ExampleChatController ECC;
     private LottieAnimationView songLikeAnimButton;
 
+    private long nexttime = 0;
+    ArrayList<Pair> CL;
+    ArrayList<Pair> SL;
+    ArrayList<Pair> TL;
+
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.replayer);
         context = this;
 
+        String path = Environment.getExternalStorageDirectory().getAbsolutePath();
+        AWSConnection.downloadFile("myUploadFileName", path+"/chatDown/chat", context);
+        AWSConnection.downloadFile("myUploadFileName_subinfo", path+"/chatDown/sub", context);
+        AWSConnection.downloadFile("myUploadFileName_timeLine", path+"/chatDown/timeline", context);
+
         playBtn = findViewById(R.id.playBtn);
         seekBar = findViewById(R.id.seekBar);
         title = findViewById(R.id.replaytitle);
         streamer_nickname = findViewById(R.id.nickname);
         listView = findViewById(R.id.ChatListView);
-
         playBtn.setOnClickListener(this);
         seekBar.setOnSeekBarChangeListener(seekBarChangeListener);
         ECC = new ExampleChatController(context, listView, R.layout.chatline, R.id.chat_line_textview, R.id.chat_line_timeview);
         ECC.show();
         ECC.add("재방송 채팅입니다.");
+
+        setLog();
+        CL = new ArrayList<>();
+        TL = new ArrayList<>();
+        SL = new ArrayList<>();
         setUri();
     }
 
@@ -110,7 +129,24 @@ public class Replayer extends AppCompatActivity
         mUri = Uri.parse(StaticVariable.stoargeUrl+"test/myUploadedFileName.mp4");
         handler.sendEmptyMessageDelayed(10, 100);
     }
+    public void setLog(){
+        AWSfileManager t = new AWSfileManager("timeline");
+        try {
+            ArrayList<String>temp = t.setTL();
+            for(String tmp : temp){
+                TL.add(LogParser(tmp));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        AWSfileManager c = new AWSfileManager("chat");
 
+
+        AWSfileManager s = new AWSfileManager("sub");
+
+
+
+    }
     public void removeUri(){
         Log.d("destroy", "destroy");
         try {
@@ -120,14 +156,12 @@ public class Replayer extends AppCompatActivity
 
         }
     }
-    public void ChatLogParser(String Log){
-        String[] data = new String[3];// [0]시간 / [1]타입 / [2]content (chat제외 무시하는 값)
-        int i = 0;
+    public Pair LogParser(String Log){
         StringTokenizer st = new StringTokenizer(Log, "/");
-        while(st.hasMoreTokens()) {
-            data[i] = st.nextToken();
-            i++;
-        }
+        Pair p = new Pair(Long.parseLong(st.nextToken()), st.nextToken());// [0]시간 / [1]타입 / 내용 (chat제외 무시하는 값)
+
+        return p;
+        /*
         if(data[1].equals("chat")){
             ECC.add2(data[0] + ":" +data[2]);
         }else if(data[1].equals("like")){
@@ -136,7 +170,7 @@ public class Replayer extends AppCompatActivity
             //Log.d("d","d");
             //Log.e("sthwrong",data[1]);
             return;
-        }
+        }*/
     }
 
     public void SubParser(String subinfo){
@@ -182,6 +216,10 @@ public class Replayer extends AppCompatActivity
                                     break;
 
                                 case MediaPlayer.Event.TimeChanged:
+                                    long d = mMediaPlayer.getTime(); //ms
+                                    if(d==nexttime) {//play chat
+                                        //nexttime =
+                                    }
                                     int position = (int) (mMediaPlayer.getPosition()*1000);
                                     seekBar.setProgress(position);
                                     break;
