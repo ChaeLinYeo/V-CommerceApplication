@@ -64,6 +64,8 @@ public class Fragment_player extends Fragment
     private EditText mMessageEditText;
     private Button mMessageSendButton;
     private Button FollowButton;	//팔로우버튼
+    private Button OnOffButton; //채팅온오프
+    private TextView system_notice; //각종알림
     private InputMethodManager mIMM;
 
     private ExampleChatController mExampleChatController;
@@ -117,6 +119,8 @@ public class Fragment_player extends Fragment
     private fragmentListener cL;
     private PopupManager pm;
 
+    private int onoff = 1; //1은 on, 0은 off
+
     Fragment_player(int numFrag, int channelNum, String mChannelUrl){
         this.numFrag = numFrag;
         this.channelNum = channelNum;
@@ -156,6 +160,8 @@ public class Fragment_player extends Fragment
         mMessageSendButton =  view.findViewById(R.id.button_open_channel_chat_send);
         mMessageEditText = view.findViewById(R.id.edittext_chat_message);
         FollowButton = view.findViewById(R.id.followButton);
+        OnOffButton = view.findViewById(R.id.btn_onoff);
+        system_notice = view.findViewById(R.id.system_notice);
         listView = view.findViewById(R.id.ChatListView);
 
         view.findViewById(R.id.buy_button).setOnClickListener(this);
@@ -214,6 +220,22 @@ public class Fragment_player extends Fragment
                 FollowButton.setText("팔로우");
             }
             is_follow = !is_follow;//상태 바꿈
+        });
+
+        //채팅과 각종알림 온오프
+        OnOffButton.setOnClickListener((View view) -> {
+            if(onoff == 1){
+                mExampleChatController.hide();
+                system_notice.setVisibility(View.GONE);
+                OnOffButton.setText("ON");
+                onoff = 0;
+            }
+            else if(onoff == 0){
+                mExampleChatController.show();
+                system_notice.setVisibility(View.VISIBLE);
+                OnOffButton.setText("OFF");
+                onoff = 1;
+            }
         });
     }
 
@@ -335,6 +357,17 @@ public class Fragment_player extends Fragment
                     });
                 }
                 break;
+
+//            case R.id.btn_onoff:
+//                if(onoff == 1){
+//                    mExampleChatController.hide();
+//                    onoff = 0;
+//                }
+//                else if(onoff == 0){
+//                    mExampleChatController.show();
+//                    onoff = 1;
+//                }
+//                break;
         }
     }
 
