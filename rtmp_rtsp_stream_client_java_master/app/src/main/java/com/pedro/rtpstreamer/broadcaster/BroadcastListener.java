@@ -12,6 +12,6 @@ public interface BroadcastListener {
 
     public void setToast(String message);
     public void setText();
-
-    public void setNoti();
+    /*public void setTitle();
+    public void setNoti();*/
 }
