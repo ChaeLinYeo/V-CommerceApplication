@@ -1,8 +1,5 @@
 package com.pedro.rtpstreamer.replayer;
-/*
-* 로그에 있는 채팅은 ECC.add
-* like는 하트 애니메이션 play
-*/
+
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -73,7 +70,6 @@ public class Replayer extends AppCompatActivity
 
         String path = Environment.getExternalStorageDirectory().getAbsolutePath();
         AWSConnection.downloadFile("myUploadFileName", path+"/chatDown/chat", context);
-        AWSConnection.downloadFile("myUploadFileName_subinfo", path+"/chatDown/sub", context);
         AWSConnection.downloadFile("myUploadFileName_timeLine", path+"/chatDown/timeline", context);
 
         playBtn = findViewById(R.id.playBtn);
@@ -172,7 +168,7 @@ public class Replayer extends AppCompatActivity
     }
     public Pair LogParser(String Log){
         StringTokenizer st = new StringTokenizer(Log, "/");
-        Pair p = new Pair(Long.parseLong(st.nextToken()), st.nextToken());// [0]시간 / [1]타입 / 내용 (chat제외 무시하는 값)
+        Pair p = new Pair(Long.parseLong(st.nextToken()), st.nextToken());// [0]시간 / [1]타입 / 내용 (chat제외 없는 값)
 
         return p;
     }
