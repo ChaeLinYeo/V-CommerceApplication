@@ -62,9 +62,9 @@ public class LocalfileManager {
             Log.d("error",""+e.getMessage());
         }
     }
-    public void savetitle(String title){
+    public void savetitle(long time, String title){
         try{
-            writer.append(System.currentTimeMillis() +"/"+title +"\n");
+            writer.append(time +"/title/"+title +"\n");
             writer.flush();
         }catch(IOException e){
             Log.d("error",""+e.getMessage());

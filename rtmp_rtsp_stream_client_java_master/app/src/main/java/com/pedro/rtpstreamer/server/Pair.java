@@ -24,5 +24,10 @@ public class Pair {
     public String getMsg(){
         return msg;
     }
-
+    public String getData(){
+        return data;
+    }
+    public long getTime(){
+        return time;
+    }
 }
