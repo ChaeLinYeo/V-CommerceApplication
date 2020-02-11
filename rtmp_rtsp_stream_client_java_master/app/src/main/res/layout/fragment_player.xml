@@ -96,10 +96,14 @@
 
                 <LinearLayout
                     android:id="@+id/layout_open_chat_chatbox"
-                    android:layout_width="344dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_alignParentBottom="true"
-                    android:background="#FFFFFF"
+                    android:layout_marginStart="0dp"
+
+                    android:background="#00FFFFFF"
                     android:minHeight="48dp"
                     android:orientation="horizontal">
 
@@ -108,34 +112,39 @@
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:layout_gravity="bottom"
-                            android:background="#00FFFFFF"
+                            android:background="#fff"
+                            android:clickable="true"
+                            android:focusable="true"
                             app:srcCompat="@drawable/buyicon" />
-                        <!--                        <Button-->
-                        <!--                            android:id="@+id/onoff_button"-->
-                        <!--                            android:layout_width="48dp"-->
-                        <!--                            android:layout_height="48dp"-->
-                        <!--                            android:layout_gravity="bottom"-->
-                        <!--                            android:background="#fff"-->
-                        <!--                            android:textColor="#000000"-->
-                        <!--                            android:text="on/off" />-->
+
+                        <Button
+                            android:id="@+id/btn_onoff"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_gravity="bottom"
+                            android:background="#fff"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:text="OFF"
+                            android:textColor="#000000" />
 
                         <ImageButton
                             android:id="@+id/button_open_channel_chat_upload"
                             android:layout_width="2dp"
                             android:layout_height="48dp"
                             android:layout_gravity="bottom"
-                            android:background="?attr/selectableItemBackground"
+                            android:background="#fff"
                             android:contentDescription="Upload file" />
 
                         <EditText
                             android:id="@+id/edittext_chat_message"
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="48dp"
                             android:layout_gravity="center"
-                            android:layout_marginLeft="16dp"
-                            android:layout_marginRight="16dp"
+                            android:layout_marginLeft="0dp"
+                            android:layout_marginRight="0dp"
                             android:layout_weight="1"
-                            android:background="@android:color/transparent"
+                            android:background="#fff"
                             android:hint="Enter message"
                             android:maxLines="6" />
 
@@ -143,34 +152,41 @@
                             android:id="@+id/button_open_channel_chat_send"
                             android:layout_width="64dp"
                             android:layout_height="48dp"
-
                             android:layout_gravity="bottom"
-                            android:background="?attr/selectableItemBackground"
+                            android:background="#fff"
                             android:clickable="true"
+                            android:focusable="true"
                             android:gravity="center"
                             android:text="SEND"
                             android:textColor="#000000"
                             android:textSize="14dp" />
 
+                        <ImageView
+                            android:id="@+id/HeartIcon"
+                            android:layout_width="65dp"
+                            android:layout_height="48dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentBottom="true"
+                            android:layout_marginStart="0dp"
+                            android:layout_marginEnd="0dp"
+                            android:layout_marginBottom="0dp"
+                            android:layout_toEndOf="@id/layout_open_chat_chatbox"
+                            app:srcCompat="@drawable/heart2" />
+
                 </LinearLayout>
 
-                <View
-                    android:layout_width="344dp"
-                    android:layout_height="2dp"
-                    android:layout_above="@id/layout_open_chat_chatbox"
-                    android:background="#DfDfDf" />
 
-                <ImageView
-                    android:id="@+id/HeartIcon"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginStart="2dp"
-                    android:layout_marginEnd="0dp"
-                    android:layout_marginBottom="0dp"
-                    android:layout_toEndOf="@id/layout_open_chat_chatbox"
-                    app:srcCompat="@drawable/heart2" />
+<!--                <View-->
+<!--                    android:layout_width="344dp"-->
+<!--                    android:layout_height="2dp"-->
+<!--                    android:layout_above="@id/layout_open_chat_chatbox"-->
+<!--                    android:layout_alignParentStart="true"-->
+<!--                    android:layout_alignParentEnd="true"-->
+<!--                    android:layout_marginStart="0dp"-->
+<!--                    android:layout_marginTop="0dp"-->
+<!--                    android:layout_marginEnd="0dp"-->
+<!--                    android:layout_marginBottom="0dp"-->
+<!--                    android:background="#DfDfDf" />-->
 
                 <Button
                     android:id="@+id/followButton"
@@ -184,7 +200,9 @@
                     android:background="#FF0000"
                     android:text="팔로우"
                     android:textColor="#fff"
-                    android:textSize="15sp" />
+                    android:textSize="15sp"
+                    android:clickable="true"
+                    android:focusable="true"/>
 
                 <Button
                     android:id="@+id/declare"
@@ -198,7 +216,9 @@
                     android:background="#FF0000"
                     android:text="신고"
                     android:textColor="#fff"
-                    android:textSize="15sp" />
+                    android:textSize="15sp"
+                    android:clickable="true"
+                    android:focusable="true"/>
 
 
                 <com.airbnb.lottie.LottieAnimationView
@@ -301,7 +321,7 @@
                     android:layout_width="28dp"
                     android:layout_height="24dp"
                     android:layout_below="@+id/followButton"
-                    android:layout_marginStart="10dp"
+                    android:layout_marginStart="20dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="0dp"
                     android:layout_toEndOf="@+id/heartnum"
@@ -312,7 +332,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/followButton"
-                    android:layout_marginStart="10dp"
+                    android:layout_marginStart="20dp"
                     android:layout_marginTop="10dp"
                     android:layout_toEndOf="@id/peoplenum"
                     android:background="#81FF0000"

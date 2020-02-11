@@ -386,7 +386,7 @@ public class PopupManager {
         // listview 생성 및 adapter 지정.
         ListView listView = mView_c.findViewById(R.id.listView) ;
         listView.setAdapter(adapter1);
-        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        //listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
         final androidx.appcompat.app.AlertDialog.Builder alert05 = new androidx.appcompat.app.AlertDialog.Builder(mContext);
 
