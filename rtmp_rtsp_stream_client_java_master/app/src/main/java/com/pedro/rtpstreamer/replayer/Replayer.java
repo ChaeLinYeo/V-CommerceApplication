@@ -17,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -38,6 +39,9 @@ import org.videolan.libvlc.MediaPlayer;
 
 import java.io.IOException;
 import java.util.ArrayList;
+
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 
 
 @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
@@ -72,6 +76,8 @@ public class Replayer extends AppCompatActivity
     private String finalViewNum;
     private String USERID;
 
+    private RelativeLayout loadingPanel;
+
     private ArrayList<String> timeLine = new ArrayList<>();
 
     private boolean byTimeLine = false;
@@ -101,6 +107,7 @@ public class Replayer extends AppCompatActivity
         heart=findViewById(R.id.reheartnum);
         playBtn.setOnClickListener(this);
         seekBar.setOnSeekBarChangeListener(seekBarChangeListener);
+        loadingPanel = findViewById(R.id.loadingPanel);
         currTimeline = findViewById(R.id.curr_category);
 
         ECC = new ExampleChatController(context, listView, R.layout.chatline, R.id.chat_line_textview, R.id.chat_line_timeview);
@@ -153,7 +160,7 @@ public class Replayer extends AppCompatActivity
                     if(TL.get(i).getTime() >= d){
                         Log.d("PKRTS","nexttimeline : "+nextTimeline);
                         nextTimeline = i;
-                        if(i>0) currTimeline.setText(TL.get(i-1).getType());
+                        if(i>0) currTimeline.setText("현재 "+TL.get(i-1).getType()+"을(를) 판매 중입니다");
                         break;
                     }
                 }
@@ -265,6 +272,13 @@ public class Replayer extends AppCompatActivity
                         mMediaPlayer.getVLCVout().attachViews(null);
                         mMediaPlayer.setEventListener(event->{
                             switch (event.type) {
+                                case MediaPlayer.Event.Buffering:
+                                    if(event.getBuffering()<100) loadingPanel.setVisibility(VISIBLE);
+                                    else loadingPanel.setVisibility(GONE);
+                                    break;
+
+//                                    case MediaPlayer.Event.
+
                                 case MediaPlayer.Event.Playing:
                                     Log.d("mediaP","playing");
                                     playBtn.setText("stop");
@@ -285,7 +299,7 @@ public class Replayer extends AppCompatActivity
                                         Log.d("PKRT","nexttimeline : "+nextTimeline);
                                         if (TL.get(nextTimeline).getTime() <= d) {
                                             Log.d("PKRTC","nexttimeline changed : "+TL.get(nextTimeline).getType());
-                                            currTimeline.setText(TL.get(nextTimeline).getType());
+                                            currTimeline.setText("현재 "+TL.get(nextTimeline).getType()+"을(를) 판매 중입니다");
                                             nextTimeline++;
                                         }
                                     }
@@ -343,7 +357,7 @@ public class Replayer extends AppCompatActivity
         // 애니메이션을 한번 실행시킨다.
         // Custom animation speed or duration.
         // ofFloat(시작 시간, 종료 시간).setDuration(지속시간)
-        songLikeAnimButton.setVisibility(View.VISIBLE);
+        songLikeAnimButton.setVisibility(VISIBLE);
         ValueAnimator animator = ValueAnimator.ofFloat(0f, 0.6f).setDuration(500);
 
         animator.addUpdateListener((ValueAnimator animation) -> {
@@ -396,7 +410,7 @@ public class Replayer extends AppCompatActivity
                 byTimeLine = true;
                 int mediaPosition = (int) (mMediaPlayer.getPosition()*1000);
                 seekBar.setProgress(mediaPosition);
-                currTimeline.setText(TL.get(position).getType());
+                currTimeline.setText("현재 "+TL.get(position).getType()+"을(를) 판매 중입니다");
                 alertDialog.dismiss();
             }
         );
