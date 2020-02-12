@@ -509,13 +509,18 @@ public class Fragment_player extends Fragment
                 super.onMetaDataUpdated(channel, metaDataMap);
                 pm.clearCategoryI();
                 for(Map.Entry<String, String> entry : metaDataMap.entrySet()){
-                    if(entry.getKey().equals("empty")){
-                        continue;
-                    }
-                    else{
+                    if(entry.getValue().equals("select")){
+                        pm.addSCategory(entry.getKey());
+                    }else {
                         pm.addCategoryI(entry.getKey());
                     }
                 }
+            }
+
+            @Override
+            public void onMetaDataDeleted(BaseChannel channel, List<String> keys) {
+                super.onMetaDataDeleted(channel, keys);
+                pm.setCategory(keys);
             }
 
             @Override

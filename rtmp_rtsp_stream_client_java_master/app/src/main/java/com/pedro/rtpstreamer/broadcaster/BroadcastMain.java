@@ -237,7 +237,7 @@ public class BroadcastMain extends AppCompatActivity
                 break;
 
             case R.id.categoryButton:
-                PM.btn_Category(getLayoutInflater(), LM_time,  category_items);
+                PM.btn_Category(getLayoutInflater(), LM_time,  category_items, systemtime);
                 break;
         }
     }
@@ -476,7 +476,6 @@ public class BroadcastMain extends AppCompatActivity
         Toast.makeText(getApplicationContext(), "방송 시작 전, 방송의 제목을 입력해주세요.", Toast.LENGTH_LONG).show();
         alertDialog.show();
     }
-
 
 
     //쿠폰 이벤트 설정 팝업창
