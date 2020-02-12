@@ -246,7 +246,7 @@ public class BroadcastMain extends AppCompatActivity
                 break;
         }
     }
-    
+
 
     //For Broadcast info
     public View.OnClickListener broadcastClickListner = (View view) -> {

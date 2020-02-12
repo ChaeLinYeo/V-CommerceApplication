@@ -385,7 +385,7 @@ public class PopupManager {
         // listview 생성 및 adapter 지정.
         ListView listView = mView_c.findViewById(R.id.listView) ;
         listView.setAdapter(adapter1);
-        //listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
         final androidx.appcompat.app.AlertDialog.Builder alert05 = new androidx.appcompat.app.AlertDialog.Builder(mContext);
 
@@ -435,6 +435,10 @@ public class PopupManager {
                     if(pos2 != ListView.INVALID_POSITION){
                         String current_item = category_items.get(pos2);
                         LM_time.savetimeline(System.currentTimeMillis(),":"+current_item+"\n");
+                        sendbirdConnection.removeCategory(category_items.get(pos2));
+                        category_items.remove(pos2);
+                        listView.clearChoices();
+                        adapter1.notifyDataSetChanged();
                     }
                 }
         );
