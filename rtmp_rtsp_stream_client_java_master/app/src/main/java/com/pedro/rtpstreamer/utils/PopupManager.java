@@ -68,8 +68,7 @@ public class PopupManager {
     public void btn_buy(LayoutInflater inflater) {
         View mView_c = inflater.inflate(R.layout.buylist_popup, null);
 
-        // ArrayAdapter 생성. 아이템 View를 선택(multiple choice)가능하도록 만듦.
-        ArrayAdapter<String> adapter1 = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_multiple_choice, category_items) ;
+        ArrayAdapter<String> adapter1 = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_multiple_choice, category_items);
 
         // listview 생성 및 adapter 지정.
         ListView listView = mView_c.findViewById(R.id.listView) ;
@@ -313,11 +312,10 @@ public class PopupManager {
     public void clearCategoryI(){
         category_items.clear();
     }
-
+    public void clearSCategory() { selected_items.clear(); }
     public void addCategoryI(String item){
         category_items.add(item);
     }
-
     public void addSCategory(String item) { selected_items.add(item); }
 
     public void setCategory(List<String> cate) {category_items = (ArrayList<String>)cate;}
