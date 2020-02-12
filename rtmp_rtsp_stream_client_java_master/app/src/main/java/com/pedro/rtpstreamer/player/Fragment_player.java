@@ -330,6 +330,7 @@ public class Fragment_player extends Fragment
         Log.d("btn onclick","click");
         switch(view.getId()){
             case R.id.buy_button:
+                getAllcategory();
                 pm.btn_buy(getLayoutInflater());
                 break;
 
@@ -477,7 +478,6 @@ public class Fragment_player extends Fragment
 
     public void connect(){
 
-
         SendBird.addChannelHandler(CHANNEL_HANDLER_ID, new SendBird.ChannelHandler() {
             @Override
             public void onMessageReceived(BaseChannel baseChannel, BaseMessage baseMessage) {
@@ -508,6 +508,7 @@ public class Fragment_player extends Fragment
             public void onMetaDataUpdated(BaseChannel channel, Map<String, String> metaDataMap) {
                 super.onMetaDataUpdated(channel, metaDataMap);
                 pm.clearCategoryI();
+                pm.clearSCategory();
                 for(Map.Entry<String, String> entry : metaDataMap.entrySet()){
                     if(entry.getValue().equals("select")){
                         pm.addSCategory(entry.getKey());
@@ -530,7 +531,23 @@ public class Fragment_player extends Fragment
             }
         });
     }
-
+    public void getAllcategory(){
+        pm.clearSCategory();
+        pm.clearCategoryI();
+        mChannel.getAllMetaData(new BaseChannel.MetaDataHandler() {
+            @Override
+            public void onResult(Map<String, String> map, SendBirdException e) {
+                pm.clearCategoryI();
+                for(Map.Entry<String, String> entry : map.entrySet()){
+                    if(entry.getValue().equals("select")){
+                        pm.addSCategory(entry.getKey());
+                    }else {
+                        pm.addCategoryI(entry.getKey());
+                    }
+                }
+            }
+        });
+    }
     private void updateCurrentUserInfo(final String userNickname) {
         SendBird.updateCurrentUserInfo(userNickname, null,
                 (SendBirdException e) -> {
@@ -573,16 +590,6 @@ public class Fragment_player extends Fragment
                         loadInitialMessageList(20);
                         title.setText(mChannel.getName());
                         streamer_nickname.setText(mChannel.getOperators().get(0).getNickname());
-                        mChannel.getAllMetaData(new BaseChannel.MetaDataHandler() {
-                            @Override
-                            public void onResult(Map<String, String> map, SendBirdException e) {
-                                for(Map.Entry<String, String> entry : map.entrySet()){
-                                    if(!entry.getKey().equals("empty")){
-                                        pm.addCategoryI(entry.getKey());
-                                    }
-                                }
-                            }
-                        });
                     }
                 });
             }

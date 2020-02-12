@@ -76,6 +76,8 @@ public class Replayer extends AppCompatActivity
     private boolean byTimeLine = false;
 
     private TextView currTimeline;
+    private Button OnOffButton;
+    private int onoff = 1;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -101,10 +103,26 @@ public class Replayer extends AppCompatActivity
         playBtn.setOnClickListener(this);
         seekBar.setOnSeekBarChangeListener(seekBarChangeListener);
         currTimeline = findViewById(R.id.curr_category);
+        OnOffButton = findViewById(R.id.btn_onoff2);
 
         ECC = new ExampleChatController(context, listView, R.layout.chatline, R.id.chat_line_textview, R.id.chat_line_timeview);
         ECC.show();
         ECC.add2("재방송 채팅입니다.");
+
+        //채팅과 각종알림 온오프
+        OnOffButton.setOnClickListener((View view) -> {
+            if(onoff == 1){
+                ECC.hide();
+                OnOffButton.setText("ON");
+                onoff = 0;
+            }
+            else if(onoff == 0){
+                ECC.show();
+                OnOffButton.setText("OFF");
+                onoff = 1;
+            }
+        });
+
     }
 
     @Override

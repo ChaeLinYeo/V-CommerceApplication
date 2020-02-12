@@ -215,7 +215,7 @@
         <LinearLayout
             android:id="@+id/etc"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="0dp"
             android:layout_marginRight="90dp"
@@ -233,7 +233,7 @@
                 app:srcCompat="@drawable/buyicon" />
 
             <Button
-                android:id="@+id/btn_onoff"
+                android:id="@+id/btn_onoff2"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_gravity="bottom"
@@ -266,7 +266,6 @@
                 android:focusable="true"
                 android:text="현재 null 판매중"
                 android:textSize="20sp"
-                android:layout_marginRight="10dp"
                 android:textColor="#fff"
                 android:gravity="center_vertical|left"
                 android:singleLine="true"

@@ -69,16 +69,30 @@ public class PopupManager {
         View mView_c = inflater.inflate(R.layout.buylist_popup, null);
 
         // ArrayAdapter 생성. 아이템 View를 선택(multiple choice)가능하도록 만듦.
-        ArrayAdapter<String> adapter1 = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_multiple_choice, category_items) ;
+        ArrayAdapter<String> adapter1 = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, category_items) ;
+
+        ArrayList<String> temp = new ArrayList<>();
+        if(selected_items.size()>0) {
+            temp.add(selected_items.get(selected_items.size() - 1));
+            selected_items.remove(selected_items.size() - 1);
+        }
+        // ArrayAdapter 생성. 아이템 View를 선택(multiple choice)가능하도록 만듦.
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, selected_items) ;
+        ArrayAdapter<String> adapter3 = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, temp) ;
 
         // listview 생성 및 adapter 지정.
-        ListView listView = mView_c.findViewById(R.id.listView) ;
-        listView.setAdapter(adapter1);
-        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        ListView listView = mView_c.findViewById(R.id.listView);
+
+//        listView.setAdapter(adapter1);
+//        listView.setAdapter(adapter2);
+//        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
         final AlertDialog.Builder alert05 = new AlertDialog.Builder(mContext);
 
         Button btn_Exit = mView_c.findViewById(R.id.btnExit);
+        Button btn_post = mView_c.findViewById(R.id.post);
+        Button btn_pre = mView_c.findViewById(R.id.pre);
+        Button btn_curr = mView_c.findViewById(R.id.curr);
 
         alert05.setView(mView_c);
 
@@ -86,6 +100,18 @@ public class PopupManager {
         alertDialog.setCanceledOnTouchOutside(false);
 
         btn_Exit.setOnClickListener((View view) -> alertDialog.dismiss());
+        btn_pre.setOnClickListener((View view) -> {
+            listView.setAdapter(adapter1);
+            adapter1.notifyDataSetChanged();
+        });
+        btn_post.setOnClickListener((View view) -> {
+            listView.setAdapter(adapter2);
+            adapter2.notifyDataSetChanged();
+        });
+        btn_curr.setOnClickListener((View view) -> {
+            listView.setAdapter(adapter3);
+            adapter3.notifyDataSetChanged();
+        });
         alertDialog.show();
     }
 
@@ -311,6 +337,9 @@ public class PopupManager {
     }
 
     public void clearCategoryI(){
+        category_items.clear();
+    }
+    public void clearSCategory(){
         category_items.clear();
     }
 
