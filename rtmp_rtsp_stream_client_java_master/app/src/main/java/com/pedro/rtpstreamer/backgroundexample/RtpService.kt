@@ -64,7 +64,8 @@ class RtpService : Service(), ConnectCheckerRtp {
       prepareStreamRtp()
       startStreamRtp(endpoint!!)
     }
-    return START_STICKY
+//    return START_STICKY
+    return START_REDELIVER_INTENT
   }
 
   override fun onDestroy() {

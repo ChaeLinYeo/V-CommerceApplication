@@ -6,11 +6,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.animation.ValueAnimator;
+import android.app.Activity;
 import android.content.Context;
-
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -38,11 +42,19 @@ import com.pedro.rtpstreamer.utils.ExampleChatController;
 import com.pedro.rtpstreamer.utils.PopupManager;
 import com.sendbird.android.User;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import gun0912.tedbottompicker.TedBottomPicker;
+import gun0912.tedbottompicker.TedBottomSheetDialogFragment;
 
 
 @RequiresApi(api = Build.VERSION_CODES.P)
@@ -174,19 +186,37 @@ public class BroadcastMain extends AppCompatActivity
                 break;
 
             case R.id.imgButton:
-//                if(!broadcastManager.isImage()) {
-//                    //핸드폰 갤러리 열음
-//                    Intent intent = new Intent();
-//                    //백그라운드 서비스 실행
-//                    //startService(intent);
-//                    // Show only images, no videos or anything else
-//                    intent.setType("image/*");
-//                    intent.setAction(Intent.ACTION_GET_CONTENT);
-//                    // Always show the chooser (if there are multiple options available)
-//                    startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
-//                } else{
-//                    broadcastManager.setTexture(1);
-//                }
+                if(!broadcastManager.isImage()) {
+                    TedBottomPicker.with(BroadcastMain.this)
+                            .setPeekHeight(1600)
+                            .showTitle(false)
+                            .setTitle("이미지 선택")
+                            .setCompleteButtonText("Done")
+                            .setEmptySelectionText("선택된 사진이 없습니다.")
+                            .setSelectMaxCount(1)
+                            .setSelectMinCount(0)
+                            .showMultiImage(new TedBottomSheetDialogFragment.OnMultiImageSelectedListener() {
+                                @Override
+                                public void onImagesSelected(List<Uri> uriList) {
+                                    // here is selected image uri list
+                                    //Bitmap bitmap = loadBitmap(uriList.toString());
+                                    try {
+                                        Bitmap bm = MediaStore.Images.Media.getBitmap(getContentResolver(), uriList.get(0));
+                                        broadcastManager.setImage(bm);
+
+                                    } catch (FileNotFoundException e) {
+                                        // TODO Auto-generated catch block
+                                        e.printStackTrace();
+                                    } catch (IOException e) {
+                                        // TODO Auto-generated catch block
+                                        e.printStackTrace();
+                                    }
+
+                                }
+                            });
+                } else{
+                    broadcastManager.setTexture(1);
+                }
                 broadcastManager.setTexture(1);
                 break;
 
@@ -212,22 +242,7 @@ public class BroadcastMain extends AppCompatActivity
                 break;
         }
     }
-
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-//            Uri uri = data.getData();
-//            try {
-//                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-//                // Log.d(TAG, String.valueOf(bitmap));
-//                broadcastManager.setImage(bitmap);
-//                //broadcastManager.setTexture(1);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
+    
 
     //For Broadcast info
     public View.OnClickListener broadcastClickListner = (View view) -> {

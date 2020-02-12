@@ -240,7 +240,7 @@ public class BroadcastManager
 
             case 1:
                 if(!onImage) {
-                    setImage();
+//                    setImage();
                 }
                 else {
                     rtmpCamera1.getGlInterface().removeFilter(1);
@@ -273,21 +273,28 @@ public class BroadcastManager
         onText=true;
     }
 
-    public void setImage(){
-        ImageObjectFilterRender imageObjectFilterRender = new ImageObjectFilterRender();
-        rtmpCamera1.getGlInterface().setFilterT(1,imageObjectFilterRender);
+    public void setImage(Bitmap bitmap){
+        if(!onImage) {
+            ImageObjectFilterRender imageObjectFilterRender = new ImageObjectFilterRender();
+            rtmpCamera1.getGlInterface().setFilterT(1,imageObjectFilterRender);
 
-        //set image and default setting
-        imageObjectFilterRender.setImage(BitmapFactory.decodeResource(pResources, R.mipmap.homiimg));
-        imageObjectFilterRender.setDefaultScale(rtmpCamera1.getStreamWidth(), rtmpCamera1.getStreamHeight());
-        imageObjectFilterRender.setScale(50f, 33.3f);
-        imageObjectFilterRender.setPosition(TranslateTo.RIGHT);
+            //set image and default setting
+            imageObjectFilterRender.setImage(bitmap);
+            imageObjectFilterRender.setDefaultScale(rtmpCamera1.getStreamWidth(), rtmpCamera1.getStreamHeight());
+            imageObjectFilterRender.setScale(50f, 33.3f);
+            imageObjectFilterRender.setPosition(TranslateTo.RIGHT);
 
-        //move,scale
-        spriteGestureControllerImg.setBaseObjectFilterRender(imageObjectFilterRender); //Optional
-        spriteGestureControllerImg.setPreventMoveOutside(false); //
+            //move,scale
+            spriteGestureControllerImg.setBaseObjectFilterRender(imageObjectFilterRender); //Optional
+            spriteGestureControllerImg.setPreventMoveOutside(false); //
 
-        onImage = true;
+            onImage = true;
+        }
+        else {
+            rtmpCamera1.getGlInterface().removeFilter(1);
+            spriteGestureControllerImg.setBaseObjectFilterRender(null);
+            onImage = false;
+        }
     }
 
     public void setUri(){
@@ -448,4 +455,7 @@ public class BroadcastManager
         broadcastListener.setToast("Auth success");
     }
 
+    public boolean isImage() {
+        return onImage;
+    }
 }
