@@ -8,8 +8,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -42,10 +40,8 @@ import com.pedro.rtpstreamer.server.SendbirdConnection;
 import com.pedro.rtpstreamer.server.SendbirdListner;
 import com.pedro.rtpstreamer.utils.ExampleChatController;
 import com.pedro.rtpstreamer.utils.PopupManager;
-import com.pedro.rtpstreamer.utils.UnCatchTaskService;
 import com.sendbird.android.User;
 
-import java.io.BufferedInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -241,8 +237,7 @@ public class BroadcastMain extends AppCompatActivity
                 break;
 
             case R.id.categoryButton:
-                sendbirdConnection.getAllCategory(PM);
-                PM.btn_Category(getLayoutInflater(), LM_time);
+                PM.btn_Category(getLayoutInflater(), LM_time,  category_items);
                 break;
         }
     }
@@ -346,7 +341,9 @@ public class BroadcastMain extends AppCompatActivity
         broadcastBtn.setText(R.string.start_button);
         sendbirdConnection.broadcastfinish();
         canStart = true;
-        LM.saveheartfinal(systemtime,heart_final);
+        LM.savefinal(systemtime,Integer.toString(heart_final), "heart");
+        LM.savefinal(systemtime,Integer.toString(sendbirdConnection.getViewNum()),"count");
+        LM.savefinal(systemtime,USER_ID,"user_id");
         LM.LMEnd();
         LM_time.LMEnd();
         AWSConnection.uploadFile(broadcastManager.getBroadcastName()+".txt", LM.getFileName(), this);
@@ -438,7 +435,6 @@ public class BroadcastMain extends AppCompatActivity
         btn_Exit.setOnClickListener((View view) -> {
             for (String item : category_items){
                 sendbirdConnection.addCategory(item);
-                PM.addCategoryI(item);
             }
             adapter1.notifyDataSetChanged();
             alertDialog.dismiss();

@@ -15,6 +15,7 @@ import com.sendbird.android.User;
 import com.sendbird.android.UserListQuery;
 import com.sendbird.android.UserMessage;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,6 +45,8 @@ public class SendbirdConnection {
 
     private List<User> UserList = new ArrayList<>();
 
+    private int viewNum=0;
+
     public void setupSendbird(Context context, String USER_ID, int type) {
         //////////////////////////////////////////////
         //try catch
@@ -61,6 +64,7 @@ public class SendbirdConnection {
                     updateCurrentUserInfo(USER_ID);
                 }
         );
+        viewNum=0;
     }
 
     private void updateCurrentUserInfo(final String userNickname) {
@@ -160,6 +164,7 @@ public class SendbirdConnection {
             @Override
             public void onUserEntered(OpenChannel channel, User user) {
                 super.onUserEntered(channel, user);
+                viewNum++;
                 getUserList(true);
             }
 
@@ -266,19 +271,19 @@ public class SendbirdConnection {
         });
     }
 
-    public void getAllCategory(PopupManager PM){
-        PM.clearCategoryI();
+    public ArrayList<String> getAllCategory(){
+        ArrayList<String> category = new ArrayList<>();
         mOpenChannel.getAllMetaData(new BaseChannel.MetaDataHandler() {
             @Override
             public void onResult(Map<String, String> map, SendBirdException e) {
                 for(Map.Entry<String, String> entry : map.entrySet()){
                     if(!entry.getKey().equals("empty")){
-                        Log.d("allcate", entry.getKey());
-                        PM.addCategoryI(entry.getKey());
+                        category.add(entry.getKey());
                     }
                 }
             }
         });
+        return category;
     }
 
     public void updateTitle(String title){
@@ -323,4 +328,6 @@ public class SendbirdConnection {
 //            }
 //        );
 //    }
+
+    public int getViewNum(){return viewNum;}
 }
