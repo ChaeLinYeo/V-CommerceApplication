@@ -45,6 +45,8 @@ public class SendbirdConnection {
 
     private List<User> UserList = new ArrayList<>();
 
+    private int viewNum=0;
+
     public void setupSendbird(Context context, String USER_ID, int type) {
         //////////////////////////////////////////////
         //try catch
@@ -62,6 +64,7 @@ public class SendbirdConnection {
                     updateCurrentUserInfo(USER_ID);
                 }
         );
+        viewNum=0;
     }
 
     private void updateCurrentUserInfo(final String userNickname) {
@@ -161,6 +164,7 @@ public class SendbirdConnection {
             @Override
             public void onUserEntered(OpenChannel channel, User user) {
                 super.onUserEntered(channel, user);
+                viewNum++;
                 getUserList(true);
             }
 
@@ -324,4 +328,6 @@ public class SendbirdConnection {
 //            }
 //        );
 //    }
+
+    public int getViewNum(){return viewNum;}
 }
