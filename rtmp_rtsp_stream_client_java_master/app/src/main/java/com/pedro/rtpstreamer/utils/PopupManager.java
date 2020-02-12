@@ -435,7 +435,7 @@ public class PopupManager {
                     pos2 = listView.getCheckedItemPosition();
                     if(pos2 != ListView.INVALID_POSITION){
                         String current_item = category_items.get(pos2);
-                        LM_time.savetimeline(System.currentTimeMillis()+":"+current_item+"\n");
+                        LM_time.savetimeline(System.currentTimeMillis(),":"+current_item+"\n");
                     }
                 }
         );

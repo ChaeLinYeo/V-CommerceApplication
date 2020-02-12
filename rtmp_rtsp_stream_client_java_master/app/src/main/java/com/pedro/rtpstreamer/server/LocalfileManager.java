@@ -54,9 +54,9 @@ public class LocalfileManager {
         }
     }
 
-    public void savetimeline(String data){
+    public void savetimeline(long time, String data){
         try{
-            writer.append(data);
+            writer.append(time+"/"+data);
             writer.flush();
         }catch(IOException e){
             Log.d("error",""+e.getMessage());
@@ -70,9 +70,9 @@ public class LocalfileManager {
             Log.d("error",""+e.getMessage());
         }
     }
-    public void saveheartfinal(int Data){
+    public void saveheartfinal(long time, int Data){
         try{
-            String fh = "finalheart/" + Data+"\n";
+            String fh = time+"/finalheart/"+ Data+"\n";
             writer.write(fh, 0 ,fh.length());
             writer.flush();
         }catch(IOException e){

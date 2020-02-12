@@ -333,7 +333,7 @@ public class BroadcastMain extends AppCompatActivity
         broadcastBtn.setText(R.string.start_button);
         sendbirdConnection.broadcastfinish();
         canStart = true;
-        LM.saveheartfinal(heart_final);
+        LM.saveheartfinal(systemtime,heart_final);
         LM.LMEnd();
         LM_time.LMEnd();
         AWSConnection.uploadFile(broadcastManager.getBroadcastName()+".txt", LM.getFileName(), this);
@@ -454,13 +454,14 @@ public class BroadcastMain extends AppCompatActivity
 
         btn_cancel.setOnClickListener((View lView) -> alertDialog.dismiss());
 
+        LM = new LocalfileManager(USER_ID+":"+systemtime+":"+sendbirdConnection.getChannelNum()+".txt");
+
         btn_ok.setOnClickListener(
             (View view) -> {
                 init_t = newtitle.getText().toString();
-                long time = System.currentTimeMillis() - systemtime;
                 sendbirdConnection.createChannel(init_t);
                 title_text.setText(init_t);
-                LM.savetitle(time , init_t);
+                LM.savetitle(0, init_t);
             }
         );
         Toast.makeText(getApplicationContext(), "방송 시작 전, 방송의 제목을 입력해주세요.", Toast.LENGTH_LONG).show();
@@ -747,7 +748,6 @@ public class BroadcastMain extends AppCompatActivity
         canStart = false;
         broadcastManager.setBroadcastChannel(sendbirdConnection.getChannelNum());
         broadcastManager.manageBroadcast(0);
-        LM = new LocalfileManager(USER_ID+":"+systemtime+":"+sendbirdConnection.getChannelNum()+".txt");
         LM_time = new LocalfileManager(USER_ID+":"+systemtime+":"+sendbirdConnection.getChannelNum()+"_timeline.txt");
         Log.d("channel complete",""+sendbirdConnection.getChannelNum());
         if(LM == null) Log.e("PKR","LM is null");

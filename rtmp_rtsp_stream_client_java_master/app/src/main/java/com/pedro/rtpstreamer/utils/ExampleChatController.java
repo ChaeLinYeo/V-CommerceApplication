@@ -37,7 +37,7 @@ public class ExampleChatController {
     public void hide() {
         mChatListView.setVisibility(View.GONE);
     }
-
+    public void clear() {mChatAdapter.clear();}
     public boolean hasMessages() {
         return !mChatAdapter.isEmpty();
     }

@@ -19,7 +19,7 @@ public class AWSfileManager {
     public AWSfileManager(String filename){
         try {
             String foldername = Environment.getExternalStorageDirectory().getAbsolutePath() + "/chatDown";
-            fileName = foldername + "/" + filename;
+            fileName = foldername + "/" + filename+".txt";
             reader = new BufferedReader(new InputStreamReader(new FileInputStream(fileName),"UTF8"));
         } catch(FileNotFoundException e){
             Log.e("error",""+e.getMessage());
