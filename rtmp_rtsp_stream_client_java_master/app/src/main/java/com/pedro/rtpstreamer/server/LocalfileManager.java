@@ -70,15 +70,17 @@ public class LocalfileManager {
             Log.d("error",""+e.getMessage());
         }
     }
-    public void saveheartfinal(long time, int Data){
+
+    public void savefinal(long time, String data, String type){
         try{
-            String fh = time+"/finalheart/"+ Data+"\n";
-            writer.write(fh, 0 ,fh.length());
+            String fh = time+"/" + type +"/"+ data+"\n";
+            writer.write(fh);
             writer.flush();
         }catch(IOException e){
             Log.d("error",""+e.getMessage());
         }
     }
+
     public void LMEnd(){
         try {
             writer.close();

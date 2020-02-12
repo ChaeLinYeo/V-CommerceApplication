@@ -7,14 +7,10 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
-import android.content.Intent;
 
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -40,10 +36,8 @@ import com.pedro.rtpstreamer.server.SendbirdConnection;
 import com.pedro.rtpstreamer.server.SendbirdListner;
 import com.pedro.rtpstreamer.utils.ExampleChatController;
 import com.pedro.rtpstreamer.utils.PopupManager;
-import com.pedro.rtpstreamer.utils.UnCatchTaskService;
 import com.sendbird.android.User;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -333,7 +327,9 @@ public class BroadcastMain extends AppCompatActivity
         broadcastBtn.setText(R.string.start_button);
         sendbirdConnection.broadcastfinish();
         canStart = true;
-        LM.saveheartfinal(systemtime,heart_final);
+        LM.savefinal(systemtime,Integer.toString(heart_final), "heart");
+        LM.savefinal(systemtime,Integer.toString(sendbirdConnection.getViewNum()),"count");
+        LM.savefinal(systemtime,USER_ID,"user_id");
         LM.LMEnd();
         LM_time.LMEnd();
         AWSConnection.uploadFile(broadcastManager.getBroadcastName()+".txt", LM.getFileName(), this);

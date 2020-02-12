@@ -16,32 +16,46 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="50dp"
         android:layout_gravity="bottom">
 
         <ListView
             android:id="@+id/ChatListView"
             android:layout_width="wrap_content"
-            android:layout_height="150dp"
+            android:layout_height="170dp"
+            android:layout_weight="3"
             android:background="#66000000"
             android:cacheColorHint="@android:color/transparent"
             android:divider="@android:color/transparent"
             android:dividerHeight="0px"
             android:listSelector="@android:color/transparent"
             android:stackFromBottom="true"
-            android:transcriptMode="alwaysScroll"
-            android:layout_weight="3"/>
+            android:transcriptMode="alwaysScroll" />
 
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/heartView"
-            android:layout_width="131dp"
-            android:layout_height="179dp"
-            app:lottie_autoPlay="false"
-            app:lottie_fileName="1851-like-02.json"
-            app:lottie_loop="false"
-            android:visibility="invisible"
-            android:layout_weight="1"/>
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
 
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/heartView"
+                android:layout_width="141dp"
+                android:layout_height="150dp"
+                android:visibility="invisible"
+                app:lottie_autoPlay="false"
+                app:lottie_fileName="1851-like-02.json"
+                android:layout_marginBottom="20dp"
+                app:lottie_loop="false"/>
+
+            <ImageView
+                android:id="@+id/HeartIcon"
+                android:layout_width="65dp"
+                android:layout_height="48dp"
+                android:layout_gravity="bottom|center"
+                android:layout_marginBottom="0dp"
+                app:srcCompat="@drawable/heart2" />
+
+        </FrameLayout>
     </LinearLayout>
 
     <RelativeLayout
@@ -95,6 +109,51 @@
             android:text="@string/noinfo"
             android:textColor="#fff"
             android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/heartnum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/replaynickname"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="10dp"
+            android:layout_toEndOf="@+id/imageView"
+            android:text=" 0 "
+            android:textColor="#fff"
+            android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="20dp"
+            android:layout_height="17dp"
+            android:layout_below="@+id/replaynickname"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="17dp"
+            app:srcCompat="@drawable/heart2" />
+
+        <TextView
+            android:id="@+id/peoplenum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/replaynickname"
+            android:layout_marginTop="13dp"
+            android:layout_marginStart="5dp"
+            android:layout_toEndOf="@id/eyeImage"
+            android:text=" 0 "
+            android:textColor="#fff"
+            android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/eyeImage"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_below="@id/replaynickname"
+            android:layout_marginStart="35dp"
+            android:layout_marginTop="18dp"
+            android:layout_marginEnd="0dp"
+            android:layout_toEndOf="@+id/heartnum"
+            app:srcCompat="@drawable/icon" />
 
 
         <LinearLayout

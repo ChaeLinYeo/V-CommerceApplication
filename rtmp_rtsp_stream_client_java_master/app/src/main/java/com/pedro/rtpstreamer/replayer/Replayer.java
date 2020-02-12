@@ -57,6 +57,7 @@ public class Replayer extends AppCompatActivity
     // 다시보기 화면 구성용
     TextView streamer_nickname;
     TextView title;
+    TextView heart;
     private ExampleChatController ECC;
     private LottieAnimationView songLikeAnimButton;
     private int nextIndex=0;
@@ -64,6 +65,9 @@ public class Replayer extends AppCompatActivity
     ArrayList<Pair> TL;
 
     private int completeFile = 0;
+    private String finalHeartNum;
+    private String finalViewNum;
+    private String USERID;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -162,6 +166,14 @@ public class Replayer extends AppCompatActivity
             e.printStackTrace();
         }
         c.End();
+
+        finalHeartNum = CL.get(CL.size()-3).getMsg();
+        finalViewNum = CL.get(CL.size()-2).getMsg();
+        USERID = CL.get(CL.size()-1).getMsg();
+        streamer_nickname.setText(USERID);
+        heart.setText(finalHeartNum);
+        TextView p = findViewById(R.id.peoplenum);
+        p.setText(finalViewNum);
     }
 
     public void removeUri(){
