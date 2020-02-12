@@ -239,7 +239,7 @@ public class BroadcastMain extends AppCompatActivity
     public View.OnClickListener broadcastClickListner = (View view) -> {
         switch(view.getId()){
             case R.id.titleText:
-                btn_showDialog();
+                PM.btn_showDialog(getLayoutInflater(), LM, systemtime, title_text);
                 break;
 
             case R.id.participant:
@@ -468,33 +468,7 @@ public class BroadcastMain extends AppCompatActivity
         alertDialog.show();
     }
 
-    //제목 수정 팝업창
-    public void btn_showDialog() {
-        final AlertDialog.Builder alert = new AlertDialog.Builder(BroadcastMain.this);
-        View mView = getLayoutInflater().inflate(R.layout.custom_dialog, null);
 
-        final EditText txt_inputText = mView.findViewById(R.id.init_title);
-        Button btn_cancel = mView.findViewById(R.id.btn_cancel);
-        Button btn_ok = mView.findViewById(R.id.btn_ok);
-
-        alert.setView(mView);
-
-        final AlertDialog alertDialog = alert.create();
-        alertDialog.setCanceledOnTouchOutside(false);
-
-        btn_cancel.setOnClickListener((View view) -> alertDialog.dismiss());
-
-        btn_ok.setOnClickListener((View view) -> {
-                init_t = txt_inputText.getText().toString();
-                long time = System.currentTimeMillis() - systemtime;
-                title_text.setText(init_t);
-                sendbirdConnection.updateTitle(init_t);
-                LM.savetitle(time, init_t);
-                alertDialog.dismiss();
-            }
-        );
-        alertDialog.show();
-    }
 
     //쿠폰 이벤트 설정 팝업창
     public void btn_editPopUp() {
@@ -726,12 +700,16 @@ public class BroadcastMain extends AppCompatActivity
     public void setText(){
         PM.btn_Text(getLayoutInflater(), broadcastManager);
     }
+    /*@Override
+    public void setTitle(){
+        PM.btn_showDialog(getLayoutInflater(),LM,systemtime, title_text);
+    }
 
     @Override
     public void setNoti(){
         PM.btn_showDialog2(getLayoutInflater(),broadcast_notice);
     }
-
+*/
     @Override
     public void channelFounded(boolean possible){
         if(possible){

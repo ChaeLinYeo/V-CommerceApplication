@@ -1,8 +1,5 @@
 package com.pedro.rtpstreamer.replayer;
-/*
-* 로그에 있는 채팅은 ECC.add
-* like는 하트 애니메이션 play
-*/
+
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -176,6 +173,7 @@ public class Replayer extends AppCompatActivity
 
         }
     }
+
     public Pair LogParser(String Log1){
         int index = Log1.indexOf("/");
         //StringTokenizer st = new StringTokenizer(Log1, "/");
