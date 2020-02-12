@@ -39,18 +39,6 @@ public class AWSfileManager {
         return al;
     }
 
-    public ArrayList<String> setSL() throws IOException {
-        String Heart = reader.readLine();
-        StringTokenizer st = new StringTokenizer(Heart);
-        String d = reader.readLine();
-        ArrayList<String> al = new ArrayList<>();
-        while(d != null){
-            al.add(d);
-            d = reader.readLine();
-        }
-        return al;
-    }
-
     public void End(){
         try {
             reader.close();

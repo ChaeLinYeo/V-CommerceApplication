@@ -15,6 +15,7 @@ import com.sendbird.android.User;
 import com.sendbird.android.UserListQuery;
 import com.sendbird.android.UserMessage;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -259,30 +260,37 @@ public class SendbirdConnection {
     }
 
     public void removeCategory(String item){
-        HashMap<String, String> map = new HashMap<>();
-        map.put(item, "empty");
-        updateCategory(map);
+        mOpenChannel.deleteMetaData(item, new BaseChannel.DeleteMetaDataHandler() {
+            @Override
+            public void onResult(SendBirdException e) {}
+        });
     }
-
+    public void selectCategory(String item){
+        HashMap<String, String> map = new HashMap<>();
+        map.put(item, "select");
+        mOpenChannel.updateMetaData(map, (Map<String, String> pMap, SendBirdException e) -> {
+            if(e!= null) Log.e("updateCategory", e.getMessage() + e.getCode());
+        });
+    }
     public void updateCategory(HashMap<String, String> map){
         mOpenChannel.updateMetaData(map, (Map<String, String> pMap, SendBirdException e) -> {
             if(e!= null) Log.e("updateCategory", e.getMessage() + e.getCode());
         });
     }
 
-    public void getAllCategory(PopupManager PM){
-        PM.clearCategoryI();
+    public ArrayList<String> getAllCategory(){
+        ArrayList<String> category = new ArrayList<>();
         mOpenChannel.getAllMetaData(new BaseChannel.MetaDataHandler() {
             @Override
             public void onResult(Map<String, String> map, SendBirdException e) {
                 for(Map.Entry<String, String> entry : map.entrySet()){
                     if(!entry.getKey().equals("empty")){
-                        Log.d("allcate", entry.getKey());
-                        PM.addCategoryI(entry.getKey());
+                        category.add(entry.getKey());
                     }
                 }
             }
         });
+        return category;
     }
 
     public void updateTitle(String title){

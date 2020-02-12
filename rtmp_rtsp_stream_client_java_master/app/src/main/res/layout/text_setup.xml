@@ -30,21 +30,32 @@
         android:text="색 선택"
         android:textSize="20sp"/>
 
+    <TextView
+        android:id="@+id/select_color"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/colortitle"
+        android:layout_marginTop="0dp"
+        android:text="현재 선택된 색 : "
+        android:textSize="20sp" />
+
     <LinearLayout
         android:id="@+id/colorpp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_below="@id/colortitle">
+        android:layout_below="@+id/select_color"
+        android:layout_marginTop="0dp"
+        android:orientation="horizontal">
 
         <Button
+            android:id="@+id/select_red"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="빨강"
-            android:textSize="20sp"
             android:layout_marginTop="5dp"
             android:background="@color/red"
-            android:id="@+id/select_red"/>
+            android:text="빨강"
+            android:textSize="20sp" />
+
         <Button
             android:id="@+id/select_blue"
             android:layout_width="wrap_content"
@@ -54,24 +65,26 @@
             android:background="@color/blue"
             android:text="파랑"
             android:textSize="20sp" />
+
         <Button
+            android:id="@+id/select_green"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="초록"
-            android:textSize="20sp"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="5dp"
             android:background="@color/green"
-            android:id="@+id/select_green"/>
+            android:text="초록"
+            android:textSize="20sp" />
+
         <Button
+            android:id="@+id/select_black"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="검정"
-            android:textSize="20sp"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="5dp"
             android:background="@color/black"
-            android:id="@+id/select_black"/>
+            android:text="검정"
+            android:textSize="20sp" />
     </LinearLayout>
     <Button
         android:id="@+id/btnAccept"

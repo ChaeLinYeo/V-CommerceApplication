@@ -35,6 +35,7 @@ import com.pedro.rtpstreamer.server.SendbirdConnection;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -43,7 +44,8 @@ public class PopupManager {
 
     private Context mContext;
 
-    private ArrayList<String> category_items  = new ArrayList<>();//카테고리 아이템들
+    private ArrayList<String> category_items = new ArrayList<>();//카테고리 아이템들
+    private ArrayList<String> selected_items = new ArrayList<>();
 
     //신고 선택 구분용 변수
     //0은 선택 안된 것, 1은 선택 된 것.
@@ -316,6 +318,10 @@ public class PopupManager {
         category_items.add(item);
     }
 
+    public void addSCategory(String item) { selected_items.add(item); }
+
+    public void setCategory(List<String> cate) {category_items = (ArrayList<String>)cate;}
+
     //공지 수정 팝업창
     public void btn_showDialog2(LayoutInflater inflater, TextView broadcast_notice) {
         final androidx.appcompat.app.AlertDialog.Builder alert03 = new androidx.appcompat.app.AlertDialog.Builder(mContext);
@@ -343,6 +349,7 @@ public class PopupManager {
         alertDialog.show();
     }
     int color;
+
     @RequiresApi(api = Build.VERSION_CODES.P)
     public void btn_Text(LayoutInflater inflater, BroadcastManager BM) {
         View mView = inflater.inflate(R.layout.text_setup, null);
@@ -355,16 +362,29 @@ public class PopupManager {
         Button green = mView.findViewById(R.id.select_green);
         Button blue = mView.findViewById(R.id.select_blue);
         Button black = mView.findViewById(R.id.select_black);
+        TextView select_color = mView.findViewById(R.id.select_color);
 
         alert05.setView(mView);
         final androidx.appcompat.app.AlertDialog alertDialog = alert05.create();
         alertDialog.setCanceledOnTouchOutside(false);
 
         btn_Exit.setOnClickListener((View view) -> alertDialog.dismiss());
-        red.setOnClickListener((View view) -> {color = Color.RED;});
-        black.setOnClickListener((View view) -> {color = Color.BLACK;});
-        blue.setOnClickListener((View view) -> {color = Color.BLUE;});
-        green.setOnClickListener((View view) -> {color = Color.GREEN;});
+        red.setOnClickListener((View view) -> {
+            color = Color.RED;
+            select_color.setText("현재 선택된 색 : 빨강");
+        });
+        black.setOnClickListener((View view) -> {
+            color = Color.BLACK;
+            select_color.setText("현재 선택된 색 : 검정");
+        });
+        blue.setOnClickListener((View view) -> {
+            color = Color.BLUE;
+            select_color.setText("현재 선택된 색 : 파랑");
+        });
+        green.setOnClickListener((View view) -> {
+            color = Color.GREEN;
+            select_color.setText("현재 선택된 색 : 초록");
+        });
         btn_Accept.setOnClickListener((View view) -> {
             if(!text.getText().toString().equals("")){
                 BM.setText(text.getText().toString(), color);
@@ -375,11 +395,12 @@ public class PopupManager {
     }
 
     //카테고리 설정하는 팝업창
-    public void btn_Category(LayoutInflater inflater, LocalfileManager LM_time) {
+    public void btn_Category(LayoutInflater inflater, LocalfileManager LM_time, ArrayList<String> initcate, long time) {
         SendbirdConnection sendbirdConnection = SendbirdConnection.getInstance();
         View mView_c = inflater.inflate(R.layout.popup_category, null);
 
         // ArrayAdapter 생성. 아이템 View를 선택(multiple choice)가능하도록 만듦.
+        category_items = initcate;
         ArrayAdapter<String> adapter1 = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_multiple_choice, category_items) ;
 
         // listview 생성 및 adapter 지정.
@@ -434,7 +455,12 @@ public class PopupManager {
                     pos2 = listView.getCheckedItemPosition();
                     if(pos2 != ListView.INVALID_POSITION){
                         String current_item = category_items.get(pos2);
-                        LM_time.savetimeline(System.currentTimeMillis(),":"+current_item+"\n");
+                        sendbirdConnection.selectCategory(current_item);
+                        long t = time - System.currentTimeMillis();
+                        LM_time.savetimeline(t,":"+current_item+"\n");
+                        category_items.remove(pos2);
+                        listView.clearChoices();
+                        adapter1.notifyDataSetChanged();
                     }
                 }
         );

@@ -237,12 +237,11 @@ public class BroadcastMain extends AppCompatActivity
                 break;
 
             case R.id.categoryButton:
-                sendbirdConnection.getAllCategory(PM);
-                PM.btn_Category(getLayoutInflater(), LM_time);
+                PM.btn_Category(getLayoutInflater(), LM_time,  category_items, systemtime);
                 break;
         }
     }
-    
+
 
     //For Broadcast info
     public View.OnClickListener broadcastClickListner = (View view) -> {
@@ -436,7 +435,6 @@ public class BroadcastMain extends AppCompatActivity
         btn_Exit.setOnClickListener((View view) -> {
             for (String item : category_items){
                 sendbirdConnection.addCategory(item);
-                PM.addCategoryI(item);
             }
             adapter1.notifyDataSetChanged();
             alertDialog.dismiss();
@@ -478,7 +476,6 @@ public class BroadcastMain extends AppCompatActivity
         Toast.makeText(getApplicationContext(), "방송 시작 전, 방송의 제목을 입력해주세요.", Toast.LENGTH_LONG).show();
         alertDialog.show();
     }
-
 
 
     //쿠폰 이벤트 설정 팝업창
