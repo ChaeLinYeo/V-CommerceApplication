@@ -241,8 +241,7 @@ public class BroadcastMain extends AppCompatActivity
                 break;
 
             case R.id.categoryButton:
-                sendbirdConnection.getAllCategory(PM);
-                PM.btn_Category(getLayoutInflater(), LM_time);
+                PM.btn_Category(getLayoutInflater(), LM_time,  category_items);
                 break;
         }
     }
@@ -438,7 +437,6 @@ public class BroadcastMain extends AppCompatActivity
         btn_Exit.setOnClickListener((View view) -> {
             for (String item : category_items){
                 sendbirdConnection.addCategory(item);
-                PM.addCategoryI(item);
             }
             adapter1.notifyDataSetChanged();
             alertDialog.dismiss();

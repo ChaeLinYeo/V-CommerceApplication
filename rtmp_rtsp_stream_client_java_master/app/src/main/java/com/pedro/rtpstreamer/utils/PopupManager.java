@@ -375,11 +375,12 @@ public class PopupManager {
     }
 
     //카테고리 설정하는 팝업창
-    public void btn_Category(LayoutInflater inflater, LocalfileManager LM_time) {
+    public void btn_Category(LayoutInflater inflater, LocalfileManager LM_time, ArrayList<String> initcate) {
         SendbirdConnection sendbirdConnection = SendbirdConnection.getInstance();
         View mView_c = inflater.inflate(R.layout.popup_category, null);
 
         // ArrayAdapter 생성. 아이템 View를 선택(multiple choice)가능하도록 만듦.
+        category_items = initcate;
         ArrayAdapter<String> adapter1 = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_multiple_choice, category_items) ;
 
         // listview 생성 및 adapter 지정.

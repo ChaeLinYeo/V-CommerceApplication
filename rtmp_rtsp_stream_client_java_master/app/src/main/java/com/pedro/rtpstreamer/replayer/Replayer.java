@@ -85,6 +85,7 @@ public class Replayer extends AppCompatActivity
         listView = findViewById(R.id.ChatListView);
         playBtn.setOnClickListener(this);
         seekBar.setOnSeekBarChangeListener(seekBarChangeListener);
+
         ECC = new ExampleChatController(context, listView, R.layout.chatline, R.id.chat_line_textview, R.id.chat_line_timeview);
         ECC.show();
         ECC.add2("재방송 채팅입니다.");
