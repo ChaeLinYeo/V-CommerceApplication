@@ -434,10 +434,40 @@ public class PopupManager {
                     pos2 = listView.getCheckedItemPosition();
                     if(pos2 != ListView.INVALID_POSITION){
                         String current_item = category_items.get(pos2);
-                        LM_time.savetimeline(System.currentTimeMillis()+":"+current_item+"\n");
+                        LM_time.savetimeline(System.currentTimeMillis(),":"+current_item+"\n");
                     }
                 }
         );
         alertDialog.show();
     }
+
+    //제목 수정 팝업창
+    public void btn_showDialog(LayoutInflater inflater, LocalfileManager LM, long systemtime, TextView title_text) {
+        final androidx.appcompat.app.AlertDialog.Builder alert = new androidx.appcompat.app.AlertDialog.Builder(mContext);
+        View mView = inflater.inflate(R.layout.custom_dialog, null);
+        SendbirdConnection sendbirdConnection = SendbirdConnection.getInstance();
+
+        final EditText txt_inputText = mView.findViewById(R.id.init_title);
+        Button btn_cancel = mView.findViewById(R.id.btn_cancel);
+        Button btn_ok = mView.findViewById(R.id.btn_ok);
+
+        alert.setView(mView);
+
+        final androidx.appcompat.app.AlertDialog alertDialog = alert.create();
+        alertDialog.setCanceledOnTouchOutside(false);
+
+        btn_cancel.setOnClickListener((View view) -> alertDialog.dismiss());
+
+        btn_ok.setOnClickListener((View view) -> {
+                    String init_t = txt_inputText.getText().toString();
+                    long time = System.currentTimeMillis() - systemtime;
+                    title_text.setText(init_t);
+                    sendbirdConnection.updateTitle(init_t);
+                    LM.savetitle(time, init_t);
+                    alertDialog.dismiss();
+                }
+        );
+        alertDialog.show();
+    }
+
 }

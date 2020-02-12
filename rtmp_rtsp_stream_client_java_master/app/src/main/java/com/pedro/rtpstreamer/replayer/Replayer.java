@@ -1,13 +1,12 @@
 package com.pedro.rtpstreamer.replayer;
-/*
-* 로그에 있는 채팅은 ECC.add
-* like는 하트 애니메이션 play
-*/
+
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -24,6 +23,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.pedro.rtpstreamer.R;
+import com.pedro.rtpstreamer.server.AWSConnection;
+import com.pedro.rtpstreamer.server.AWSListner;
+import com.pedro.rtpstreamer.server.AWSfileManager;
+import com.pedro.rtpstreamer.server.Pair;
 import com.pedro.rtpstreamer.utils.ExampleChatController;
 import com.pedro.rtpstreamer.utils.StaticVariable;
 
@@ -31,12 +34,13 @@ import org.videolan.libvlc.LibVLC;
 import org.videolan.libvlc.Media;
 import org.videolan.libvlc.MediaPlayer;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
 public class Replayer extends AppCompatActivity
-    implements View.OnClickListener {
+    implements View.OnClickListener, AWSListner {
 
     Context context;
 
@@ -55,6 +59,11 @@ public class Replayer extends AppCompatActivity
     TextView title;
     private ExampleChatController ECC;
     private LottieAnimationView songLikeAnimButton;
+    private int nextIndex=0;
+    ArrayList<Pair> CL;
+    ArrayList<Pair> TL;
+
+    private int completeFile = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -62,25 +71,33 @@ public class Replayer extends AppCompatActivity
         setContentView(R.layout.replayer);
         context = this;
 
+        AWSConnection.setAwsListner(this);
+
+        String path = Environment.getExternalStorageDirectory().getAbsolutePath();
+        AWSConnection.downloadFile("myUploadedFileName", path+"/chatDown/chat.txt", context);
+        AWSConnection.downloadFile("myUploadedFileName_timeLine", path+"/chatDown/timeline.txt", context);
+
+        songLikeAnimButton = findViewById(R.id.heartView);
         playBtn = findViewById(R.id.playBtn);
         seekBar = findViewById(R.id.seekBar);
         title = findViewById(R.id.replaytitle);
         streamer_nickname = findViewById(R.id.nickname);
         listView = findViewById(R.id.ChatListView);
-
         playBtn.setOnClickListener(this);
         seekBar.setOnSeekBarChangeListener(seekBarChangeListener);
         ECC = new ExampleChatController(context, listView, R.layout.chatline, R.id.chat_line_textview, R.id.chat_line_timeview);
         ECC.show();
-        ECC.add("재방송 채팅입니다.");
-        setUri();
+        ECC.add2("재방송 채팅입니다.");
     }
 
     @Override
     public void onClick(View view){
         switch(view.getId()){
             case R.id.playBtn:
-                if(mediaState==0) setUri();
+                if(mediaState==0) {
+                    nextIndex = 0;
+                    setUri();
+                }
                 else if(mediaState==1) mMediaPlayer.pause();
                 else mMediaPlayer.play();
         }
@@ -92,6 +109,20 @@ public class Replayer extends AppCompatActivity
             if(fromUser && mediaState != 0){
                 float pr = ((float) progress) / 1000f;
                 mMediaPlayer.setPosition(pr);
+                long d = mMediaPlayer.getTime();
+                for(int i=0; i<CL.size(); i++){
+                    if(CL.get(i).getTime() >= d) {
+                        nextIndex = i;
+                        break;
+                    }
+                }
+                ECC.clear();
+                for(int i=0; i<nextIndex; i++){
+                    Pair cp = CL.get(i);
+                    if(cp.getType().equals("chat")) {
+                        ECC.add2(cp.getMsg());
+                    }
+                }
             }
         }
 
@@ -110,6 +141,28 @@ public class Replayer extends AppCompatActivity
         mUri = Uri.parse(StaticVariable.stoargeUrl+"test/myUploadedFileName.mp4");
         handler.sendEmptyMessageDelayed(10, 100);
     }
+    public void setLog(){
+        AWSfileManager t = new AWSfileManager("timeline");
+        try {
+            ArrayList<String>temp = t.setTL();
+            for(String tmp : temp){
+                TL.add(LogParser(tmp));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        t.End();
+        AWSfileManager c = new AWSfileManager("chat");
+        try {
+            ArrayList<String>temp = c.setTL();
+            for(String tmp : temp){
+                CL.add(LogParser(tmp));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        c.End();
+    }
 
     public void removeUri(){
         Log.d("destroy", "destroy");
@@ -120,40 +173,15 @@ public class Replayer extends AppCompatActivity
 
         }
     }
-    public void ChatLogParser(String Log){
-        String[] data = new String[3];// [0]시간 / [1]타입 / [2]content (chat제외 무시하는 값)
-        int i = 0;
-        StringTokenizer st = new StringTokenizer(Log, "/");
-        while(st.hasMoreTokens()) {
-            data[i] = st.nextToken();
-            i++;
-        }
-        if(data[1].equals("chat")){
-            ECC.add2(data[0] + ":" +data[2]);
-        }else if(data[1].equals("like")){
-            //좋아요 애니메이션 실행
-        }else{
-            //Log.d("d","d");
-            //Log.e("sthwrong",data[1]);
-            return;
-        }
+
+    public Pair LogParser(String Log1){
+        int index = Log1.indexOf("/");
+        //StringTokenizer st = new StringTokenizer(Log1, "/");
+        Pair p = new Pair(Long.parseLong(Log1.substring(0,index)), Log1.substring(index+1));// [0]시간 / [1]타입 / 내용 (chat제외 무시하는 값)
+        Log.d("PKR3", "after new pair time : "+p.getTime()+" type : "+p.getType() + " msg : "+p.getMsg());
+        return p;
     }
 
-    public void SubParser(String subinfo){
-        String[] data = new String[2];// [0]시간 / [1]바뀐 제목
-        StringTokenizer st = new StringTokenizer(subinfo, "/");
-        data[0] = st.nextToken();
-        data[1] = st.nextToken();
-
-    }
-
-    public void TimeParser(String timeline){
-        String[] data = new String[2];// [0]시간 / [1]방송중인 상품
-        StringTokenizer st = new StringTokenizer(timeline, "/");
-        data[0] = st.nextToken();
-        data[1] = st.nextToken();
-
-    }
     //////////////////////////////////////////////
     //handler for play uri
     @SuppressLint("HandlerLeak")
@@ -182,6 +210,14 @@ public class Replayer extends AppCompatActivity
                                     break;
 
                                 case MediaPlayer.Event.TimeChanged:
+                                    long d = mMediaPlayer.getTime(); //ms
+                                    if(nextIndex == CL.size()) break;
+                                    Pair cp = CL.get(nextIndex);
+                                    Log.d("PKR2","time : "+cp.getTime()+"/"+d+" type : "+cp.getType() + "msg : "+cp.getMsg());
+                                    if(cp.getTime() <= d){
+                                        playChat(cp);
+                                        nextIndex++;
+                                    }
                                     int position = (int) (mMediaPlayer.getPosition()*1000);
                                     seekBar.setProgress(position);
                                     break;
@@ -212,4 +248,48 @@ public class Replayer extends AppCompatActivity
             }
         }
     };
+
+    private void playChat(Pair cp){
+        switch (cp.getType()) {
+            case "chat" :
+                ECC.add2(cp.getMsg());
+                break;
+
+            case "title":
+                title.setText(cp.getMsg());
+                break;
+
+            case "like" :
+                heartAni();
+                Log.d("PKR","play heart");
+                break;
+        }
+    }
+
+    private void heartAni(){
+        // 애니메이션을 한번 실행시킨다.
+        // Custom animation speed or duration.
+        // ofFloat(시작 시간, 종료 시간).setDuration(지속시간)
+        songLikeAnimButton.setVisibility(View.VISIBLE);
+        ValueAnimator animator = ValueAnimator.ofFloat(0f, 0.6f).setDuration(500);
+
+        animator.addUpdateListener((ValueAnimator animation) -> {
+                    float animatedValue = (Float) animation.getAnimatedValue();
+                    songLikeAnimButton.setProgress(animatedValue);
+                }
+        );
+        animator.start();
+    }
+
+    @Override
+    public void downloadComplete(){
+        completeFile++;
+        if(completeFile == 2){
+            CL = new ArrayList<>();
+            TL = new ArrayList<>();
+            setLog();
+
+            setUri();
+        }
+    }
 }

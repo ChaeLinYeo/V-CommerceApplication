@@ -19,6 +19,9 @@ import java.io.File;
 
 public class AWSConnection {
 
+    private static AWSListner awsListner;
+    private static TransferUtility transferUtility;
+
     public static void uploadFile(String fileName, String localPath, Context context) {
         Log.d("upload", ""+localPath);
 //        Amplify.Storage.uploadFile(
@@ -35,13 +38,14 @@ public class AWSConnection {
 //                }
 //            }
 //        );
-
-        TransferUtility transferUtility =
-                TransferUtility.builder()
-                        .context(context)
-                        .awsConfiguration(AWSMobileClient.getInstance().getConfiguration())
-                        .s3Client(new AmazonS3Client(AWSMobileClient.getInstance().getCredentials()))
-                        .build();
+        if(transferUtility == null) {
+            transferUtility =
+                    TransferUtility.builder()
+                            .context(context)
+                            .awsConfiguration(AWSMobileClient.getInstance().getConfiguration())
+                            .s3Client(new AmazonS3Client(AWSMobileClient.getInstance().getCredentials()))
+                            .build();
+        }
 
         TransferObserver uploadObserver =
                 transferUtility.upload(
@@ -72,7 +76,6 @@ public class AWSConnection {
                 // Handle errors
                 Log.e("error", ""+ ex.getMessage());
             }
-
         });
 
         // If you prefer to poll for the data, instead of attaching a
@@ -85,20 +88,41 @@ public class AWSConnection {
         Log.d("YourActivity", "Bytes Total: " + uploadObserver.getBytesTotal());
     }
 
-    public static void downloadFile(Context context) {
+    public static void downloadFile(String fileName, String localPath, Context context) {
 
-        String localPath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/chatDown/subinfo.txt";
+//        Amplify.Storage.downloadFile(
+//            fileName, localPath,
+//            new ResultListener<StorageDownloadFileResult>() {
+//                @Override
+//                public void onResult(StorageDownloadFileResult result) {
+//                    Log.i("StorageQuickStart", "Successfully downloaded: " + result.getFile().getName());
+//                }
+//
+//                @Override
+//                public void onError(Throwable error) {
+//                    Log.e("StorageQuickStart", error.getMessage());
+//                }
+//            }
+//        );
 
-        TransferUtility transferUtility =
-                TransferUtility.builder()
-                        .context(context)
-                        .awsConfiguration(AWSMobileClient.getInstance().getConfiguration())
-                        .s3Client(new AmazonS3Client(AWSMobileClient.getInstance().getCredentials()))
-                        .build();
+        //String localPath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/chatDown/subinfo.txt";
+
+        if(transferUtility == null) {
+            transferUtility =
+                    TransferUtility.builder()
+                            .context(context)
+                            .awsConfiguration(AWSMobileClient.getInstance().getConfiguration())
+                            .s3Client(new AmazonS3Client(AWSMobileClient.getInstance().getCredentials()))
+                            .build();
+        }
+
+
+        String key = "public/test/"+fileName+".txt";
+        Log.d("PKR","download"+key);
 
         TransferObserver downloadObserver =
                 transferUtility.download(
-                        "public/test/myUploadedFileName_subinfo.txt",
+                        key,
                         new File(localPath));
 
         // Attach a listener to the observer to get notified of the
@@ -109,6 +133,7 @@ public class AWSConnection {
             public void onStateChanged(int id, TransferState state) {
                 if (TransferState.COMPLETED == state) {
                     // Handle a completed upload.
+                    awsListner.downloadComplete();
                 }
             }
 
@@ -154,4 +179,8 @@ public class AWSConnection {
 //            }
 //        );
 //    }
+
+    public static void setAwsListner(Context context){
+        awsListner = (AWSListner) context;
+    }
 }

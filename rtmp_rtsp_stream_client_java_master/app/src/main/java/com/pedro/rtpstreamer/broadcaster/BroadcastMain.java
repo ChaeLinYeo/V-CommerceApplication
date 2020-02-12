@@ -114,7 +114,6 @@ public class BroadcastMain extends AppCompatActivity
     private SendbirdConnection sendbirdConnection;
     private LocalfileManager LM;
     private LocalfileManager LM_time;
-    private LocalfileManager LM_subinfo;
     private int heart_final;
     private AlertDialog alertDialog;
 
@@ -296,7 +295,7 @@ public class BroadcastMain extends AppCompatActivity
     public View.OnClickListener broadcastClickListner = (View view) -> {
         switch(view.getId()){
             case R.id.titleText:
-                btn_showDialog();
+                PM.btn_showDialog(getLayoutInflater(), LM, systemtime, title_text);
                 break;
 
             case R.id.participant:
@@ -390,13 +389,11 @@ public class BroadcastMain extends AppCompatActivity
         broadcastBtn.setText(R.string.start_button);
         sendbirdConnection.broadcastfinish();
         canStart = true;
-        LM_subinfo.saveheartfinal(heart_final);
+        LM.saveheartfinal(systemtime,heart_final);
         LM.LMEnd();
         LM_time.LMEnd();
-        LM_subinfo.LMEnd();
         AWSConnection.uploadFile(broadcastManager.getBroadcastName()+".txt", LM.getFileName(), this);
         AWSConnection.uploadFile(broadcastManager.getBroadcastName()+"_timeLine.txt", LM_time.getFileName(), this);
-        AWSConnection.uploadFile(broadcastManager.getBroadcastName()+"_subinfo.txt", LM_subinfo.getFileName(), this);
         category_items.clear();
     }
 
@@ -502,7 +499,6 @@ public class BroadcastMain extends AppCompatActivity
     public void create_title() {
         final AlertDialog.Builder alert = new AlertDialog.Builder(BroadcastMain.this);
         View mView = getLayoutInflater().inflate(R.layout.init_channel, null);
-        LM_subinfo = new LocalfileManager(USER_ID+":"+systemtime+":"+sendbirdConnection.getChannelNum()+"_subinfo.txt");
         final EditText newtitle = mView.findViewById(R.id.init_title);
         Button btn_cancel = mView.findViewById(R.id.init_cancel);
         Button btn_ok = mView.findViewById(R.id.init_ok);
@@ -514,46 +510,21 @@ public class BroadcastMain extends AppCompatActivity
 
         btn_cancel.setOnClickListener((View lView) -> alertDialog.dismiss());
 
+        LM = new LocalfileManager(USER_ID+":"+systemtime+":"+sendbirdConnection.getChannelNum()+".txt");
+
         btn_ok.setOnClickListener(
             (View view) -> {
                 init_t = newtitle.getText().toString();
-                long time = System.currentTimeMillis() - systemtime;
                 sendbirdConnection.createChannel(init_t);
                 title_text.setText(init_t);
-                LM_subinfo.savetitle(time + "/" +init_t);
+                LM.savetitle(0, init_t);
             }
         );
         Toast.makeText(getApplicationContext(), "방송 시작 전, 방송의 제목을 입력해주세요.", Toast.LENGTH_LONG).show();
         alertDialog.show();
     }
 
-    //제목 수정 팝업창
-    public void btn_showDialog() {
-        final AlertDialog.Builder alert = new AlertDialog.Builder(BroadcastMain.this);
-        View mView = getLayoutInflater().inflate(R.layout.custom_dialog, null);
 
-        final EditText txt_inputText = mView.findViewById(R.id.init_title);
-        Button btn_cancel = mView.findViewById(R.id.btn_cancel);
-        Button btn_ok = mView.findViewById(R.id.btn_ok);
-
-        alert.setView(mView);
-
-        final AlertDialog alertDialog = alert.create();
-        alertDialog.setCanceledOnTouchOutside(false);
-
-        btn_cancel.setOnClickListener((View view) -> alertDialog.dismiss());
-
-        btn_ok.setOnClickListener((View view) -> {
-                init_t = txt_inputText.getText().toString();
-                long time = System.currentTimeMillis() - systemtime;
-                title_text.setText(init_t);
-                sendbirdConnection.updateTitle(init_t);
-                LM_subinfo.savetitle(time + "/"+init_t);
-                alertDialog.dismiss();
-            }
-        );
-        alertDialog.show();
-    }
 
     //쿠폰 이벤트 설정 팝업창
     public void btn_editPopUp() {
@@ -785,12 +756,16 @@ public class BroadcastMain extends AppCompatActivity
     public void setText(){
         PM.btn_Text(getLayoutInflater(), broadcastManager);
     }
+    /*@Override
+    public void setTitle(){
+        PM.btn_showDialog(getLayoutInflater(),LM,systemtime, title_text);
+    }
 
     @Override
     public void setNoti(){
         PM.btn_showDialog2(getLayoutInflater(),broadcast_notice);
     }
-
+*/
     @Override
     public void channelFounded(boolean possible){
         if(possible){
@@ -807,7 +782,6 @@ public class BroadcastMain extends AppCompatActivity
         canStart = false;
         broadcastManager.setBroadcastChannel(sendbirdConnection.getChannelNum());
         broadcastManager.manageBroadcast(0);
-        LM = new LocalfileManager(USER_ID+":"+systemtime+":"+sendbirdConnection.getChannelNum()+".txt");
         LM_time = new LocalfileManager(USER_ID+":"+systemtime+":"+sendbirdConnection.getChannelNum()+"_timeline.txt");
         Log.d("channel complete",""+sendbirdConnection.getChannelNum());
         if(LM == null) Log.e("PKR","LM is null");
