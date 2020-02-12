@@ -237,7 +237,7 @@ public class BroadcastMain extends AppCompatActivity
                 break;
 
             case R.id.categoryButton:
-                PM.btn_Category(getLayoutInflater(), LM_time,  category_items);
+                PM.btn_Category(getLayoutInflater(), LM_time,  category_items, systemtime);
                 break;
         }
     }
