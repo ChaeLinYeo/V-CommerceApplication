@@ -63,6 +63,7 @@ public class Replayer extends AppCompatActivity
     private ExampleChatController ECC;
     private LottieAnimationView songLikeAnimButton;
     private int nextIndex=0;
+    private int nextTimeline=0;
     ArrayList<Pair> CL;
     ArrayList<Pair> TL;
 
@@ -113,6 +114,7 @@ public class Replayer extends AppCompatActivity
             case R.id.playBtn:
                 if(mediaState==0) {
                     nextIndex = 0;
+                    nextTimeline=0;
                     setUri();
                 }
                 else if(mediaState==1) mMediaPlayer.pause();
@@ -144,6 +146,15 @@ public class Replayer extends AppCompatActivity
                     Pair cp = CL.get(i);
                     if(cp.getType().equals("chat")) {
                         ECC.add2(cp.getMsg());
+                    }
+                }
+
+                for(int i=0; i<TL.size();i++){
+                    if(TL.get(i).getTime() >= d){
+                        Log.d("PKRTS","nexttimeline : "+nextTimeline);
+                        nextTimeline = i;
+                        if(i>0) currTimeline.setText(TL.get(i-1).getType());
+                        break;
                     }
                 }
             } else if(byTimeLine){
@@ -262,12 +273,21 @@ public class Replayer extends AppCompatActivity
 
                                 case MediaPlayer.Event.TimeChanged:
                                     long d = mMediaPlayer.getTime(); //ms
-                                    if(nextIndex == CL.size()-2) break;
-                                    Pair cp = CL.get(nextIndex);
-                                    Log.d("PKR2","time : "+cp.getTime()+"/"+d+" type : "+cp.getType() + "msg : "+cp.getMsg());
-                                    if(cp.getTime() <= d){
-                                        playChat(cp);
-                                        nextIndex++;
+                                    if(nextIndex < CL.size()-2) {
+                                        Pair cp = CL.get(nextIndex);
+                                        Log.d("PKR2", "time : " + cp.getTime() + "/" + d + " type : " + cp.getType() + "msg : " + cp.getMsg());
+                                        if (cp.getTime() <= d) {
+                                            playChat(cp);
+                                            nextIndex++;
+                                        }
+                                    }
+                                    if(nextTimeline < TL.size()) {
+                                        Log.d("PKRT","nexttimeline : "+nextTimeline);
+                                        if (TL.get(nextTimeline).getTime() <= d) {
+                                            Log.d("PKRTC","nexttimeline changed : "+TL.get(nextTimeline).getType());
+                                            currTimeline.setText(TL.get(nextTimeline).getType());
+                                            nextTimeline++;
+                                        }
                                     }
                                     int position = (int) (mMediaPlayer.getPosition()*1000);
                                     seekBar.setProgress(position);
@@ -370,6 +390,8 @@ public class Replayer extends AppCompatActivity
 
         listView.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
                 Log.d("PKRA","category time : "+TL.get(position).getTime());
+                nextTimeline = position;
+                Log.d("PKRTT","nexttimeline : "+nextTimeline);
                 mMediaPlayer.setTime(TL.get(position).getTime());
                 byTimeLine = true;
                 int mediaPosition = (int) (mMediaPlayer.getPosition()*1000);
