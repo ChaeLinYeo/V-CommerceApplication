@@ -102,4 +102,7 @@ dependencies {
     implementation 'com.facebook.android:facebook-share:[5,6)'
     implementation 'com.google.firebase:firebase-config:19.1.1'
     implementation 'com.google.firebase:firebase-auth:19.2.0'
+
+    //bottom sheet https://github.com/ParkSangGwon/TedBottomPicker
+    implementation 'gun0912.ted:tedbottompicker:2.0.1'
 }

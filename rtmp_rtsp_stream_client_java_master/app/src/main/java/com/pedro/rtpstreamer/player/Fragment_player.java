@@ -357,17 +357,6 @@ public class Fragment_player extends Fragment
                     });
                 }
                 break;
-
-//            case R.id.btn_onoff:
-//                if(onoff == 1){
-//                    mExampleChatController.hide();
-//                    onoff = 0;
-//                }
-//                else if(onoff == 0){
-//                    mExampleChatController.show();
-//                    onoff = 1;
-//                }
-//                break;
         }
     }
 
