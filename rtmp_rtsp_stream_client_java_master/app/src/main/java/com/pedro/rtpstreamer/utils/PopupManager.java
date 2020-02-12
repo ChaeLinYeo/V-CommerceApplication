@@ -456,8 +456,8 @@ public class PopupManager {
                     if(pos2 != ListView.INVALID_POSITION){
                         String current_item = category_items.get(pos2);
                         sendbirdConnection.selectCategory(current_item);
-                        long t = time - System.currentTimeMillis();
-                        LM_time.savetimeline(t,":"+current_item+"\n");
+                        long t = System.currentTimeMillis()-time;
+                        LM_time.savetimeline(t,current_item+"\n");
                         category_items.remove(pos2);
                         listView.clearChoices();
                         adapter1.notifyDataSetChanged();

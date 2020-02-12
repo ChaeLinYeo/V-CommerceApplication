@@ -278,6 +278,7 @@ public class Replayer extends AppCompatActivity
                                 case MediaPlayer.Event.Stopped:
                                     Log.d("mHandler","stop");
                                     playBtn.setText("start");
+                                    seekBar.setProgress(1000);
                                     mediaState=0;
                                     removeUri();
                                     byTimeLine = false;
