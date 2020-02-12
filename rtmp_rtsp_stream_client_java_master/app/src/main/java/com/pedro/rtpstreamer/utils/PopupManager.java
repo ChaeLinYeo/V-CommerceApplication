@@ -35,6 +35,7 @@ import com.pedro.rtpstreamer.server.SendbirdConnection;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -43,7 +44,8 @@ public class PopupManager {
 
     private Context mContext;
 
-    private ArrayList<String> category_items  = new ArrayList<>();//카테고리 아이템들
+    private ArrayList<String> category_items = new ArrayList<>();//카테고리 아이템들
+    private ArrayList<String> selected_items = new ArrayList<>();
 
     //신고 선택 구분용 변수
     //0은 선택 안된 것, 1은 선택 된 것.
@@ -316,6 +318,10 @@ public class PopupManager {
         category_items.add(item);
     }
 
+    public void addSCategory(String item) { selected_items.add(item); }
+
+    public void setCategory(List<String> cate) {category_items = (ArrayList<String>)cate;}
+
     //공지 수정 팝업창
     public void btn_showDialog2(LayoutInflater inflater, TextView broadcast_notice) {
         final androidx.appcompat.app.AlertDialog.Builder alert03 = new androidx.appcompat.app.AlertDialog.Builder(mContext);
@@ -375,7 +381,7 @@ public class PopupManager {
     }
 
     //카테고리 설정하는 팝업창
-    public void btn_Category(LayoutInflater inflater, LocalfileManager LM_time, ArrayList<String> initcate) {
+    public void btn_Category(LayoutInflater inflater, LocalfileManager LM_time, ArrayList<String> initcate, long time) {
         SendbirdConnection sendbirdConnection = SendbirdConnection.getInstance();
         View mView_c = inflater.inflate(R.layout.popup_category, null);
 
@@ -435,7 +441,9 @@ public class PopupManager {
                     pos2 = listView.getCheckedItemPosition();
                     if(pos2 != ListView.INVALID_POSITION){
                         String current_item = category_items.get(pos2);
-                        LM_time.savetimeline(System.currentTimeMillis(),":"+current_item+"\n");
+                        sendbirdConnection.selectCategory(current_item);
+                        long t = time - System.currentTimeMillis();
+                        LM_time.savetimeline(t,":"+current_item+"\n");
                     }
                 }
         );

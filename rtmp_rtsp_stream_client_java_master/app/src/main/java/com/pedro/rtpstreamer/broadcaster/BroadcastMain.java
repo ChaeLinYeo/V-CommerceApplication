@@ -478,7 +478,6 @@ public class BroadcastMain extends AppCompatActivity
     }
 
 
-
     //쿠폰 이벤트 설정 팝업창
     public void btn_editPopUp() {
         final AlertDialog.Builder alert = new AlertDialog.Builder(BroadcastMain.this);
