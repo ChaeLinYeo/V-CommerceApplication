@@ -65,7 +65,7 @@
             android:textSize="15sp" />
 
         <TextView
-            android:id="@+id/heartnum"
+            android:id="@+id/reheartnum"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/replaynickname"
@@ -91,7 +91,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/replaynickname"
-            android:layout_marginTop="13dp"
+            android:layout_marginTop="10dp"
             android:layout_marginStart="5dp"
             android:layout_toEndOf="@id/eyeImage"
             android:text=" 0 "
@@ -104,9 +104,9 @@
             android:layout_height="16dp"
             android:layout_below="@id/replaynickname"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="17dp"
             android:layout_marginEnd="0dp"
-            android:layout_toEndOf="@+id/heartnum"
+            android:layout_toEndOf="@id/reheartnum"
             app:srcCompat="@drawable/icon" />
 
         <LinearLayout
@@ -243,6 +243,36 @@
                 android:text="OFF"
                 android:layout_marginRight="10dp"
                 android:textColor="#000000" />
+
+            <Button
+                android:id="@+id/timelineButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="bottom"
+                android:background="#fff"
+                android:clickable="true"
+                android:focusable="true"
+                android:text="타임라인"
+                android:layout_marginRight="10dp"
+                android:textColor="#000000" />
+
+            <TextView
+                android:id="@+id/curr_category"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_gravity="bottom"
+                android:background="#34000000"
+                android:clickable="true"
+                android:focusable="true"
+                android:text="현재 null 판매중"
+                android:textSize="20sp"
+                android:layout_marginRight="10dp"
+                android:textColor="#fff"
+                android:gravity="center_vertical|left"
+                android:singleLine="true"
+                android:focusableInTouchMode="true"
+                android:ellipsize="marquee"
+                android:marqueeRepeatLimit="marquee_forever"/>
         </LinearLayout>
     </RelativeLayout>
 
