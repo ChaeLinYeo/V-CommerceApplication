@@ -15,53 +15,12 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="50dp"
-        android:layout_gravity="bottom">
+        android:orientation="horizontal">
 
-        <ListView
-            android:id="@+id/ChatListView"
-            android:layout_width="wrap_content"
-            android:layout_height="170dp"
-            android:layout_weight="3"
-            android:background="#66000000"
-            android:cacheColorHint="@android:color/transparent"
-            android:divider="@android:color/transparent"
-            android:dividerHeight="0px"
-            android:listSelector="@android:color/transparent"
-            android:stackFromBottom="true"
-            android:transcriptMode="alwaysScroll" />
-
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-
-            <com.airbnb.lottie.LottieAnimationView
-                android:id="@+id/heartView"
-                android:layout_width="141dp"
-                android:layout_height="150dp"
-                android:visibility="invisible"
-                app:lottie_autoPlay="false"
-                app:lottie_fileName="1851-like-02.json"
-                android:layout_marginBottom="20dp"
-                app:lottie_loop="false"/>
-
-            <ImageView
-                android:id="@+id/HeartIcon"
-                android:layout_width="65dp"
-                android:layout_height="48dp"
-                android:layout_gravity="bottom|center"
-                android:layout_marginBottom="0dp"
-                app:srcCompat="@drawable/heart2" />
-
-        </FrameLayout>
-    </LinearLayout>
-
-    <RelativeLayout
+        <RelativeLayout
         android:id="@+id/rl_Live"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
         <ImageButton
             android:id="@+id/imageButton3"
@@ -111,7 +70,7 @@
             android:textSize="15sp" />
 
         <TextView
-            android:id="@+id/heartnum"
+            android:id="@+id/reheartnum"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/replaynickname"
@@ -152,31 +111,87 @@
             android:layout_marginStart="35dp"
             android:layout_marginTop="18dp"
             android:layout_marginEnd="0dp"
-            android:layout_toEndOf="@+id/heartnum"
+            android:layout_toEndOf="@id/reheartnum"
             app:srcCompat="@drawable/icon" />
 
-
-        <LinearLayout
-            android:id="@+id/playbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="680dp"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/playBtn"
-                android:text="start"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"/>
-
-            <SeekBar
-                android:id="@+id/seekBar"
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:background="@color/white"
-                android:max="1000" />
-        </LinearLayout>
-
     </RelativeLayout>
+
+        <Button
+            android:id="@+id/timelineButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="20dp"
+            android:layout_marginVertical="20dp"
+            android:text = "TIMLINE"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="60dp"
+        android:layout_gravity="bottom">
+
+        <ListView
+            android:id="@+id/ChatListView"
+            android:layout_width="wrap_content"
+            android:layout_height="170dp"
+            android:layout_weight="3"
+            android:background="#66000000"
+            android:cacheColorHint="@android:color/transparent"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="0px"
+            android:listSelector="@android:color/transparent"
+            android:stackFromBottom="true"
+            android:transcriptMode="alwaysScroll" />
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/heartView"
+                android:layout_width="141dp"
+                android:layout_height="150dp"
+                android:visibility="invisible"
+                app:lottie_autoPlay="false"
+                app:lottie_fileName="1851-like-02.json"
+                android:layout_marginBottom="20dp"
+                app:lottie_loop="false"/>
+
+            <ImageView
+                android:id="@+id/HeartIcon"
+                android:layout_width="65dp"
+                android:layout_height="48dp"
+                android:layout_gravity="bottom|center"
+                android:layout_marginBottom="0dp"
+                app:srcCompat="@drawable/heart2" />
+
+        </FrameLayout>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/playbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="680dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/playBtn"
+            android:text="start"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"/>
+
+        <SeekBar
+            android:id="@+id/seekBar"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:background="@color/white"
+            android:max="1000" />
+    </LinearLayout>
 
 </FrameLayout>
