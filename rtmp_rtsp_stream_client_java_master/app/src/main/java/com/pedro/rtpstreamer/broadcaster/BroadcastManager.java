@@ -176,8 +176,8 @@ public class BroadcastManager
             return;
         }
         if(rtmpCamera1.prepareAudio() && rtmpCamera1.prepareVideo(cW, cH)){
-            broadcastListener.broadcastStart();
             rtmpCamera1.startStream(StaticVariable.bambuserDefaultUrl +""+ StaticVariable.broadcastUrl[broadcastChannel]);
+            broadcastListener.broadcastStart();
         } else broadcastListener.setToast("Error preparing stream, This device cant do it");
     }
 
