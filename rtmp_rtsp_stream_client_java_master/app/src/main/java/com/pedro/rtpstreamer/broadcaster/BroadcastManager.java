@@ -250,7 +250,9 @@ public class BroadcastManager
                 break;
 
             case 2:
-                if(!onUri) setUri();
+                if(!onUri) {
+//                    setUri();
+                }
                 else removeUri();
                 break;
         }
@@ -297,15 +299,18 @@ public class BroadcastManager
         }
     }
 
-    public void setUri(){
+    public void setUri(Uri uri){
         Log.d("Uri", "setUri");
         onUri = true;
         broadcastListener.onUriLoading();
-        mUri = Uri.parse("https://s3.ap-northeast-2.amazonaws.com/asset.solmaru.co.kr/BRD/qRusKMnmVg.mp4");
+//        mUri = Uri.parse("https://s3.ap-northeast-2.amazonaws.com/asset.solmaru.co.kr/BRD/qRusKMnmVg.mp4");
+        mUri = uri;
         surfaceFilterRender = new SurfaceFilterRender();
         rtmpCamera1.getGlInterface().setFilterT(2,surfaceFilterRender);
         handler.sendEmptyMessageDelayed(10, 100);
     }
+
+    public boolean isUri(){return onUri;}
 
     public void removeUri(){
         Log.d("destroy", "destroy");
