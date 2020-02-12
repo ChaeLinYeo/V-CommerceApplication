@@ -349,6 +349,7 @@ public class PopupManager {
         alertDialog.show();
     }
     int color;
+
     @RequiresApi(api = Build.VERSION_CODES.P)
     public void btn_Text(LayoutInflater inflater, BroadcastManager BM) {
         View mView = inflater.inflate(R.layout.text_setup, null);
@@ -361,16 +362,29 @@ public class PopupManager {
         Button green = mView.findViewById(R.id.select_green);
         Button blue = mView.findViewById(R.id.select_blue);
         Button black = mView.findViewById(R.id.select_black);
+        TextView select_color = mView.findViewById(R.id.select_color);
 
         alert05.setView(mView);
         final androidx.appcompat.app.AlertDialog alertDialog = alert05.create();
         alertDialog.setCanceledOnTouchOutside(false);
 
         btn_Exit.setOnClickListener((View view) -> alertDialog.dismiss());
-        red.setOnClickListener((View view) -> {color = Color.RED;});
-        black.setOnClickListener((View view) -> {color = Color.BLACK;});
-        blue.setOnClickListener((View view) -> {color = Color.BLUE;});
-        green.setOnClickListener((View view) -> {color = Color.GREEN;});
+        red.setOnClickListener((View view) -> {
+            color = Color.RED;
+            select_color.setText("현재 선택된 색 : 빨강");
+        });
+        black.setOnClickListener((View view) -> {
+            color = Color.BLACK;
+            select_color.setText("현재 선택된 색 : 검정");
+        });
+        blue.setOnClickListener((View view) -> {
+            color = Color.BLUE;
+            select_color.setText("현재 선택된 색 : 파랑");
+        });
+        green.setOnClickListener((View view) -> {
+            color = Color.GREEN;
+            select_color.setText("현재 선택된 색 : 초록");
+        });
         btn_Accept.setOnClickListener((View view) -> {
             if(!text.getText().toString().equals("")){
                 BM.setText(text.getText().toString(), color);
@@ -444,6 +458,9 @@ public class PopupManager {
                         sendbirdConnection.selectCategory(current_item);
                         long t = time - System.currentTimeMillis();
                         LM_time.savetimeline(t,":"+current_item+"\n");
+                        category_items.remove(pos2);
+                        listView.clearChoices();
+                        adapter1.notifyDataSetChanged();
                     }
                 }
         );
