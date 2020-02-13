@@ -100,9 +100,6 @@ public class BroadcastMain extends AppCompatActivity
     private int heart_final;
 
 
-    //갤러리에서 이미지 선택용 변수
-    private int PICK_IMAGE_REQUEST = 1;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -191,8 +188,10 @@ public class BroadcastMain extends AppCompatActivity
                                     // here is selected image uri list
                                     //Bitmap bitmap = loadBitmap(uriList.toString());
                                     try {
-                                        Bitmap bm = MediaStore.Images.Media.getBitmap(getContentResolver(), uriList.get(0));
-                                        broadcastManager.setImage(bm);
+                                        if(uriList.size()!= 0) {
+                                            Bitmap bm = MediaStore.Images.Media.getBitmap(getContentResolver(), uriList.get(0));
+                                            broadcastManager.setImage(bm);
+                                        }
                                     } catch (FileNotFoundException e) {
                                         e.printStackTrace();
                                     } catch (IOException e) {
