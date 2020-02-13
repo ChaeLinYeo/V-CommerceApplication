@@ -66,7 +66,9 @@ public class PopupManager {
     public PopupManager(Context context){
         mContext = context;
     }
+
     public void setCC(){
+        temp.clear();
         int last = selected_items.size();
         if(last > 0) {
             Log.d("btn_buy", selected_items.get(last-1));
