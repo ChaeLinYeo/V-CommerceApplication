@@ -512,6 +512,7 @@ public class Fragment_player extends Fragment
                         pm.addCategoryI(entry.getKey());
                     }
                 }
+                pm.setCC();
             }
 
             @Override
@@ -526,6 +527,7 @@ public class Fragment_player extends Fragment
                         pm.addCategoryI(entry.getKey());
                     }
                 }
+                pm.setCC();
             }
 
             @Override
@@ -554,9 +556,9 @@ public class Fragment_player extends Fragment
                         pm.addCategoryI(entry.getKey());
                     }
                 }
+                pm.setCC();
             }
         });
-        pm.setCC();
         return true;
     }
     private void updateCurrentUserInfo(final String userNickname) {
