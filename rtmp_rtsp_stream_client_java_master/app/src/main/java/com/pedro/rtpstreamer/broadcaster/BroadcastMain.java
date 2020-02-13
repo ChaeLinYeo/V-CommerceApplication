@@ -72,9 +72,6 @@ public class BroadcastMain extends AppCompatActivity
     private int usernumber = r.nextInt(10000);
     private String USER_ID = "broadcaster_"+usernumber;
 
-    //init title
-    String init_t = null;
-
     // 로티 애니메이션뷰 선언
     LottieAnimationView songLikeAnimButton;
 
@@ -84,9 +81,6 @@ public class BroadcastMain extends AppCompatActivity
     TextView people;
     TextView broadcast_notice;
     TextView system_notice;
-
-    //카테고리용 변수
-    ArrayList<String> category_items = new ArrayList<>();
 
     //examplechatcontroller
     ExampleChatController mExampleChatController;
@@ -98,10 +92,6 @@ public class BroadcastMain extends AppCompatActivity
     private LocalfileManager LM;
     private LocalfileManager LM_time;
     private int heart_final;
-
-
-    //갤러리에서 이미지 선택용 변수
-    private int PICK_IMAGE_REQUEST = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -231,8 +221,6 @@ public class BroadcastMain extends AppCompatActivity
                 } else{
                     broadcastManager.setTexture(2);
                 }
-//                broadcastManager.setTexture(2);
-//                broadcastManager.setTexture(2);
                 break;
 
             case R.id.b_start_stop:
@@ -248,11 +236,10 @@ public class BroadcastMain extends AppCompatActivity
                 break;
 
             case R.id.categoryButton:
-                PM.btn_Category(getLayoutInflater(), LM_time,  category_items, systemtime);
+                PM.btn_Category(getLayoutInflater(), LM_time,  systemtime);
                 break;
         }
     }
-
 
     //For Broadcast info
     public View.OnClickListener broadcastClickListner = (View view) -> {
@@ -273,9 +260,6 @@ public class BroadcastMain extends AppCompatActivity
                 PM.btn_showDialog2(getLayoutInflater(), broadcast_notice);
                 break;
 
-            case R.id.custom_event:
-                PM.btn_editPopUp(getLayoutInflater());
-                break;
         }
     };
     ////////////////////////////////////////////////////////////////////////
@@ -355,7 +339,8 @@ public class BroadcastMain extends AppCompatActivity
         LM_time.LMEnd();
         AWSConnection.uploadFile(broadcastManager.getBroadcastName()+".txt", LM.getFileName(), this);
         AWSConnection.uploadFile(broadcastManager.getBroadcastName()+"_timeLine.txt", LM_time.getFileName(), this);
-        category_items.clear();
+        PM.clearCategoryI();
+        PM.clearSCategory();
     }
 
     @Override
@@ -392,14 +377,6 @@ public class BroadcastMain extends AppCompatActivity
         animator.start();
         return true;
     }
-
-    //방송 시작 시 카테고리 설정하는 팝업창
-
-
-//    @Override
-//    public void getCate(){
-//        PM.btn_Category(getLayoutInflater(), sendbirdConnection, LM_time);
-//    }
 
     @Override
     public void setText(){
