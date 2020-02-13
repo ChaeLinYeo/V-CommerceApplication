@@ -278,21 +278,6 @@ public class SendbirdConnection {
         });
     }
 
-    public ArrayList<String> getAllCategory(){
-        ArrayList<String> category = new ArrayList<>();
-        mOpenChannel.getAllMetaData(new BaseChannel.MetaDataHandler() {
-            @Override
-            public void onResult(Map<String, String> map, SendBirdException e) {
-                for(Map.Entry<String, String> entry : map.entrySet()){
-                    if(!entry.getKey().equals("empty")){
-                        category.add(entry.getKey());
-                    }
-                }
-            }
-        });
-        return category;
-    }
-
     public void updateTitle(String title){
         String coverUrl = mOpenChannel.getCoverUrl();
         mOpenChannel.updateChannel(title, coverUrl, "null",
