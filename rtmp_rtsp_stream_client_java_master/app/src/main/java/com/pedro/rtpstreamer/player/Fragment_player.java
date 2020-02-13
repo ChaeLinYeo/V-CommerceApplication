@@ -79,17 +79,6 @@ public class Fragment_player extends Fragment
     // 좋아요 클릭 여부
     private boolean is_follow = false;
 
-    //랜덤영문 +숫자
-    private Random r = new Random();
-    private int f = r.nextInt(26);
-    private String f2 = Character.toString((char) (f+65));
-    private int d = r.nextInt(26);
-    private String d2 = Character.toString((char) (d+65));
-    private int num = r.nextInt(10000);
-    private int num2 = r.nextInt(10000);
-    private String USER_ID = f2 + d2 + num + num2;
-
-
     private ListView listView;
     ///////////////////////////////////////////////////////////
     private static final String CHANNEL_HANDLER_ID = "CHANNEL_HANDLER_OPEN_CHAT";
@@ -203,7 +192,7 @@ public class Fragment_player extends Fragment
 
 
         mMessageSendButton.setOnClickListener( (View v) -> {
-            String text = USER_ID+" : "+mMessageEditText.getText().toString();
+            String text = PlayerMain.USER_ID+" : "+mMessageEditText.getText().toString();
             mExampleChatController.add(text);
             mMessageEditText.setText("");
             mIMM.hideSoftInputFromWindow(mMessageEditText.getWindowToken(), 0);
@@ -213,7 +202,7 @@ public class Fragment_player extends Fragment
         FollowButton.setOnClickListener((View view) -> {
             if(!is_follow){//팔로우 안한 상태에서 클릭하면
                 FollowButton.setText("팔로우 취소");
-                String text = USER_ID+"님이 팔로우 하셨습니다.";
+                String text = PlayerMain.USER_ID+"님이 팔로우 하셨습니다.";
                 sendUserMessage(text, "alarm");
                 AlarmPlayer(text);
             }
@@ -424,7 +413,7 @@ public class Fragment_player extends Fragment
     }
 
     public void EEventPlayer(String data) {
-        // "User=,  ,    ,\ncn="+e_n+"ci="+e_a+"\nTimeLimit="+e_t_h+":"+e_t_m+":"+e_t_s;
+        // "User=    ,  ,    ,\ncn="+e_n+"ci="+e_a+"\nTimeLimit="+e_t_h+":"+e_t_m+":"+e_t_s;
         Log.d("event",""+data);
         int index = 4;
         int i = 0;
@@ -444,13 +433,14 @@ public class Fragment_player extends Fragment
         }
         String Users = map.get("User");
         StringTokenizer ui = new StringTokenizer(Users,",");
-        ArrayList<String> uu = new ArrayList<>();
         while(ui.hasMoreTokens()){
-            uu.add(ui.nextToken());
-        }
-
-        for(String iii : uu) {
-            if(iii.equals(USER_ID)) IsPlay = true;
+            String cid = ui.nextToken();
+            Log.d("compare", cid);
+            if(cid.equals(PlayerMain.USER_ID)) {
+                Log.d("same", cid);
+                IsPlay = true;
+                break;
+            }
         }
 
         if(IsPlay) {
@@ -682,7 +672,7 @@ public class Fragment_player extends Fragment
                         mExampleChatController.add(b.getData());
                     }else if(b.getCustomType().equals("alarm")){
                         alarm.setText(b.getData());
-                    }else if(b.getCustomType().equals(("notification"))){
+                    }else if(b.getCustomType().equals(("notice"))){
                         notify.setText(b.getData());
                     }
                 }
