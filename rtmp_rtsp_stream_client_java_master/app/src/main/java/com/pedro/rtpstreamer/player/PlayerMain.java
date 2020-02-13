@@ -11,9 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.pedro.rtpstreamer.R;
-import com.pedro.rtpstreamer.server.SendbirdConnection;
 import com.pedro.rtpstreamer.utils.StaticVariable;
-import com.sendbird.android.BaseChannel;
 import com.sendbird.android.OpenChannel;
 import com.sendbird.android.SendBird;
 import com.sendbird.android.SendBirdException;
@@ -58,8 +56,6 @@ public class PlayerMain extends AppCompatActivity
     private int num2 = r.nextInt(10000);
     public static String USER_ID;
 
-    private SendbirdConnection sendbirdConnection;
-
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -77,10 +73,6 @@ public class PlayerMain extends AppCompatActivity
                 updateCurrentUserInfo(USER_ID);
             }
         );
-        ////////////////////////////////////////////////
-//        sendbirdConnection = SendbirdConnection.getInstance();
-//        sendbirdConnection.setupSendbird(this, USER_ID, 1);
-        ////////////////////////////////////////////////
 
 
         Intent intent = getIntent();

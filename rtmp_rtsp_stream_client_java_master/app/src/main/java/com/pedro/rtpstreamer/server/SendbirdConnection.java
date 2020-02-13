@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.Log;
 
 import com.pedro.rtpstreamer.R;
-import com.pedro.rtpstreamer.utils.PopupManager;
 import com.pedro.rtpstreamer.utils.StaticVariable;
 import com.sendbird.android.BaseChannel;
 import com.sendbird.android.BaseMessage;
@@ -15,7 +14,6 @@ import com.sendbird.android.User;
 import com.sendbird.android.UserListQuery;
 import com.sendbird.android.UserMessage;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,52 +30,44 @@ public class SendbirdConnection {
     private SendbirdConnection(){}
 
     /////////////////////////////////////////////////////////////////////////////
-    private SendbirdListner.ForBroadcaster forBroadcaster;
-    private SendbirdListner.ForPlayer forPlayer;
-//    private SendbirdListner.
+    private static SendbirdListner.ForBroadcaster forBroadcaster;
     /////////////////////////////////////////////////////////////////////////////
-    private List<User> operator = new ArrayList<>();
-    private OpenChannel ctrl_channel;
-    private OpenChannel mOpenChannel;
+    private static List<User> operator = new ArrayList<>();
+    private static OpenChannel ctrl_channel;
+    private static OpenChannel mOpenChannel;
 
-    private String CHANNEL_URL;
-    private int channelNum;
+    private static String CHANNEL_URL;
+    private static int channelNum;
 
-    private List<User> UserList = new ArrayList<>();
+    private static List<User> UserList = new ArrayList<>();
 
-    private int viewNum=0;
+    private static int viewNum=0;
 
-    public void setupSendbird(Context context, String USER_ID, int type) {
+    public static void setupSendbird(Context context, String USER_ID, int type) {
         //////////////////////////////////////////////
         //try catch
         if(type == 0) forBroadcaster = (SendbirdListner.ForBroadcaster) context;
-        else if(type == 1) forPlayer = (SendbirdListner.ForPlayer) context;
         //////////////////////////////////////////////
+
         SendBird.init(context.getString(R.string.sendbird_app_id), context);
         SendBird.connect(USER_ID,
-                (User user, SendBirdException e) -> {
-                    if (e != null) {    // Error.
-                        Log.d("connect error","connect : 1" );
-                        return;
-                    }
-                    operator.add(user);
-                    updateCurrentUserInfo(USER_ID);
+            (User user, SendBirdException e) -> {
+                if (e != null) {    // Error.
+                    Log.d("connect error","connect : 1" );
+                    return;
                 }
+                operator.add(user);
+                SendBird.updateCurrentUserInfo(USER_ID, null,
+                    (SendBirdException ex) -> {
+                        if (ex != null) Log.e("nickname",ex.getMessage()+" : "+ex.getCode());
+                    }
+                );
+            }
         );
         viewNum=0;
     }
 
-    private void updateCurrentUserInfo(final String userNickname) {
-        SendBird.updateCurrentUserInfo(userNickname, null,
-                (SendBirdException e) -> {
-                    if (e != null) {
-                        Log.e("nickname",e.getMessage()+" : "+e.getCode());
-                    }
-                }
-        );
-    }
-
-    public void getCtrl(Context context){
+    public static void getCtrl(Context context){
         OpenChannel.getChannel(context.getString(R.string.sendbird_ctrlChannel),
             (OpenChannel openChannel, SendBirdException e) -> {
                 if (e != null) {    // Error.
@@ -86,41 +76,25 @@ public class SendbirdConnection {
                 }
                 ctrl_channel = openChannel;
                 ////////////////////////////
-                openChannel.getAllMetaData((Map<String, String> map, SendBirdException ex) -> {
-                        for(int i = 0; i < 10; i++){
-                            if(map.get(Integer.toString(i)).equals("true")){
-                                forBroadcaster.channelFounded(true);
-                                channelNum = i;
-                                return;
-                            }
-                        }
-                    forBroadcaster.channelFounded(false);
-                    }
-                );
+                getBroadcastChannel();
             }
         );
     }
 
-    public void getBroadcastChannel(){
-        ctrl_channel.getAllMetaData(
-            (Map<String, String> map, SendBirdException ex) -> {
-                for(int i = 0; i < 10; i++){
-                    if(map.get(Integer.toString(i)).equals("true")){
-                        forBroadcaster.channelFounded(true);
-                        channelNum = i;
-                        return;
-                    }
+    public static void getBroadcastChannel(){
+        ctrl_channel.getAllMetaData((Map<String, String> map, SendBirdException ex) -> {
+            for(int i = 0; i < StaticVariable.numChannel; i++){
+                if(map.get(Integer.toString(i)).equals("true")){
+                    forBroadcaster.getChannelComplete(true);
+                    channelNum = i;
+                    return;
                 }
-                forBroadcaster.channelFounded(false);
             }
-        );
+            forBroadcaster.getChannelComplete(false);
+        });
     }
 
-    public void getBroadcastChannelList(){
-
-    }
-
-    public void createChannel(String title){
+    public static void createChannel(String title){
         OpenChannel.createChannel(title, null, null, null, operator,
                 (OpenChannel openChannel, SendBirdException e) -> {
                     if (e != null) {
@@ -130,24 +104,14 @@ public class SendbirdConnection {
                     CHANNEL_URL = openChannel.getUrl();
                     /////////////////////////////////////////////////////////////////////
                     //ctrl channel의 메타 데이터 업데이트
-                    HashMap<String,String> map1 = new HashMap<>();
-                    map1.put(Integer.toString(channelNum),CHANNEL_URL);
-                    ctrl_channel.updateMetaData(map1, (Map<String, String> map, SendBirdException ex) -> {
-                            if(e!=null){
-                                Log.e("createChannel",""+ex.getMessage());
-                            }
-                        }
-                    );
+                    updateMetaData(ctrl_channel, Integer.toString(channelNum), CHANNEL_URL);
                     //////////////////////////////////////////
                     mOpenChannel = openChannel;
                     HashMap<String, Integer> map = new HashMap<>();
                     map.put("heart", 0);
                     mOpenChannel.createMetaCounters(map,
                         (Map<String, Integer> hMap, SendBirdException ex) -> {
-                            if( ex != null) {
-                                Log.e("createChannel", ""+ex.getMessage());
-                                return;
-                            }
+                            if(ex != null) Log.e("createChannel", ""+ex.getMessage());
                         }
                     );
                     getChannel(CHANNEL_URL);
@@ -182,7 +146,7 @@ public class SendbirdConnection {
         });
     }
 
-    private void getChannel(String channelUrl){
+    private static void getChannel(String channelUrl){
         OpenChannel.getChannel(channelUrl,
             (OpenChannel openChannel, SendBirdException e) -> {
                 if (e != null) {    // Error.
@@ -190,47 +154,40 @@ public class SendbirdConnection {
                     return;
                 }
                 openChannel.enter((SendBirdException ex) -> {
-                            if (ex != null) {    // Error.
-                                Log.e("getChannel",""+ex.getMessage());
-                            }
-                        }
-                );
+                    if (ex != null) Log.e("getChannel",""+ex.getMessage());
+                });
             }
         );
     }
 
-    public int getChannelNum(){
+    public static int getChannelNum(){
         return channelNum;
     }
 
     //////////////////////////////////////////////////////////////////////
 
-    public void sendUserMessage(String text, String type) {
+    public static void sendUserMessage(String text, String type) {
         if(mOpenChannel == null) {
             Log.e("sendUserMessage", "channel is null");
             return;
         }
         mOpenChannel.sendUserMessage(text, text, type,
-                (UserMessage userMessage, SendBirdException e) -> {
-                    if (e != null) {
-                        // Error!
-                       Log.e("sendUserMessage",""+e.getMessage());
-                    }
-                }
+            (UserMessage userMessage, SendBirdException e) -> {
+                if (e != null) Log.e("sendUserMessage",""+e.getMessage());
+            }
         );
     }
 
-    private void getUserListFromServer() {
+    private static void getUserListFromServer() {
         UserListQuery userListQuery = mOpenChannel.createParticipantListQuery();
         userListQuery.next((List<User> list, SendBirdException e) -> {
-                    if (e != null) return;
-                    UserList = setUserList(list);
+            if (e != null) return;
+            UserList = setUserList(list);
             forBroadcaster.getUserListComplete(Integer.toString(UserList.size()));
-                }
-        );
+        });
     }
 
-    private List<User> setUserList(List<User> userList) {
+    private static List<User> setUserList(List<User> userList) {
         List<User> sortedUserList = new ArrayList<>();
         for (User participant : userList) {
             if (!(participant.getUserId().equals(operator.get(0).getUserId()))) {
@@ -240,12 +197,12 @@ public class SendbirdConnection {
         return sortedUserList;
     }
 
-    public List<User> getUserList(boolean renewal) {{
+    public static List<User> getUserList(boolean renewal) {{
         if(renewal) getUserListFromServer();
         return UserList;
     }}
 
-    public void banUser(int position){
+    public static void banUser(int position){
         mOpenChannel.muteUserWithUserId(UserList.get(position).getUserId(), "ban by operater", 10,
                 (SendBirdException e) -> {
                     if(e!=null) Log.e("banUser", ""+e.getMessage()+e.getCode());
@@ -253,60 +210,37 @@ public class SendbirdConnection {
         );
     }
 
-    public void addCategory(String item){
+    ///////////////CATEGORY///////////////
+    public static void addCategory(String item){
+        updateMetaData(mOpenChannel, item, item);
+    }
+
+    public static void removeCategory(String item){
+        mOpenChannel.deleteMetaData(item, (SendBirdException e) -> {});
+    }
+
+    public static void selectCategory(String item){
+        updateMetaData(mOpenChannel, item, "select");
+    }
+    ///////////////////////////////////////
+
+    private static void updateMetaData(OpenChannel openChannel, String key, String value){
         HashMap<String, String> map = new HashMap<>();
-        map.put(item, item);
-        updateCategory(map);
-    }
-
-    public void removeCategory(String item){
-        mOpenChannel.deleteMetaData(item, new BaseChannel.DeleteMetaDataHandler() {
-            @Override
-            public void onResult(SendBirdException e) {}
-        });
-    }
-    public void selectCategory(String item){
-        HashMap<String, String> map = new HashMap<>();
-        map.put(item, "select");
-        mOpenChannel.updateMetaData(map, (Map<String, String> pMap, SendBirdException e) -> {
-            if(e!= null) Log.e("updateCategory", e.getMessage() + e.getCode());
-        });
-    }
-    public void updateCategory(HashMap<String, String> map){
-        mOpenChannel.updateMetaData(map, (Map<String, String> pMap, SendBirdException e) -> {
-            if(e!= null) Log.e("updateCategory", e.getMessage() + e.getCode());
+        map.put(key, value);
+        openChannel.updateMetaData(map, (Map<String, String> pMap, SendBirdException e) -> {
+            if(e!= null) Log.e("updateMetaData", e.getMessage() + e.getCode());
         });
     }
 
-    public ArrayList<String> getAllCategory(){
-        ArrayList<String> category = new ArrayList<>();
-        mOpenChannel.getAllMetaData(new BaseChannel.MetaDataHandler() {
-            @Override
-            public void onResult(Map<String, String> map, SendBirdException e) {
-                for(Map.Entry<String, String> entry : map.entrySet()){
-                    if(!entry.getKey().equals("empty")){
-                        category.add(entry.getKey());
-                    }
-                }
-            }
-        });
-        return category;
-    }
-
-    public void updateTitle(String title){
+    public static void updateTitle(String title){
         String coverUrl = mOpenChannel.getCoverUrl();
         mOpenChannel.updateChannel(title, coverUrl, "null",
                 (OpenChannel openChannel, SendBirdException e) -> { }
         );
     }
 
-    public void broadcastfinish(){
-        HashMap<String, String> map = new HashMap<>();
-        map.put(Integer.toString(channelNum), "true");
-        ctrl_channel.updateMetaData(map, (Map<String, String> pMap, SendBirdException e) -> {
-                if(e!=null) Log.d("finishBro",""+e.getMessage());
-            }
-        );
+    public static void broadcastfinish(){
+        updateMetaData(ctrl_channel, Integer.toString(channelNum), "true");
         mOpenChannel.delete((SendBirdException e) -> { });
         SendBird.removeChannelHandler(StaticVariable.CHANNEL_HANDLER_ID);
     }
@@ -336,5 +270,5 @@ public class SendbirdConnection {
 //        );
 //    }
 
-    public int getViewNum(){return viewNum;}
+    public static int getViewNum(){return viewNum;}
 }

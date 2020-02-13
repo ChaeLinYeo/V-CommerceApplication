@@ -264,7 +264,7 @@ public class BroadcastManager
         TextObjectFilterRender textObjectFilterRender = new TextObjectFilterRender();
         rtmpCamera1.getGlInterface().setFilterT(0, textObjectFilterRender);
 
-        textObjectFilterRender.setText(text, 50, color);
+        textObjectFilterRender.setText(text, 100, color);
         textObjectFilterRender.setDefaultScale(rtmpCamera1.getStreamWidth(), rtmpCamera1.getStreamHeight());
         textObjectFilterRender.setPosition(TranslateTo.CENTER);
 

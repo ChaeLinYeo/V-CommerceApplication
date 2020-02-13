@@ -21,7 +21,7 @@ public class StaticVariable {
     };
     /////////////////////////////////////////////////////////////////////////////////
 
-    public static final int numChannel = 5;
+    public static final int numChannel = 10;
 
     public static final String[] broadcastAuthor = new String[]{
             "9478bfc47a346c37321e735506d3c10f5f42dda8",
