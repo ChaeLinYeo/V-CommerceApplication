@@ -73,22 +73,8 @@ public class BroadcastMain extends AppCompatActivity
     TextView broadcast_notice;
     TextView system_notice;
 
-    //이벤트 쿠폰 팝업용 변수
-    public String e_n = "";
-    public String e_a="";
-    public int e_t_h=0;
-    public int e_t_m=0;
-    public int e_t_s=0;
-    public int save_time_before = 0;
-    NumberPicker numberpicker_h;
-    NumberPicker numberpicker_m;
-    NumberPicker numberpicker_s;
-    public int save_time = 0;
-
     //카테고리용 변수
     ArrayList<String> category_items = new ArrayList<>();
-    ArrayList<String> couponuser = new ArrayList<>();
-    ArrayAdapter<String> adapter1;
 
     //examplechatcontroller
     ExampleChatController mExampleChatController;
@@ -100,10 +86,6 @@ public class BroadcastMain extends AppCompatActivity
     private LocalfileManager LM;
     private LocalfileManager LM_time;
     private int heart_final;
-    private AlertDialog alertDialog;
-
-    //갤러리에서 이미지 선택용 변수
-    private int PICK_IMAGE_REQUEST = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -264,11 +246,11 @@ public class BroadcastMain extends AppCompatActivity
                 break;
 
             case R.id.participant:
-                btn_showPeople();
+                PM.btn_showPeople(getLayoutInflater());
                 break;
 
             case R.id.eye:
-                btn_showPeople();
+                PM.btn_showPeople(getLayoutInflater());
                 break;
 
             case R.id.broadcast_notice:
@@ -276,10 +258,11 @@ public class BroadcastMain extends AppCompatActivity
                 break;
 
             case R.id.custom_event:
-                btn_editPopUp();
+                PM.btn_editPopUp(getLayoutInflater());
                 break;
         }
     };
+
     ////////////////////////////////////////////////////////////////////////
     //View.OnTouchListener
     @Override
@@ -395,365 +378,10 @@ public class BroadcastMain extends AppCompatActivity
         return true;
     }
 
-    //방송 시작 시 카테고리 설정하는 팝업창
-    public void create_Category() {
-        View mView_c = getLayoutInflater().inflate(R.layout.popup_category, null);
-
-        // ArrayAdapter 생성. 아이템 View를 선택(multiple choice)가능하도록 만듦.
-        adapter1 = new ArrayAdapter<>(this, android.R.layout.simple_list_item_multiple_choice, category_items) ;
-
-        // listview 생성 및 adapter 지정.
-        ListView listView = mView_c.findViewById(R.id.listView) ;
-        listView.setAdapter(adapter1);
-        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-
-        final AlertDialog.Builder alert05 = new AlertDialog.Builder(BroadcastMain.this);
-
-        EditText editText = mView_c.findViewById(R.id.editText);
-        Button btn_Add = mView_c.findViewById(R.id.btnAdd);
-        Button btn_Del = mView_c.findViewById(R.id.btnDel);
-        Button btn_Exit = mView_c.findViewById(R.id.btnExit);
-        Button btn_Select = mView_c.findViewById(R.id.btnSelect);
-
-        alert05.setView(mView_c);
-
-        final AlertDialog alertDialog = alert05.create();
-        alertDialog.setCanceledOnTouchOutside(false);
-
-        btn_Add.setOnClickListener((View view) -> {
-                String text = editText.getText().toString();
-                if(text.length()!=0){
-                    category_items.add(text);
-                    editText.setText("");
-                    adapter1.notifyDataSetChanged();
-                }
-            }
-        );
-
-        btn_Del.setOnClickListener((View view) -> {
-                int pos;
-                pos = listView.getCheckedItemPosition();
-                if(pos != ListView.INVALID_POSITION){
-                    category_items.remove(pos);
-                    listView.clearChoices();
-                    adapter1.notifyDataSetChanged();
-                }
-            }
-        );
-
-        btn_Exit.setOnClickListener((View view) -> {
-            for (String item : category_items){
-                SendbirdConnection.addCategory(item);
-            }
-            adapter1.notifyDataSetChanged();
-            alertDialog.dismiss();
-        });
-
-        btn_Select.setOnClickListener((View view) ->
-            Toast.makeText(getApplicationContext(), "방송 시작 후 해당 상품을 판매할 때 눌러주세요.", Toast.LENGTH_LONG).show()
-        );
-
-        Toast.makeText(getApplicationContext(), "방송 시작 전, 판매할 상품의 카테고리를 기입해주세요.", Toast.LENGTH_LONG).show();
-        alertDialog.show();
-    }
-
-    // 방송 시작 첫 제목 설정
-    public void create_title() {
-        final AlertDialog.Builder alert = new AlertDialog.Builder(BroadcastMain.this);
-        View mView = getLayoutInflater().inflate(R.layout.init_channel, null);
-        final EditText newtitle = mView.findViewById(R.id.init_title);
-        Button btn_cancel = mView.findViewById(R.id.init_cancel);
-        Button btn_ok = mView.findViewById(R.id.init_ok);
-
-        alert.setView(mView);
-
-        alertDialog = alert.create();
-        alertDialog.setCanceledOnTouchOutside(false);
-
-        btn_cancel.setOnClickListener((View lView) -> alertDialog.dismiss());
-
-        LM = new LocalfileManager(SendbirdConnection.getUserId()+":"+systemtime+":"+SendbirdConnection.getBroadcastChannelNum()+".txt");
-
-        btn_ok.setOnClickListener(
-            (View view) -> {
-                init_t = newtitle.getText().toString();
-                SendbirdConnection.createChannel(init_t);
-                title_text.setText(init_t);
-                LM.savetitle(0, init_t);
-            }
-        );
-        Toast.makeText(getApplicationContext(), "방송 시작 전, 방송의 제목을 입력해주세요.", Toast.LENGTH_LONG).show();
-        alertDialog.show();
-    }
-
-
-    //쿠폰 이벤트를 만드는 팝업창
-    public void btn_editPopUp() {
-        final AlertDialog.Builder alert = new AlertDialog.Builder(BroadcastMain.this);
-        View mView = getLayoutInflater().inflate(R.layout.popup_custom_dialog, null);
-
-        final EditText txt_coupon_name = mView.findViewById(R.id.blabla01);
-        final EditText txt_coupon_ect = mView.findViewById(R.id.blabla02);
-        Button coupon_btn_ok_02 = mView.findViewById(R.id.coupon_btn_ok_02);
-        Button coupon_btn_cancel_02 = mView.findViewById(R.id.coupon_btn_cancel_02);
-
-        numberpicker_h = mView.findViewById(R.id.hour);
-        numberpicker_m = mView.findViewById(R.id.minute);
-        numberpicker_s = mView.findViewById(R.id.seconds);
-
-        alert.setView(mView);
-
-        final AlertDialog alertDialog = alert.create();
-        alertDialog.setCanceledOnTouchOutside(false);
-
-        //시
-        numberpicker_h.setMinValue(0);
-        numberpicker_h.setMaxValue(23);
-        numberpicker_h.setValue(0);
-        //분
-        numberpicker_m.setMinValue(0);
-        numberpicker_m.setMaxValue(59);
-        numberpicker_m.setValue(0);
-        //초
-        numberpicker_s.setMinValue(0);
-        numberpicker_s.setMaxValue(59);
-        numberpicker_s.setValue(0);
-
-        coupon_btn_cancel_02.setOnClickListener((View view) -> alertDialog.dismiss());
-
-        coupon_btn_ok_02.setOnClickListener((View view) -> {
-                e_n=txt_coupon_name.getText().toString();
-                e_a=txt_coupon_ect.getText().toString();
-                e_t_h = numberpicker_h.getValue();
-                e_t_m = numberpicker_m.getValue();
-                e_t_s = numberpicker_s.getValue();
-                alertDialog.dismiss();
-            }
-        );
-
-        alertDialog.show();
-    }
-
-    //쿠폰 이벤트 생성 팝업창
-    public void btn_showPopUp(){
-        final AlertDialog.Builder alert01 = new AlertDialog.Builder(BroadcastMain.this);
-        View mView01 = getLayoutInflater().inflate(R.layout.popup_coupon, null);
-        final EditText coupon_name_txt = mView01.findViewById(R.id.blabla011);
-        final EditText coupon_ect_txt = mView01.findViewById(R.id.blabla022);
-        final EditText coupon_time_txt = mView01.findViewById(R.id.blabla033);  //n초뒤 사라짐 이라고 띄우는 부분
-        Button coupon_btn_cancel_01 = mView01.findViewById(R.id.coupon_btn_cancel_01);
-        Button coupon_btn_ok_01 = mView01.findViewById(R.id.coupon_btn_ok_01);
-
-        if(couponuser.size() >0){
-            String result  = "User=";
-            for(String user : couponuser) {
-                Log.d("selectuser", user);
-                result += user+",";
-            }
-            result +="\ncn="+e_n+"\nci="+e_a+"\nTimeLimit="+e_t_h+":"+e_t_m+":"+e_t_s;
-            SendbirdConnection.sendUserMessage(result, "event_someone");
-        }else {
-            String result  = "cn="+e_n+"\nci="+e_a+"\nTimeLimit="+e_t_h+":"+e_t_m+":"+e_t_s;
-            SendbirdConnection.sendUserMessage(result, "event_everyone");}
-
-        coupon_name_txt.setText(e_n);
-        coupon_ect_txt.setText(e_a);
-
-        //초*1000
-        //분*1000*60
-        //시*1000*60*60
-        save_time_before = (e_t_h*1000*60*60) + (e_t_m*1000*60) + (e_t_s*1000); //시간 int로 저장
-        save_time = e_t_h + e_t_m + e_t_s;
-        alert01.setView(mView01);
-
-        final AlertDialog alertDialog = alert01.create();
-        alertDialog.setCanceledOnTouchOutside(false);
-
-        Thread thread = new Thread(() -> {
-                String timeText= save_time + "초 뒤 사라짐";
-                coupon_time_txt.setText(timeText);
-                // n초가 지나면 다이얼로그 닫기
-                TimerTask task = new TimerTask(){
-                    @Override
-                    public void run() {
-                        alertDialog.dismiss();
-                    }
-                };
-
-                Timer timer = new Timer();
-                timer.schedule(task, save_time_before);
-            }
-        );
-        thread.start();
-
-        coupon_btn_cancel_01.setOnClickListener((View view) -> alertDialog.dismiss());
-
-        coupon_btn_ok_01.setOnClickListener((View view) -> alertDialog.dismiss());
-        e_n = null; e_a = null; e_t_h = 0; e_t_m = 0; e_t_s = 0;
-        alertDialog.show();
-    }
-
-
-    //시청자 목록 보는 팝업창
-    public void btn_showPeople() {
-        View mView = getLayoutInflater().inflate(R.layout.popup_people, null);
-        mView.findViewById(R.id.custom_event).setOnClickListener(broadcastClickListner);
-
-        //User만을 담은 유저리스트 생성
-        List<User> userList = SendbirdConnection.getUserList(true);
-
-        //리스트뷰에 보여주기 위한 리스트 생성
-        ArrayList<String> ShowList = new ArrayList<>();
-        for(User user : userList){
-            ShowList.add(user.getUserId() + "(" + user.getNickname() + ")");
-        }
-        // listview 생성 및 adapter 지정.
-        final ListView listview = mView.findViewById(R.id.listview1);
-        final ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_multiple_choice, ShowList) ;
-
-        listview.setAdapter(adapter) ;
-
-        final AlertDialog.Builder alert04 = new AlertDialog.Builder(BroadcastMain.this);
-
-        Button btn_cancel = mView.findViewById(R.id.popup_cancel);
-        Button selectAllButton = mView.findViewById(R.id.select_all);
-        Button ban = mView.findViewById(R.id.ben);
-        Button sendcoupon =  mView.findViewById(R.id.show_event);
-        EditText search = mView.findViewById(R.id.searchPeople);
-        SwipeRefreshLayout mSwipeRefreshLayout = mView.findViewById(R.id.swipeRefresh);
-        mSwipeRefreshLayout.setOnRefreshListener(() -> {
-                mSwipeRefreshLayout.setRefreshing(true);
-                new Handler().postDelayed(() -> {
-                        ShowList.clear();
-                        List<User> reuserList = SendbirdConnection.getUserList(true);
-                        for(User user : reuserList){
-                            ShowList.add(user.getUserId() + "(" + user.getNickname() + ")");
-                        }
-                        listview.setAdapter(adapter);
-                        mSwipeRefreshLayout.setRefreshing(false);
-                    }
-                ,500);
-            }
-        );
-
-        //색상지정
-        mSwipeRefreshLayout.setColorSchemeResources(
-                android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light
-        );
-
-        alert04.setView(mView);
-
-        final AlertDialog alertDialog = alert04.create();
-        alertDialog.setCanceledOnTouchOutside(false);
-
-        search.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {  }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                String text = search.getText().toString();
-                searching(text, adapter);
-            }
-        });
-
-        btn_cancel.setOnClickListener((View view) -> alertDialog.dismiss());
-
-        //사용자 벤
-        ban.setOnClickListener((View v) -> {
-                SparseBooleanArray checkedItems = listview.getCheckedItemPositions();
-                int count = adapter.getCount() ;
-                for (int i = count-1; i >= 0; i--) {
-                    if (checkedItems.get(i)) {
-                        SendbirdConnection.banUser(i);
-                    }
-                }
-                // 모든 선택 상태 초기화.
-                listview.clearChoices() ;
-                adapter.notifyDataSetChanged();
-            }
-        );
-
-        //"Select All" Button 클릭 시 모든 아이템 선택.
-        selectAllButton.setOnClickListener((View v) -> {
-                int count = adapter.getCount() ;
-                for (int i=0; i<count; i++) {
-                    listview.setItemChecked(i, true) ;
-                }
-            }
-        );
-
-        sendcoupon.setOnClickListener((View v) -> {
-                    SparseBooleanArray checkedItems = listview.getCheckedItemPositions();
-                    int count = adapter.getCount() ;
-                    couponuser.clear();
-                    for (int i = count-1; i >= 0; i--) {
-                        if (checkedItems.get(i)) {
-                            couponuser.add(userList.get(i).getUserId());
-                        }
-                    }
-                    btn_showPopUp();
-                    // 모든 선택 상태 초기화.
-                    listview.clearChoices() ;
-                    adapter.notifyDataSetChanged();
-                }
-        );
-
-        alertDialog.show();
-    }
-
-    public void searching(String charText, ArrayAdapter A) {
-        List<String> searchlist = new ArrayList<>(); //????
-        List<String> alllist = new ArrayList<>();
-        ///////////////////////////////////////////////
-        List<User> userList = SendbirdConnection.getUserList(false);
-        ///////////////////////////////////////////////
-        for(User user : userList){
-            alllist.add(user.getUserId() + "(" + user.getNickname() + ")");
-        }
-        // 문자 입력시마다 리스트를 지우고 새로 뿌려준다.
-        searchlist.clear();
-
-        // 문자 입력이 없을때는 모든 데이터를 보여준다.
-        if (charText.length() == 0) {
-            searchlist.addAll(alllist);
-        }else {
-            for(int i = 0;i < alllist.size(); i++){
-                if (alllist.get(i).toLowerCase().contains(charText)) {
-                    // 검색된 데이터를 리스트에 추가한다.
-                    searchlist.add(alllist.get(i));
-                }
-            }
-        }
-        // 리스트 데이터가 변경되었으므로 아답터를 갱신하여 검색된 데이터를 화면에 보여준다.
-        A.notifyDataSetChanged();
-    }
-
-//    @Override
-//    public void getCate(){
-//        PM.btn_Category(getLayoutInflater(), sendbirdConnection, LM_time);
-//    }
-
     @Override
     public void setText(){
         PM.btn_Text(getLayoutInflater(), broadcastManager);
     }
-    /*@Override
-    public void setTitle(){
-        PM.btn_showDialog(getLayoutInflater(),LM,systemtime, title_text);
-    }
-
-    @Override
-    public void setNoti(){
-        PM.btn_showDialog2(getLayoutInflater(),broadcast_notice);
-    }
-*/
 
     private SendbirdListner sendbirdListner = new SendbirdListner() {
         @Override
@@ -766,8 +394,9 @@ public class BroadcastMain extends AppCompatActivity
         public void getChannelComplete(boolean success) {
             super.getChannelComplete(success);
             if(success){
-                create_title();
-
+                PM.create_title(getLayoutInflater(), title_text);
+                LM = new LocalfileManager(SendbirdConnection.getUserId()+":"+systemtime+":"+SendbirdConnection.getBroadcastChannelNum()+".txt");
+                LM.savetitle(0, title_text.getText().toString());
             } else{
                 Toast.makeText(getApplicationContext(), "모든 방송 채널이 사용중입니다.", Toast.LENGTH_LONG).show();
             }
@@ -801,14 +430,14 @@ public class BroadcastMain extends AppCompatActivity
         @Override
         public void channelCreateComplete() {
             super.channelCreateComplete();
-            alertDialog.dismiss();
+            PM.PopupEnd();
             canStart = false;
             broadcastManager.setBroadcastChannel(SendbirdConnection.getBroadcastChannelNum());
             broadcastManager.manageBroadcast(0);
             LM_time = new LocalfileManager(SendbirdConnection.getUserId()+":"+systemtime+":"+SendbirdConnection.getBroadcastChannelNum()+"_timeline.txt");
             Log.d("channel complete",""+SendbirdConnection.getBroadcastChannelNum());
             if(LM == null) Log.e("PKR","LM is null");
-            create_Category();
+            PM.create_Category(getLayoutInflater());
         }
 
         @Override
