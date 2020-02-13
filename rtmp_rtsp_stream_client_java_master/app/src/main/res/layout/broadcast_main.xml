@@ -107,18 +107,6 @@
             app:srcCompat="@drawable/icon" />
 
         <!-- view left time -->
-        <TextView
-            android:id="@+id/left_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/titleText"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_toEndOf="@+id/participant"
-            android:background="#43FF0000"
-            android:text=" 남은시간 "
-            android:textColor="#fff"
-            android:textSize="18sp" />
 
         <!-- system notice -->
         <TextView

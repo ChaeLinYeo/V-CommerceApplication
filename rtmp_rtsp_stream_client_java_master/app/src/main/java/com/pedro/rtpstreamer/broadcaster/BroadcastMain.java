@@ -99,6 +99,7 @@ public class BroadcastMain extends AppCompatActivity
 
     //카테고리용 변수
     ArrayList<String> category_items = new ArrayList<>();
+    ArrayList<String> couponuser = new ArrayList<>();
     ArrayAdapter<String> adapter1;
 
     //examplechatcontroller
@@ -289,10 +290,6 @@ public class BroadcastMain extends AppCompatActivity
 
             case R.id.custom_event:
                 btn_editPopUp();
-                break;
-
-            case R.id.show_event:
-                btn_showPopUp();
                 break;
         }
     };
@@ -503,7 +500,7 @@ public class BroadcastMain extends AppCompatActivity
     }
 
 
-    //쿠폰 이벤트 설정 팝업창
+    //쿠폰 이벤트를 만드는 팝업창
     public void btn_editPopUp() {
         final AlertDialog.Builder alert = new AlertDialog.Builder(BroadcastMain.this);
         View mView = getLayoutInflater().inflate(R.layout.popup_custom_dialog, null);
@@ -551,7 +548,7 @@ public class BroadcastMain extends AppCompatActivity
     }
 
     //쿠폰 이벤트 생성 팝업창
-    public void btn_showPopUp (){
+    public void btn_showPopUp (){ // 선택한 사람
         final AlertDialog.Builder alert01 = new AlertDialog.Builder(BroadcastMain.this);
         View mView01 = getLayoutInflater().inflate(R.layout.popup_coupon, null);
         final EditText coupon_name_txt = mView01.findViewById(R.id.blabla011);
@@ -560,9 +557,16 @@ public class BroadcastMain extends AppCompatActivity
         Button coupon_btn_cancel_01 = mView01.findViewById(R.id.coupon_btn_cancel_01);
         Button coupon_btn_ok_01 = mView01.findViewById(R.id.coupon_btn_ok_01);
 
-        String result  = "cn="+e_n+"\nci="+e_a+"\nTimeLimit="+e_t_h+":"+e_t_m+":"+e_t_s;
-        SendbirdConnection.sendUserMessage(result, "event");
-
+        if(couponuser.size() >0){
+            String result  = "User=";
+            for(String user : couponuser) {
+                result += user+",";
+            }
+            result +="\ncn="+e_n+"\nci="+e_a+"\nTimeLimit="+e_t_h+":"+e_t_m+":"+e_t_s;
+            SendbirdConnection.sendUserMessage(result, "event_someone");
+        }else {
+            String result  = "cn="+e_n+"\nci="+e_a+"\nTimeLimit="+e_t_h+":"+e_t_m+":"+e_t_s;
+            SendbirdConnection.sendUserMessage(result, "event_everyone");}
         coupon_name_txt.setText(e_n);
         coupon_ect_txt.setText(e_a);
 
@@ -605,7 +609,7 @@ public class BroadcastMain extends AppCompatActivity
     public void btn_showPeople() {
         View mView = getLayoutInflater().inflate(R.layout.popup_people, null);
         mView.findViewById(R.id.custom_event).setOnClickListener(broadcastClickListner);
-        mView.findViewById(R.id.show_event).setOnClickListener(broadcastClickListner);
+
         //User만을 담은 유저리스트 생성
         List<User> userList = SendbirdConnection.getUserList(true);
 
@@ -625,6 +629,7 @@ public class BroadcastMain extends AppCompatActivity
         Button btn_cancel = mView.findViewById(R.id.popup_cancel);
         Button selectAllButton = mView.findViewById(R.id.select_all);
         Button ban = mView.findViewById(R.id.ben);
+        Button sendcoupon =  mView.findViewById(R.id.show_event);
         EditText search = mView.findViewById(R.id.searchPeople);
         SwipeRefreshLayout mSwipeRefreshLayout = mView.findViewById(R.id.swipeRefresh);
         mSwipeRefreshLayout.setOnRefreshListener(() -> {
@@ -692,6 +697,20 @@ public class BroadcastMain extends AppCompatActivity
                     listview.setItemChecked(i, true) ;
                 }
             }
+        );
+
+        sendcoupon.setOnClickListener((View v) -> {
+                    SparseBooleanArray checkedItems = listview.getCheckedItemPositions();
+                    int count = adapter.getCount() ;
+                    for (int i = count-1; i >= 0; i--) {
+                        if (checkedItems.get(i)) {
+                            couponuser.add(userList.get(i).getUserId());
+                        }
+                    }
+                    // 모든 선택 상태 초기화.
+                    listview.clearChoices() ;
+                    adapter.notifyDataSetChanged();
+                }
         );
 
         alertDialog.show();

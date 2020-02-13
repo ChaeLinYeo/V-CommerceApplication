@@ -11,6 +11,7 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
+import android.util.EventLog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -377,8 +378,11 @@ public class Fragment_player extends Fragment
             case "chat" :
                 mExampleChatController.add(Data);
                 break;
-            case "event" :
+            case "event_everyone" :
                 EventPlayer(Data);
+                break;
+            case "event_someone" :
+                EEventPlayer(Data);
                 break;
             case "effect" :
                 // 방송자가 이펙트를 눌렀을 경우 (송출부시작)
@@ -417,6 +421,46 @@ public class Fragment_player extends Fragment
         int s = Integer.parseInt(ei.nextToken());
 
         pm.CouponPlayer(getLayoutInflater(), h, m, s, map.get("cn"), map.get("ci"));
+    }
+
+    public void EEventPlayer(String data) {
+        // "User=,  ,    ,\ncn="+e_n+"ci="+e_a+"\nTimeLimit="+e_t_h+":"+e_t_m+":"+e_t_s;
+        Log.d("event",""+data);
+        int index = 4;
+        int i = 0;
+        boolean IsPlay = false;
+        String[] str = new String[index];
+        HashMap<String, String> map = new HashMap<String, String>();
+        StringTokenizer st = new StringTokenizer(data,"\n");
+        while(st.hasMoreTokens()) {
+            str[i] = st.nextToken();
+            i++;
+        }
+        i = 0;
+        while(i < index) {
+            StringTokenizer st2 = new StringTokenizer(str[i],"=");
+            map.put(st2.nextToken(), st2.nextToken());
+            i++;
+        }
+        String Users = map.get("User");
+        StringTokenizer ui = new StringTokenizer(Users,",");
+        ArrayList<String> uu = new ArrayList<>();
+        while(ui.hasMoreTokens()){
+            uu.add(ui.nextToken());
+        }
+
+        for(String iii : uu) {
+            if(iii.equals(USER_ID)) IsPlay = true;
+        }
+
+        if(IsPlay) {
+            String TL= map.get("TimeLimit");
+            StringTokenizer ei = new StringTokenizer(TL,":");
+            int h = Integer.parseInt(ei.nextToken());
+            int m = Integer.parseInt(ei.nextToken());
+            int s = Integer.parseInt(ei.nextToken());
+            pm.CouponPlayer(getLayoutInflater(), h, m, s, map.get("cn"), map.get("ci"));
+        }
     }
 
     public void LikePlayer(int newheart){
@@ -512,6 +556,7 @@ public class Fragment_player extends Fragment
                         pm.addCategoryI(entry.getKey());
                     }
                 }
+                pm.setCC();
             }
 
             @Override
@@ -526,6 +571,7 @@ public class Fragment_player extends Fragment
                         pm.addCategoryI(entry.getKey());
                     }
                 }
+                pm.setCC();
             }
 
             @Override
@@ -555,9 +601,9 @@ public class Fragment_player extends Fragment
                         pm.addCategoryI(entry.getKey());
                     }
                 }
+                pm.setCC();
             }
         });
-        pm.setCC();
         return true;
     }
     private void updateCurrentUserInfo(final String userNickname) {
