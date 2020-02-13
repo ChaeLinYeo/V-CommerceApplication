@@ -185,6 +185,7 @@ public class BroadcastMain extends AppCompatActivity
                 broadcastManager.setTexture(0);
                 break;
 
+            //이미지 띄우기 버튼
             case R.id.imgButton:
                 if(!broadcastManager.isImage()) {
                     TedBottomPicker.with(BroadcastMain.this)
@@ -195,6 +196,8 @@ public class BroadcastMain extends AppCompatActivity
                             .setEmptySelectionText("선택된 사진이 없습니다.")
                             .setSelectMaxCount(1)
                             .setSelectMinCount(0)
+                            .showCameraTile(false)
+                            .showGalleryTile(false)
                             .showMultiImage(new TedBottomSheetDialogFragment.OnMultiImageSelectedListener() {
                                 @Override
                                 public void onImagesSelected(List<Uri> uriList) {
@@ -203,12 +206,9 @@ public class BroadcastMain extends AppCompatActivity
                                     try {
                                         Bitmap bm = MediaStore.Images.Media.getBitmap(getContentResolver(), uriList.get(0));
                                         broadcastManager.setImage(bm);
-
                                     } catch (FileNotFoundException e) {
-                                        // TODO Auto-generated catch block
                                         e.printStackTrace();
                                     } catch (IOException e) {
-                                        // TODO Auto-generated catch block
                                         e.printStackTrace();
                                     }
 
@@ -217,11 +217,36 @@ public class BroadcastMain extends AppCompatActivity
                 } else{
                     broadcastManager.setTexture(1);
                 }
-                broadcastManager.setTexture(1);
+//                broadcastManager.setTexture(1);
                 break;
 
+            //동영상 띄우는 버튼
             case R.id.uriButton:
-                broadcastManager.setTexture(2);
+                if(!broadcastManager.isUri()) {
+                    TedBottomPicker.with(BroadcastMain.this)
+                            .setPeekHeight(1600)
+                            .showTitle(false)
+                            .setTitle("동영상 선택")
+                            .setCompleteButtonText("Done")
+                            .setEmptySelectionText("선택된 동영상이 없습니다.")
+                            .setSelectMaxCount(1)
+                            .setSelectMinCount(0)
+                            .showCameraTile(false)
+                            .showGalleryTile(false)
+                            .showVideoMedia()
+                            .showMultiImage(new TedBottomSheetDialogFragment.OnMultiImageSelectedListener() {
+                                @Override
+                                public void onImagesSelected(List<Uri> uriList) {
+                                    // here is selected image uri list
+                                    //Bitmap bitmap = loadBitmap(uriList.toString());
+                                    broadcastManager.setUri(uriList.get(0));
+                                }
+                            });
+                } else{
+                    broadcastManager.setTexture(2);
+                }
+//                broadcastManager.setTexture(2);
+//                broadcastManager.setTexture(2);
                 break;
 
             case R.id.b_start_stop:
