@@ -108,7 +108,7 @@ public class BroadcastMain extends AppCompatActivity
     boolean canStart = true;
     long systemtime;
     ////////////////////////////////////////////////
-    private SendbirdConnection sendbirdConnection;
+//    private SendbirdConnection sendbirdConnection;
     private LocalfileManager LM;
     private LocalfileManager LM_time;
     private int heart_final;
@@ -128,8 +128,8 @@ public class BroadcastMain extends AppCompatActivity
         setupBroadcast();
 
         ///////////////////////
-        sendbirdConnection = SendbirdConnection.getInstance();
-        sendbirdConnection.setupSendbird(this, USER_ID, 0);
+//        sendbirdConnection = SendbirdConnection.getInstance();
+        SendbirdConnection.setupSendbird(this, USER_ID, 0);
         ///////////////////////
 
         mExampleChatController = new ExampleChatController(this, findViewById(R.id.ChatListView), R.layout.chatline, R.id.chat_line_textview, R.id.chat_line_timeview);
@@ -218,7 +218,6 @@ public class BroadcastMain extends AppCompatActivity
                 } else{
                     broadcastManager.setTexture(1);
                 }
-//                broadcastManager.setTexture(1);
                 break;
 
             //동영상 띄우는 버튼
@@ -252,7 +251,7 @@ public class BroadcastMain extends AppCompatActivity
 
             case R.id.b_start_stop:
                 if(canStart){
-                    sendbirdConnection.getCtrl(this);
+                    SendbirdConnection.getCtrl(this);
                 }else{
                     broadcastManager.manageBroadcast(0);
                 }
@@ -361,10 +360,10 @@ public class BroadcastMain extends AppCompatActivity
     public void broadcastStop(){
         Log.d("PKR","broadcast stop");
         broadcastBtn.setText(R.string.start_button);
-        sendbirdConnection.broadcastfinish();
+        SendbirdConnection.broadcastfinish();
         canStart = true;
         LM.savefinal(systemtime,Integer.toString(heart_final), "heart");
-        LM.savefinal(systemtime,Integer.toString(sendbirdConnection.getViewNum()),"count");
+        LM.savefinal(systemtime,Integer.toString(SendbirdConnection.getViewNum()),"count");
         LM.savefinal(systemtime,USER_ID,"user_id");
         LM.LMEnd();
         LM_time.LMEnd();
@@ -456,7 +455,7 @@ public class BroadcastMain extends AppCompatActivity
 
         btn_Exit.setOnClickListener((View view) -> {
             for (String item : category_items){
-                sendbirdConnection.addCategory(item);
+                SendbirdConnection.addCategory(item);
             }
             adapter1.notifyDataSetChanged();
             alertDialog.dismiss();
@@ -485,12 +484,12 @@ public class BroadcastMain extends AppCompatActivity
 
         btn_cancel.setOnClickListener((View lView) -> alertDialog.dismiss());
 
-        LM = new LocalfileManager(USER_ID+":"+systemtime+":"+sendbirdConnection.getChannelNum()+".txt");
+        LM = new LocalfileManager(USER_ID+":"+systemtime+":"+SendbirdConnection.getChannelNum()+".txt");
 
         btn_ok.setOnClickListener(
             (View view) -> {
                 init_t = newtitle.getText().toString();
-                sendbirdConnection.createChannel(init_t);
+                SendbirdConnection.createChannel(init_t);
                 title_text.setText(init_t);
                 LM.savetitle(0, init_t);
             }
@@ -564,12 +563,11 @@ public class BroadcastMain extends AppCompatActivity
                 result += user+",";
             }
             result +="\ncn="+e_n+"\nci="+e_a+"\nTimeLimit="+e_t_h+":"+e_t_m+":"+e_t_s;
-            Log.d("beforesend", result);
-            sendbirdConnection.sendUserMessage(result, "event_someone");
+            SendbirdConnection.sendUserMessage(result, "event_someone");
         }else {
             String result  = "cn="+e_n+"\nci="+e_a+"\nTimeLimit="+e_t_h+":"+e_t_m+":"+e_t_s;
-            sendbirdConnection.sendUserMessage(result, "event_everyone");
-        }
+            SendbirdConnection.sendUserMessage(result, "event_everyone");}
+
         coupon_name_txt.setText(e_n);
         coupon_ect_txt.setText(e_a);
 
@@ -614,7 +612,7 @@ public class BroadcastMain extends AppCompatActivity
         mView.findViewById(R.id.custom_event).setOnClickListener(broadcastClickListner);
 
         //User만을 담은 유저리스트 생성
-        List<User> userList = sendbirdConnection.getUserList(true);
+        List<User> userList = SendbirdConnection.getUserList(true);
 
         //리스트뷰에 보여주기 위한 리스트 생성
         ArrayList<String> ShowList = new ArrayList<>();
@@ -639,7 +637,7 @@ public class BroadcastMain extends AppCompatActivity
                 mSwipeRefreshLayout.setRefreshing(true);
                 new Handler().postDelayed(() -> {
                         ShowList.clear();
-                        List<User> reuserList = sendbirdConnection.getUserList(true);
+                        List<User> reuserList = SendbirdConnection.getUserList(true);
                         for(User user : reuserList){
                             ShowList.add(user.getUserId() + "(" + user.getNickname() + ")");
                         }
@@ -685,7 +683,7 @@ public class BroadcastMain extends AppCompatActivity
                 int count = adapter.getCount() ;
                 for (int i = count-1; i >= 0; i--) {
                     if (checkedItems.get(i)) {
-                        sendbirdConnection.banUser(i);
+                        SendbirdConnection.banUser(i);
                     }
                 }
                 // 모든 선택 상태 초기화.
@@ -726,7 +724,7 @@ public class BroadcastMain extends AppCompatActivity
         List<String> searchlist = new ArrayList<>(); //????
         List<String> alllist = new ArrayList<>();
         ///////////////////////////////////////////////
-        List<User> userList = sendbirdConnection.getUserList(false);
+        List<User> userList = SendbirdConnection.getUserList(false);
         ///////////////////////////////////////////////
         for(User user : userList){
             alllist.add(user.getUserId() + "(" + user.getNickname() + ")");
@@ -769,7 +767,7 @@ public class BroadcastMain extends AppCompatActivity
     }
 */
     @Override
-    public void channelFounded(boolean possible){
+    public void getChannelComplete(boolean possible){
         if(possible){
             create_title();
 
@@ -782,10 +780,10 @@ public class BroadcastMain extends AppCompatActivity
     public void channelCreateComplete(){
         alertDialog.dismiss();
         canStart = false;
-        broadcastManager.setBroadcastChannel(sendbirdConnection.getChannelNum());
+        broadcastManager.setBroadcastChannel(SendbirdConnection.getChannelNum());
         broadcastManager.manageBroadcast(0);
-        LM_time = new LocalfileManager(USER_ID+":"+systemtime+":"+sendbirdConnection.getChannelNum()+"_timeline.txt");
-        Log.d("channel complete",""+sendbirdConnection.getChannelNum());
+        LM_time = new LocalfileManager(USER_ID+":"+systemtime+":"+SendbirdConnection.getChannelNum()+"_timeline.txt");
+        Log.d("channel complete",""+SendbirdConnection.getChannelNum());
         if(LM == null) Log.e("PKR","LM is null");
         create_Category();
     }

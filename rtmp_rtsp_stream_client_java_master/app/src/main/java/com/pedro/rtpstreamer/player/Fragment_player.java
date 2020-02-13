@@ -577,6 +577,7 @@ public class Fragment_player extends Fragment
             }
         });
     }
+
     public boolean getAllcategory(){
         pm.clearSCategory();
         pm.clearCategoryI();

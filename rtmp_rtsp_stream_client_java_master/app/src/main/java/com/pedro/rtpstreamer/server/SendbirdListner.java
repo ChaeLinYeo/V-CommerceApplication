@@ -3,7 +3,7 @@ package com.pedro.rtpstreamer.server;
 public interface SendbirdListner {
 
     public interface ForBroadcaster {
-        public void channelFounded(boolean possible);
+        public void getChannelComplete(boolean possible);
 
         public void channelCreateComplete();
 

@@ -258,13 +258,11 @@ public class BroadcastManager
         }
     }
 
-//    public boolean isImage(){return onImage;}
-
     public void setText(String text, int color){
         TextObjectFilterRender textObjectFilterRender = new TextObjectFilterRender();
         rtmpCamera1.getGlInterface().setFilterT(0, textObjectFilterRender);
 
-        textObjectFilterRender.setText(text, 50, color);
+        textObjectFilterRender.setText(text, 100, color);
         textObjectFilterRender.setDefaultScale(rtmpCamera1.getStreamWidth(), rtmpCamera1.getStreamHeight());
         textObjectFilterRender.setPosition(TranslateTo.CENTER);
 
@@ -276,27 +274,20 @@ public class BroadcastManager
     }
 
     public void setImage(Bitmap bitmap){
-        if(!onImage) {
-            ImageObjectFilterRender imageObjectFilterRender = new ImageObjectFilterRender();
-            rtmpCamera1.getGlInterface().setFilterT(1,imageObjectFilterRender);
+        ImageObjectFilterRender imageObjectFilterRender = new ImageObjectFilterRender();
+        rtmpCamera1.getGlInterface().setFilterT(1,imageObjectFilterRender);
 
-            //set image and default setting
-            imageObjectFilterRender.setImage(bitmap);
-            imageObjectFilterRender.setDefaultScale(rtmpCamera1.getStreamWidth(), rtmpCamera1.getStreamHeight());
-            imageObjectFilterRender.setScale(50f, 33.3f);
-            imageObjectFilterRender.setPosition(TranslateTo.RIGHT);
+        //set image and default setting
+        imageObjectFilterRender.setImage(bitmap);
+        imageObjectFilterRender.setDefaultScale(rtmpCamera1.getStreamWidth(), rtmpCamera1.getStreamHeight());
+        imageObjectFilterRender.setScale(50f, 33.3f);
+        imageObjectFilterRender.setPosition(TranslateTo.RIGHT);
 
-            //move,scale
-            spriteGestureControllerImg.setBaseObjectFilterRender(imageObjectFilterRender); //Optional
-            spriteGestureControllerImg.setPreventMoveOutside(false); //
+        //move,scale
+        spriteGestureControllerImg.setBaseObjectFilterRender(imageObjectFilterRender); //Optional
+        spriteGestureControllerImg.setPreventMoveOutside(false); //
 
-            onImage = true;
-        }
-        else {
-            rtmpCamera1.getGlInterface().removeFilter(1);
-            spriteGestureControllerImg.setBaseObjectFilterRender(null);
-            onImage = false;
-        }
+        onImage = true;
     }
 
     public void setUri(Uri uri){
