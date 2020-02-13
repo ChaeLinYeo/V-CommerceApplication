@@ -559,6 +559,7 @@ public class BroadcastMain extends AppCompatActivity
         if(couponuser.size() >0){
             String result  = "User=";
             for(String user : couponuser) {
+                Log.d("selectuser", user);
                 result += user+",";
             }
             result +="\ncn="+e_n+"\nci="+e_a+"\nTimeLimit="+e_t_h+":"+e_t_m+":"+e_t_s;
@@ -566,6 +567,7 @@ public class BroadcastMain extends AppCompatActivity
         }else {
             String result  = "cn="+e_n+"\nci="+e_a+"\nTimeLimit="+e_t_h+":"+e_t_m+":"+e_t_s;
             SendbirdConnection.sendUserMessage(result, "event_everyone");}
+
         coupon_name_txt.setText(e_n);
         coupon_ect_txt.setText(e_a);
 
@@ -702,6 +704,7 @@ public class BroadcastMain extends AppCompatActivity
         sendcoupon.setOnClickListener((View v) -> {
                     SparseBooleanArray checkedItems = listview.getCheckedItemPositions();
                     int count = adapter.getCount() ;
+                    couponuser.clear();
                     for (int i = count-1; i >= 0; i--) {
                         if (checkedItems.get(i)) {
                             couponuser.add(userList.get(i).getUserId());
