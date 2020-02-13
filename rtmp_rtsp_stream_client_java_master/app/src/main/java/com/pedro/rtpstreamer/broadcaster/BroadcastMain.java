@@ -181,8 +181,10 @@ public class BroadcastMain extends AppCompatActivity
                                     // here is selected image uri list
                                     //Bitmap bitmap = loadBitmap(uriList.toString());
                                     try {
-                                        Bitmap bm = MediaStore.Images.Media.getBitmap(getContentResolver(), uriList.get(0));
-                                        broadcastManager.setImage(bm);
+                                        if(uriList.size()!= 0) {
+                                            Bitmap bm = MediaStore.Images.Media.getBitmap(getContentResolver(), uriList.get(0));
+                                            broadcastManager.setImage(bm);
+                                        }
                                     } catch (FileNotFoundException e) {
                                         e.printStackTrace();
                                     } catch (IOException e) {
