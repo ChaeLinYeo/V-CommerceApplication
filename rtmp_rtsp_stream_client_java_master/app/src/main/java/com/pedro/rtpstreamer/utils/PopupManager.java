@@ -192,6 +192,7 @@ public class PopupManager {
     }
 
 
+    //공유
     public void btn(int channelNum) {
         //카카오 공유기능
 //        FeedTemplate params = FeedTemplate
@@ -283,6 +284,7 @@ public class PopupManager {
         return false;
     };
 
+    //만들어진 쿠폰 이벤트가 띄워지는 팝업창
     public void CouponPlayer(LayoutInflater inflater, int h, int m, int s, String name, String info) {
         final AlertDialog.Builder alert01 = new AlertDialog.Builder(mContext);
         View mView01 = inflater.inflate(R.layout.popup, null);

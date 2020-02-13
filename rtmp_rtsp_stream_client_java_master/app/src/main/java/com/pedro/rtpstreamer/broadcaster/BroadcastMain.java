@@ -500,7 +500,7 @@ public class BroadcastMain extends AppCompatActivity
     }
 
 
-    //쿠폰 이벤트 설정 팝업창
+    //쿠폰 이벤트를 만드는 팝업창
     public void btn_editPopUp() {
         final AlertDialog.Builder alert = new AlertDialog.Builder(BroadcastMain.this);
         View mView = getLayoutInflater().inflate(R.layout.popup_custom_dialog, null);
