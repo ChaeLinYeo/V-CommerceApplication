@@ -218,7 +218,6 @@ public class BroadcastMain extends AppCompatActivity
                 } else{
                     broadcastManager.setTexture(1);
                 }
-//                broadcastManager.setTexture(1);
                 break;
 
             //동영상 띄우는 버튼
