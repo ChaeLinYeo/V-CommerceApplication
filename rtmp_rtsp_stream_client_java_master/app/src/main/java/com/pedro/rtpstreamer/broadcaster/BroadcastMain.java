@@ -584,6 +584,7 @@ public class BroadcastMain extends AppCompatActivity
         Thread thread = new Thread(() -> {
                 String timeText= save_time + "초 뒤 사라짐";
                 coupon_time_txt.setText(timeText);
+                save_time--;
                 // n초가 지나면 다이얼로그 닫기
                 TimerTask task = new TimerTask(){
                     @Override
