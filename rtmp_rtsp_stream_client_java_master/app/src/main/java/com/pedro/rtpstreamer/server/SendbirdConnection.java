@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 public class SendbirdConnection {
 
@@ -30,25 +31,33 @@ public class SendbirdConnection {
     private SendbirdConnection(){}
 
     /////////////////////////////////////////////////////////////////////////////
-    private static SendbirdListner.ForBroadcaster forBroadcaster;
+//    private static SendbirdListner.ForBroadcaster forBroadcaster;
+    private static SendbirdListner sendbirdListner;
     /////////////////////////////////////////////////////////////////////////////
     private static List<User> operator = new ArrayList<>();
     private static OpenChannel ctrl_channel;
     private static OpenChannel mOpenChannel;
 
     private static String CHANNEL_URL;
-    private static int channelNum;
+    private static int broadcastChannelNum;
 
     private static List<User> UserList = new ArrayList<>();
 
     private static int viewNum=0;
 
     private static String[] channelUrl = new String[10];
+    private static ArrayList<Integer> liveChannelList = new ArrayList<>();
 
-    public static void setupSendbird(Context context, String USER_ID, boolean isOperator) {
+    private static String USER_ID="";
+
+    public static void setupSendbird(Context context, boolean isOperator, SendbirdListner sendbirdListner1) {
+
+        setUserId();
+
         //////////////////////////////////////////////
         //try catch
-        if(isOperator) forBroadcaster = (SendbirdListner.ForBroadcaster) context;
+//        if(isOperator) forBroadcaster = (SendbirdListner.ForBroadcaster) context;
+        sendbirdListner = sendbirdListner1;
         //////////////////////////////////////////////
 
         SendBird.init(context.getString(R.string.sendbird_app_id), context);
@@ -70,16 +79,30 @@ public class SendbirdConnection {
         viewNum=0;
     }
 
-    public static void getCtrl(Context context){
-        OpenChannel.getChannel(context.getString(R.string.sendbird_ctrlChannel),
+    public static void setUserId(){
+        USER_ID="";
+        Random r = new Random();
+        for(int i = 0; i < 3 ; i++ ) {
+            int f = r.nextInt(26);
+            USER_ID+= Character.toString((char) (f + 65));
+        }
+
+        int num = r.nextInt(10000) + r.nextInt(10000);
+
+        USER_ID += num;
+    }
+
+    public static String getUserId(){ return USER_ID; }
+
+    public static void getCtrl(){
+        OpenChannel.getChannel(StaticVariable.sendbirdCtrlChannel,
             (OpenChannel openChannel, SendBirdException e) -> {
                 if (e != null) {    // Error.
                     Log.d("getCtrl", ""+e.getMessage());
                     return;
                 }
                 ctrl_channel = openChannel;
-                ////////////////////////////
-                getBroadcastChannel();
+                sendbirdListner.getCtrlComplete();
             }
         );
     }
@@ -88,13 +111,43 @@ public class SendbirdConnection {
         ctrl_channel.getAllMetaData((Map<String, String> map, SendBirdException ex) -> {
             for(int i = 0; i < StaticVariable.numChannel; i++){
                 if(map.get(Integer.toString(i)).equals("true")){
-                    forBroadcaster.getChannelComplete(true);
-                    channelNum = i;
+                    sendbirdListner.getChannelComplete(true);
+                    broadcastChannelNum = i;
                     return;
                 }
             }
-            forBroadcaster.getChannelComplete(false);
+            sendbirdListner.getChannelComplete(false);
         });
+    }
+
+    public static void getLiveChannelUrl(){
+        liveChannelList.clear();
+        ctrl_channel.getAllMetaData((Map<String, String> map, SendBirdException ex) -> {
+            for(String key : map.keySet()) {
+                if (!map.get(key).equals("true")) {
+                    channelUrl[Integer.parseInt(key)] = map.get(key);
+                    liveChannelList.add(Integer.parseInt(key));
+                }
+                else channelUrl[Integer.parseInt(key)] = null;
+            }
+            sendbirdListner.getChannelComplete(true);
+        });
+    }
+
+    public static boolean isLive(int channelNum){
+        return channelUrl[channelNum] != null;
+    }
+
+    public static int getLiveNum(){
+        return liveChannelList.size();
+    }
+
+    public static int getLiveChannelNum(int i){
+        return liveChannelList.get(i);
+    }
+
+    public static String getChannelUrl(int i){
+        return channelUrl[i];
     }
 
     public static void createChannel(String title){
@@ -107,7 +160,7 @@ public class SendbirdConnection {
                     CHANNEL_URL = openChannel.getUrl();
                     /////////////////////////////////////////////////////////////////////
                     //ctrl channel의 메타 데이터 업데이트
-                    updateMetaData(ctrl_channel, Integer.toString(channelNum), CHANNEL_URL);
+                    updateMetaData(ctrl_channel, Integer.toString(broadcastChannelNum), CHANNEL_URL);
                     //////////////////////////////////////////
                     mOpenChannel = openChannel;
                     HashMap<String, Integer> map = new HashMap<>();
@@ -119,13 +172,14 @@ public class SendbirdConnection {
                     );
                     getChannel(CHANNEL_URL);
                     getUserList(true);
-                    forBroadcaster.channelCreateComplete();
+                    sendbirdListner.channelCreateComplete();
                 }
         );
+
         SendBird.addChannelHandler(StaticVariable.CHANNEL_HANDLER_ID, new SendBird.ChannelHandler() {
             @Override
             public void onMessageReceived(BaseChannel baseChannel, BaseMessage baseMessage) {
-                forBroadcaster.messageReceived(baseMessage.getCustomType(), baseMessage.getData(), baseMessage.getCreatedAt());
+                sendbirdListner.messageReceived(baseMessage.getCustomType(), baseMessage.getData(), baseMessage.getCreatedAt());
             }
 
             @Override
@@ -144,7 +198,7 @@ public class SendbirdConnection {
             @Override
             public void onMetaCountersUpdated(BaseChannel channel, Map<String, Integer> metaCounterMap) {
                 super.onMetaCountersUpdated(channel, metaCounterMap);
-                forBroadcaster.metaCounterUpdated(metaCounterMap.get("heart"));
+                sendbirdListner.metaCounterUpdated(metaCounterMap.get("heart"));
             }
         });
     }
@@ -163,8 +217,8 @@ public class SendbirdConnection {
         );
     }
 
-    public static int getChannelNum(){
-        return channelNum;
+    public static int getBroadcastChannelNum(){
+        return broadcastChannelNum;
     }
 
     //////////////////////////////////////////////////////////////////////
@@ -186,7 +240,7 @@ public class SendbirdConnection {
         userListQuery.next((List<User> list, SendBirdException e) -> {
             if (e != null) return;
             UserList = setUserList(list);
-            forBroadcaster.getUserListComplete(Integer.toString(UserList.size()));
+            sendbirdListner.getUserListComplete(Integer.toString(UserList.size()));
         });
     }
 
@@ -243,7 +297,7 @@ public class SendbirdConnection {
     }
 
     public static void broadcastfinish(){
-        updateMetaData(ctrl_channel, Integer.toString(channelNum), "true");
+        updateMetaData(ctrl_channel, Integer.toString(broadcastChannelNum), "true");
         mOpenChannel.delete((SendBirdException e) -> { });
         SendBird.removeChannelHandler(StaticVariable.CHANNEL_HANDLER_ID);
     }

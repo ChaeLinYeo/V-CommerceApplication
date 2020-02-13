@@ -44,18 +44,21 @@ public class FullVideoFragment extends Fragment
 
     private ArrayList<String> mPlayList;
     private ArrayList<String> mPlaypreviewList;
-    private ArrayList<Integer> mPlayChannel;
-    private ArrayList<String> mChatUrl;
+//    private ArrayList<Integer> mPlayChannel;
+//    private ArrayList<String> mChatUrl;
 
     private int curFragment = -1;
-    private int comFragment = 0;
-    private boolean createAllFrag = false;
 
-    FullVideoFragment(ArrayList<String> mPlayList, ArrayList<String> mPlaypreviewList, ArrayList<Integer> mPlayChannel, ArrayList<String> mChatUrl){ //package-private
+//    FullVideoFragment(ArrayList<String> mPlayList, ArrayList<String> mPlaypreviewList, ArrayList<Integer> mPlayChannel, ArrayList<String> mChatUrl){ //package-private
+//        this.mPlayList = mPlayList;
+//        this.mPlaypreviewList = mPlaypreviewList;
+//        this.mPlayChannel = mPlayChannel;
+//        this.mChatUrl = mChatUrl;
+//    }
+
+    FullVideoFragment(ArrayList<String> mPlayList, ArrayList<String> mPlaypreviewList){ //package-private
         this.mPlayList = mPlayList;
         this.mPlaypreviewList = mPlaypreviewList;
-        this.mPlayChannel = mPlayChannel;
-        this.mChatUrl = mChatUrl;
     }
 
     @Override
@@ -93,11 +96,9 @@ public class FullVideoFragment extends Fragment
         });
 
         //init adapter
-        comFragment = 0;
-        createAllFrag = false;
         adapter.clearFragment();
         for(int i = 0 ;i < mPlayList.size();i++) {
-            adapter.addFragment(new Fragment_player(i, mPlayChannel.get(i), mChatUrl.get(i)), "" + i);
+            adapter.addFragment(new Fragment_player(i), "" + i);
         }
 
         viewPager.setAdapter(adapter);

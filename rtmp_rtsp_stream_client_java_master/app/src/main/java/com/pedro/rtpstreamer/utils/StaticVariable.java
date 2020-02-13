@@ -54,4 +54,6 @@ public class StaticVariable {
     public static final String stoargeUrl = "https://rtmprtspstreamclientec4408a7ba95486ebe7ba8f169495201-dev.s3.us-east-2.amazonaws.com/public/";
 
     public static final String CHANNEL_HANDLER_ID = "CHANNEL_HANDLER_OPEN_CHAT";
+
+    public static final String sendbirdCtrlChannel = "sendbird_Ctrl";
 }

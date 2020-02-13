@@ -1,7 +1,5 @@
 package com.pedro.rtpstreamer.player;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,18 +10,14 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.pedro.rtpstreamer.R;
 import com.pedro.rtpstreamer.server.SendbirdConnection;
+import com.pedro.rtpstreamer.server.SendbirdListner;
 import com.pedro.rtpstreamer.utils.StaticVariable;
-import com.sendbird.android.OpenChannel;
-import com.sendbird.android.SendBird;
-import com.sendbird.android.SendBirdException;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.Random;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -32,60 +26,31 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class PlayerMain extends AppCompatActivity
-    implements View.OnClickListener {
+    implements View.OnClickListener{
 
     private final OkHttpClient mOkHttpClient = new OkHttpClient();
 
     private ArrayList<String> resourceUri = new ArrayList<>();
     private ArrayList<String> previewUri = new ArrayList<>();
-    private ArrayList<String> sendUrl = new ArrayList<>();
-    private ArrayList<Integer> channelNumList = new ArrayList<>();
+//    private ArrayList<String> sendUrl = new ArrayList<>();
+//    private ArrayList<Integer> channelNumList = new ArrayList<>();
 
     private int curBroad = 0;
-    private int fragNum = -1;
+    private int fragPosition = -1;
 
     private boolean full_ing = false;
 
-    //랜덤영문 +숫자
-    private Random r = new Random();
-    private int f = r.nextInt(26);
-    private String f2 = Character.toString((char) (f+65));
-    private int d = r.nextInt(26);
-    private String d2 = Character.toString((char) (d+65));
-    private int num = r.nextInt(10000);
-    private int num2 = r.nextInt(10000);
-    public static String USER_ID;
+    private int selectedChannelNum=-1;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.player_main);
 
-        USER_ID = f2 + d2 + num + num2;
-
-//        SendBird.init(getString(R.string.sendbird_app_id), this);
-//        SendBird.connect(USER_ID,
-//            (User user, SendBirdException e) -> {
-//                if (e != null) {    // Error.
-//                    Log.d("connect error","connect : 1" );
-//                    return;
-//                }
-//                updateCurrentUserInfo(USER_ID);
-//            }
-//        );
-
-        SendbirdConnection.setupSendbird(this, USER_ID, false);
+        SendbirdConnection.setupSendbird(this, false, sendbirdListner);
 
         initBtn();
     }
-
-//    private void updateCurrentUserInfo(final String userNickname) {
-//        SendBird.updateCurrentUserInfo(userNickname, null,
-//                (SendBirdException e) -> {
-//                    if (e != null) Log.e("nickname",e.getMessage()+" : "+e.getCode());
-//                }
-//        );
-//    }
 
     @Override
     public void onBackPressed(){
@@ -116,98 +81,61 @@ public class PlayerMain extends AppCompatActivity
     //방송정보로 각 버튼 내용 설정하기
     @Override
     public void onClick(View view){
-        int channelNum;
         switch(view.getId()){
             case R.id.btn1:
-                channelNum = 0;
+                selectedChannelNum = 0;
                 break;
             case R.id.btn2:
-                channelNum = 1;
+                selectedChannelNum = 1;
                 break;
             case R.id.btn3:
-                channelNum = 2;
+                selectedChannelNum = 2;
                 break;
             case R.id.btn4:
-                channelNum = 3;
+                selectedChannelNum = 3;
                 break;
             case R.id.btn5:
-                channelNum = 4;
+                selectedChannelNum = 4;
                 break;
             case R.id.btn6:
-                channelNum = 5;
+                selectedChannelNum = 5;
                 break;
             case R.id.btn7:
-                channelNum = 6;
+                selectedChannelNum = 6;
                 break;
             case R.id.btn8:
-                channelNum = 7;
+                selectedChannelNum = 7;
                 break;
             case R.id.btn9:
-                channelNum = 8;
+                selectedChannelNum = 8;
                 break;
             case R.id.btn10:
-                channelNum = 9;
+                selectedChannelNum = 9;
                 break;
 
                 default:
                 return;
         }
 
-        getSendbird(channelNum);
+        SendbirdConnection.getCtrl();
+
     }
 
-    public void getSendbird(int channelNum){
-        OpenChannel.getChannel(getString(R.string.sendbird_ctrlChannel),
-            (OpenChannel openChannel, SendBirdException e) -> {
-                if (e != null) {    // Error.
-                    Log.d("getchannelerror1", ""+e.getMessage());
-                    e.printStackTrace();
-                    return;
-                }
-                //////////////////////////////
-                openChannel.getAllMetaData((Map<String, String> map, SendBirdException ex) -> {
-                        sendUrl.clear();
-                        channelNumList.clear();
-                        for(String key : map.keySet()) {
-                            if (!map.get(key).equals("true")){
-                                sendUrl.add(map.get(key));
-                                channelNumList.add(Integer.parseInt(key));
-                            }
-                            else{
-                                if(key.equals(Integer.toString(channelNum))){
-                                    sendUrl.clear();
-                                    channelNumList.clear();
-                                    Toast.makeText(getApplicationContext(), "This channel is not on air.", Toast.LENGTH_SHORT).show();
-                                    return;
-                                }
-                            }
-                        }
-                        showBroadcast(channelNum);
-                    }
-                );
-            }
-        );
-    }
-
-    public int setBroadcast(int channelNum){
+    public void setBroadcast(){
         resourceUri.clear();
         previewUri.clear();
-        curBroad=channelNumList.size();
-        int res = -1;
-        for(int i=0; i<curBroad; i++){
-            resourceUri.add(null);
-            previewUri.add(null);
-        }
-        for(int i=0; i<curBroad; i++){
-            getBroadcast(channelNumList.get(i),i);
-            if(channelNum == channelNumList.get(i)) res = i;
-        }
+        curBroad = 0;
+        fragPosition = -1;
+        for(int i=0; i<StaticVariable.numChannel; i++){
+            if(SendbirdConnection.isLive(i)){
+                resourceUri.add(null);
+                previewUri.add(null);
+                getBroadcast(i, curBroad);
+                if(selectedChannelNum == i) fragPosition = curBroad;
 
-        return res;
-    }
-
-    public void showBroadcast(int channelNum){
-        this.fragNum = setBroadcast(channelNum);
+                curBroad++;
+            }
+        }
     }
 
     public void startBroadcastPlay(){
@@ -218,7 +146,7 @@ public class PlayerMain extends AppCompatActivity
             Log.d("showBroadcast", "fvf is null");
             return;
         }
-        fvf.startFull(fragNum);
+        fvf.startFull(fragPosition);
     }
 
     private void getBroadcast(int channelNum, int position){
@@ -259,10 +187,25 @@ public class PlayerMain extends AppCompatActivity
     public void setFull(){
         Log.d("setFull", ""+resourceUri.size());
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        FullVideoFragment frag = new FullVideoFragment(resourceUri, previewUri, channelNumList, sendUrl);
+        FullVideoFragment frag = new FullVideoFragment(resourceUri, previewUri);
         fragmentTransaction.add(R.id.fullVideo, frag, "fullFragment");
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
         getSupportFragmentManager().executePendingTransactions();
     }
+
+    private SendbirdListner sendbirdListner = new SendbirdListner() {
+        @Override
+        public void getCtrlComplete() {
+            Log.d("PKR","getctrl complete");
+            SendbirdConnection.getLiveChannelUrl();
+        }
+
+        @Override
+        public void getChannelComplete(boolean success) {
+            Log.d("PKR","getchannel complete");
+            if (SendbirdConnection.isLive(selectedChannelNum)) setBroadcast();
+            else Toast.makeText(getApplicationContext(), "This channel is not onAir", Toast.LENGTH_LONG).show();
+        }
+    };
 }
