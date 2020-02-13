@@ -11,11 +11,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.pedro.rtpstreamer.R;
+import com.pedro.rtpstreamer.server.SendbirdConnection;
 import com.pedro.rtpstreamer.utils.StaticVariable;
 import com.sendbird.android.OpenChannel;
 import com.sendbird.android.SendBird;
 import com.sendbird.android.SendBirdException;
-import com.sendbird.android.User;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -63,43 +63,29 @@ public class PlayerMain extends AppCompatActivity
 
         USER_ID = f2 + d2 + num + num2;
 
-        SendBird.init(getString(R.string.sendbird_app_id), this);
-        SendBird.connect(USER_ID,
-            (User user, SendBirdException e) -> {
-                if (e != null) {    // Error.
-                    Log.d("connect error","connect : 1" );
-                    return;
-                }
-                updateCurrentUserInfo(USER_ID);
-            }
-        );
+//        SendBird.init(getString(R.string.sendbird_app_id), this);
+//        SendBird.connect(USER_ID,
+//            (User user, SendBirdException e) -> {
+//                if (e != null) {    // Error.
+//                    Log.d("connect error","connect : 1" );
+//                    return;
+//                }
+//                updateCurrentUserInfo(USER_ID);
+//            }
+//        );
 
-
-        Intent intent = getIntent();
-        if(intent.getAction() == null){
-            Log.d("action","null");
-
-        } else if(intent.getAction().equals(Intent.ACTION_VIEW)) {
-            Log.d("action","action view");
-            Uri uri = intent.getData();
-            if(uri != null) {
-                String data = uri.getQueryParameter("board_id");
-                int channelNum = Integer.parseInt(""+data);
-                Log.d("channel","channel num : "+channelNum);
-                getSendbird(channelNum);
-            }
-        }
+        SendbirdConnection.setupSendbird(this, USER_ID, false);
 
         initBtn();
     }
 
-    private void updateCurrentUserInfo(final String userNickname) {
-        SendBird.updateCurrentUserInfo(userNickname, null,
-                (SendBirdException e) -> {
-                    if (e != null) Log.e("nickname",e.getMessage()+" : "+e.getCode());
-                }
-        );
-    }
+//    private void updateCurrentUserInfo(final String userNickname) {
+//        SendBird.updateCurrentUserInfo(userNickname, null,
+//                (SendBirdException e) -> {
+//                    if (e != null) Log.e("nickname",e.getMessage()+" : "+e.getCode());
+//                }
+//        );
+//    }
 
     @Override
     public void onBackPressed(){

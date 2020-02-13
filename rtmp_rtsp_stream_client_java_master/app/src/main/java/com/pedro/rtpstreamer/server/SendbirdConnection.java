@@ -43,10 +43,12 @@ public class SendbirdConnection {
 
     private static int viewNum=0;
 
-    public static void setupSendbird(Context context, String USER_ID, int type) {
+    private static String[] channelUrl = new String[10];
+
+    public static void setupSendbird(Context context, String USER_ID, boolean isOperator) {
         //////////////////////////////////////////////
         //try catch
-        if(type == 0) forBroadcaster = (SendbirdListner.ForBroadcaster) context;
+        if(isOperator) forBroadcaster = (SendbirdListner.ForBroadcaster) context;
         //////////////////////////////////////////////
 
         SendBird.init(context.getString(R.string.sendbird_app_id), context);
@@ -56,7 +58,7 @@ public class SendbirdConnection {
                     Log.d("connect error","connect : 1" );
                     return;
                 }
-                operator.add(user);
+                if(isOperator) operator.add(user);
                 SendBird.updateCurrentUserInfo(USER_ID, null,
                     (SendBirdException ex) -> {
                         if (ex != null) Log.e("nickname",ex.getMessage()+" : "+ex.getCode());
@@ -64,6 +66,7 @@ public class SendbirdConnection {
                 );
             }
         );
+
         viewNum=0;
     }
 
