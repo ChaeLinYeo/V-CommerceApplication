@@ -548,7 +548,7 @@ public class BroadcastMain extends AppCompatActivity
     }
 
     //쿠폰 이벤트 생성 팝업창
-    public void btn_showPopUp (){ // 선택한 사람
+    public void btn_showPopUp(){
         final AlertDialog.Builder alert01 = new AlertDialog.Builder(BroadcastMain.this);
         View mView01 = getLayoutInflater().inflate(R.layout.popup_coupon, null);
         final EditText coupon_name_txt = mView01.findViewById(R.id.blabla011);
@@ -556,9 +556,6 @@ public class BroadcastMain extends AppCompatActivity
         final EditText coupon_time_txt = mView01.findViewById(R.id.blabla033);  //n초뒤 사라짐 이라고 띄우는 부분
         Button coupon_btn_cancel_01 = mView01.findViewById(R.id.coupon_btn_cancel_01);
         Button coupon_btn_ok_01 = mView01.findViewById(R.id.coupon_btn_ok_01);
-
-
-
 
         if(couponuser.size() >0){
             String result  = "User=";
@@ -638,6 +635,7 @@ public class BroadcastMain extends AppCompatActivity
         mSwipeRefreshLayout.setOnRefreshListener(() -> {
                 mSwipeRefreshLayout.setRefreshing(true);
                 new Handler().postDelayed(() -> {
+                        ShowList.clear();
                         List<User> reuserList = sendbirdConnection.getUserList(true);
                         for(User user : reuserList){
                             ShowList.add(user.getUserId() + "(" + user.getNickname() + ")");
@@ -710,6 +708,7 @@ public class BroadcastMain extends AppCompatActivity
                             couponuser.add(userList.get(i).getUserId());
                         }
                     }
+                    btn_showPopUp();
                     // 모든 선택 상태 초기화.
                     listview.clearChoices() ;
                     adapter.notifyDataSetChanged();
