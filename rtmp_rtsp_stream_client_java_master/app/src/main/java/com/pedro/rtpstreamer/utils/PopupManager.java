@@ -33,6 +33,7 @@ import com.pedro.rtpstreamer.broadcaster.BroadcastManager;
 import com.pedro.rtpstreamer.server.LocalfileManager;
 import com.pedro.rtpstreamer.server.SendbirdConnection;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,7 +46,8 @@ public class PopupManager {
     private Context mContext;
 
     private ArrayList<String> category_items = new ArrayList<>();//카테고리 아이템들
-    private ArrayList<String> selected_items = new ArrayList<>();
+    ArrayList<String> selected_items = new ArrayList<>();
+    ArrayList<String> temp = new ArrayList<>();
 
     //신고 선택 구분용 변수
     //0은 선택 안된 것, 1은 선택 된 것.
@@ -64,20 +66,34 @@ public class PopupManager {
     public PopupManager(Context context){
         mContext = context;
     }
-
+    public void setCC(){
+        int last = selected_items.size();
+        if(last > 0) {
+            Log.d("btn_buy", selected_items.get(last-1));
+            temp.add(selected_items.get(last - 1));
+            selected_items.remove(last - 1);
+        }
+    }
     public void btn_buy(LayoutInflater inflater) {
         View mView_c = inflater.inflate(R.layout.buylist_popup, null);
 
-        ArrayAdapter<String> adapter1 = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_multiple_choice, category_items);
+        ArrayAdapter<String> adapter1 = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, category_items) ;
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, selected_items) ;
+        ArrayAdapter<String> adapter3 = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, temp) ;
 
         // listview 생성 및 adapter 지정.
-        ListView listView = mView_c.findViewById(R.id.listView) ;
-        listView.setAdapter(adapter1);
-        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        ListView listView = mView_c.findViewById(R.id.listView);
+
+//        listView.setAdapter(adapter1);
+//        listView.setAdapter(adapter2);
+//        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
         final AlertDialog.Builder alert05 = new AlertDialog.Builder(mContext);
 
         Button btn_Exit = mView_c.findViewById(R.id.btnExit);
+        Button already = mView_c.findViewById(R.id.post);
+        Button notyet = mView_c.findViewById(R.id.pre);
+        Button now = mView_c.findViewById(R.id.curr);
 
         alert05.setView(mView_c);
 
@@ -85,6 +101,18 @@ public class PopupManager {
         alertDialog.setCanceledOnTouchOutside(false);
 
         btn_Exit.setOnClickListener((View view) -> alertDialog.dismiss());
+        notyet.setOnClickListener((View view) -> {
+            listView.setAdapter(adapter1);
+            adapter1.notifyDataSetChanged();
+        });
+        already.setOnClickListener((View view) -> {
+            listView.setAdapter(adapter2);
+            adapter2.notifyDataSetChanged();
+        });
+        now.setOnClickListener((View view) -> {
+            listView.setAdapter(adapter3);
+            adapter3.notifyDataSetChanged();
+        });
         alertDialog.show();
     }
 
@@ -313,12 +341,16 @@ public class PopupManager {
         category_items.clear();
     }
     public void clearSCategory() { selected_items.clear(); }
+
     public void addCategoryI(String item){
         category_items.add(item);
     }
     public void addSCategory(String item) { selected_items.add(item); }
 
-    public void setCategory(List<String> cate) {category_items = (ArrayList<String>)cate;}
+    public void setCategory(List<String> cate) {
+        ArrayList<String> aL = (ArrayList<String>)cate;
+        category_items = aL;
+    }
 
     //공지 수정 팝업창
     public void btn_showDialog2(LayoutInflater inflater, TextView broadcast_notice) {
@@ -452,10 +484,10 @@ public class PopupManager {
                     int pos2;
                     pos2 = listView.getCheckedItemPosition();
                     if(pos2 != ListView.INVALID_POSITION){
+                        long t = System.currentTimeMillis()-time;
                         String current_item = category_items.get(pos2);
                         sendbirdConnection.selectCategory(current_item);
-                        long t = time - System.currentTimeMillis();
-                        LM_time.savetimeline(t,":"+current_item+"\n");
+                        LM_time.savetimeline(t,current_item+"\n");
                         category_items.remove(pos2);
                         listView.clearChoices();
                         adapter1.notifyDataSetChanged();

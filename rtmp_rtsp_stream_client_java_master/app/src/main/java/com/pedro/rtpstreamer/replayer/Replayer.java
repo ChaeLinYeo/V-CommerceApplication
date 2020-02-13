@@ -2,6 +2,7 @@ package com.pedro.rtpstreamer.replayer;
 
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
@@ -12,9 +13,11 @@ import android.os.Message;
 import android.util.Log;
 import android.view.SurfaceView;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -36,7 +39,10 @@ import org.videolan.libvlc.MediaPlayer;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.StringTokenizer;
+
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 
 @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
 public class Replayer extends AppCompatActivity
@@ -61,6 +67,7 @@ public class Replayer extends AppCompatActivity
     private ExampleChatController ECC;
     private LottieAnimationView songLikeAnimButton;
     private int nextIndex=0;
+    private int nextTimeline=0;
     ArrayList<Pair> CL;
     ArrayList<Pair> TL;
 
@@ -68,6 +75,16 @@ public class Replayer extends AppCompatActivity
     private String finalHeartNum;
     private String finalViewNum;
     private String USERID;
+
+    private RelativeLayout loadingPanel;
+
+    private ArrayList<String> timeLine = new ArrayList<>();
+
+    private boolean byTimeLine = false;
+
+    private TextView currTimeline;
+    private Button OnOffButton;
+    private int onoff = 1;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -81,18 +98,39 @@ public class Replayer extends AppCompatActivity
         AWSConnection.downloadFile("myUploadedFileName", path+"/chatDown/chat.txt", context);
         AWSConnection.downloadFile("myUploadedFileName_timeLine", path+"/chatDown/timeline.txt", context);
 
+        findViewById(R.id.timelineButton).setOnClickListener(this);
+
         songLikeAnimButton = findViewById(R.id.heartView);
         playBtn = findViewById(R.id.playBtn);
         seekBar = findViewById(R.id.seekBar);
         title = findViewById(R.id.replaytitle);
-        streamer_nickname = findViewById(R.id.nickname);
+        streamer_nickname = findViewById(R.id.replaynickname);
         listView = findViewById(R.id.ChatListView);
+        heart=findViewById(R.id.reheartnum);
         playBtn.setOnClickListener(this);
         seekBar.setOnSeekBarChangeListener(seekBarChangeListener);
+        loadingPanel = findViewById(R.id.loadingPanel);
+        currTimeline = findViewById(R.id.curr_category);
+        OnOffButton = findViewById(R.id.btn_onoff2);
 
         ECC = new ExampleChatController(context, listView, R.layout.chatline, R.id.chat_line_textview, R.id.chat_line_timeview);
         ECC.show();
         ECC.add2("재방송 채팅입니다.");
+
+        //채팅과 각종알림 온오프
+        OnOffButton.setOnClickListener((View view) -> {
+            if(onoff == 1){
+                ECC.hide();
+                OnOffButton.setText("ON");
+                onoff = 0;
+            }
+            else if(onoff == 0){
+                ECC.show();
+                OnOffButton.setText("OFF");
+                onoff = 1;
+            }
+        });
+
     }
 
     @Override
@@ -101,10 +139,16 @@ public class Replayer extends AppCompatActivity
             case R.id.playBtn:
                 if(mediaState==0) {
                     nextIndex = 0;
+                    nextTimeline=0;
                     setUri();
                 }
                 else if(mediaState==1) mMediaPlayer.pause();
                 else mMediaPlayer.play();
+                break;
+
+            case R.id.timelineButton:
+                popTimeLine();
+                break;
         }
     }
 
@@ -112,6 +156,7 @@ public class Replayer extends AppCompatActivity
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             if(fromUser && mediaState != 0){
+                Log.d("PKRR","progresschanged");
                 float pr = ((float) progress) / 1000f;
                 mMediaPlayer.setPosition(pr);
                 long d = mMediaPlayer.getTime();
@@ -128,6 +173,32 @@ public class Replayer extends AppCompatActivity
                         ECC.add2(cp.getMsg());
                     }
                 }
+
+                for(int i=0; i<TL.size();i++){
+                    if(TL.get(i).getTime() >= d){
+                        Log.d("PKRTS","nexttimeline : "+nextTimeline);
+                        nextTimeline = i;
+                        if(i>0) currTimeline.setText("현재 "+TL.get(i-1).getType()+"을(를) 판매 중입니다");
+                        break;
+                    }
+                }
+            } else if(byTimeLine){
+                Log.d("PKRR","progresschanged byTimeLine");
+                long d = mMediaPlayer.getTime();
+                for(int i=0; i<CL.size(); i++){
+                    if(CL.get(i).getTime() >= d) {
+                        nextIndex = i;
+                        break;
+                    }
+                }
+                ECC.clear();
+                for(int i=0; i<nextIndex; i++){
+                    Pair cp = CL.get(i);
+                    if(cp.getType().equals("chat")) {
+                        ECC.add2(cp.getMsg());
+                    }
+                }
+                byTimeLine = false;
             }
         }
 
@@ -175,10 +246,15 @@ public class Replayer extends AppCompatActivity
         heart.setText(finalHeartNum);
         TextView p = findViewById(R.id.peoplenum);
         p.setText(finalViewNum);
+
+        for(int i=0; i<TL.size(); i++){
+            timeLine.add(TL.get(i).getType());
+        }
+
+        Log.d("PKRA","end setlog");
     }
 
     public void removeUri(){
-        Log.d("destroy", "destroy");
         try {
             mMediaPlayer.release();
             mLibVLC.release();
@@ -189,9 +265,7 @@ public class Replayer extends AppCompatActivity
 
     public Pair LogParser(String Log1){
         int index = Log1.indexOf("/");
-        //StringTokenizer st = new StringTokenizer(Log1, "/");
         Pair p = new Pair(Long.parseLong(Log1.substring(0,index)), Log1.substring(index+1));// [0]시간 / [1]타입 / 내용 (chat제외 무시하는 값)
-        Log.d("PKR3", "after new pair time : "+p.getTime()+" type : "+p.getType() + " msg : "+p.getMsg());
         return p;
     }
 
@@ -216,6 +290,13 @@ public class Replayer extends AppCompatActivity
                         mMediaPlayer.getVLCVout().attachViews(null);
                         mMediaPlayer.setEventListener(event->{
                             switch (event.type) {
+                                case MediaPlayer.Event.Buffering:
+                                    if(event.getBuffering()<100) loadingPanel.setVisibility(VISIBLE);
+                                    else loadingPanel.setVisibility(GONE);
+                                    break;
+
+//                                    case MediaPlayer.Event.
+
                                 case MediaPlayer.Event.Playing:
                                     Log.d("mediaP","playing");
                                     playBtn.setText("stop");
@@ -224,12 +305,21 @@ public class Replayer extends AppCompatActivity
 
                                 case MediaPlayer.Event.TimeChanged:
                                     long d = mMediaPlayer.getTime(); //ms
-                                    if(nextIndex == CL.size()) break;
-                                    Pair cp = CL.get(nextIndex);
-                                    Log.d("PKR2","time : "+cp.getTime()+"/"+d+" type : "+cp.getType() + "msg : "+cp.getMsg());
-                                    if(cp.getTime() <= d){
-                                        playChat(cp);
-                                        nextIndex++;
+                                    if(nextIndex < CL.size()-2) {
+                                        Pair cp = CL.get(nextIndex);
+                                        Log.d("PKR2", "time : " + cp.getTime() + "/" + d + " type : " + cp.getType() + "msg : " + cp.getMsg());
+                                        if (cp.getTime() <= d) {
+                                            playChat(cp);
+                                            nextIndex++;
+                                        }
+                                    }
+                                    if(nextTimeline < TL.size()) {
+                                        Log.d("PKRT","nexttimeline : "+nextTimeline);
+                                        if (TL.get(nextTimeline).getTime() <= d) {
+                                            Log.d("PKRTC","nexttimeline changed : "+TL.get(nextTimeline).getType());
+                                            currTimeline.setText("현재 "+TL.get(nextTimeline).getType()+"을(를) 판매 중입니다");
+                                            nextTimeline++;
+                                        }
                                     }
                                     int position = (int) (mMediaPlayer.getPosition()*1000);
                                     seekBar.setProgress(position);
@@ -243,8 +333,10 @@ public class Replayer extends AppCompatActivity
                                 case MediaPlayer.Event.Stopped:
                                     Log.d("mHandler","stop");
                                     playBtn.setText("start");
+                                    seekBar.setProgress(1000);
                                     mediaState=0;
                                     removeUri();
+                                    byTimeLine = false;
                                     break;
                             }
                         });
@@ -283,7 +375,7 @@ public class Replayer extends AppCompatActivity
         // 애니메이션을 한번 실행시킨다.
         // Custom animation speed or duration.
         // ofFloat(시작 시간, 종료 시간).setDuration(지속시간)
-        songLikeAnimButton.setVisibility(View.VISIBLE);
+        songLikeAnimButton.setVisibility(VISIBLE);
         ValueAnimator animator = ValueAnimator.ofFloat(0f, 0.6f).setDuration(500);
 
         animator.addUpdateListener((ValueAnimator animation) -> {
@@ -304,5 +396,43 @@ public class Replayer extends AppCompatActivity
 
             setUri();
         }
+    }
+
+    public void popTimeLine(){
+        View mView_c = getLayoutInflater().inflate(R.layout.popup_timeline, null);
+
+        // ArrayAdapter 생성. 아이템 View를 선택(multiple choice)가능하도록 만듦.
+        ArrayAdapter<String> adapter1 = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, timeLine) ;
+
+        // listview 생성 및 adapter 지정.
+        ListView listView = mView_c.findViewById(R.id.timelineList) ;
+        listView.setAdapter(adapter1);
+        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+
+        final AlertDialog.Builder alert05 = new AlertDialog.Builder(this);
+
+        Button btn_Exit = mView_c.findViewById(R.id.timelineExit);
+
+        alert05.setView(mView_c);
+
+        final AlertDialog alertDialog = alert05.create();
+        alertDialog.setCanceledOnTouchOutside(false);
+
+        btn_Exit.setOnClickListener((View view) -> alertDialog.dismiss());
+
+        listView.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
+                Log.d("PKRA","category time : "+TL.get(position).getTime());
+                nextTimeline = position;
+                Log.d("PKRTT","nexttimeline : "+nextTimeline);
+                mMediaPlayer.setTime(TL.get(position).getTime());
+                byTimeLine = true;
+                int mediaPosition = (int) (mMediaPlayer.getPosition()*1000);
+                seekBar.setProgress(mediaPosition);
+                currTimeline.setText("현재 "+TL.get(position).getType()+"을(를) 판매 중입니다");
+                alertDialog.dismiss();
+            }
+        );
+
+        alertDialog.show();
     }
 }
