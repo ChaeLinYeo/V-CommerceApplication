@@ -279,7 +279,6 @@ public class BroadcastMain extends AppCompatActivity
         broadcastManager.surfaceDestroy();
     }
 
-    /////////////////////////////////////////////////////
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -354,9 +353,6 @@ public class BroadcastMain extends AppCompatActivity
     }
     // 좋아요 로띠 애니메이션을 실행 시키는 메소드
     private boolean toggleSongLikeAnimButton(){
-        // 애니메이션을 한번 실행시킨다.
-        // Custom animation speed or duration.
-        // ofFloat(시작 시간, 종료 시간).setDuration(지속시간)
         songLikeAnimButton.setVisibility(View.VISIBLE);
         ValueAnimator animator = ValueAnimator.ofFloat(0f, 0.6f).setDuration(500);
 

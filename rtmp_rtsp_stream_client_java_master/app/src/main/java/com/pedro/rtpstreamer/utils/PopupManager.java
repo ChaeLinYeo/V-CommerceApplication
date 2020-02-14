@@ -70,7 +70,7 @@ public class PopupManager {
     private boolean is_declare_6 = false;	//기타
     //신고 사유 기술용 변수
     private String txt_dummy_save;
-
+    Button makecoupon;
     //이벤트 쿠폰 팝업용 변수
     public String e_n = "";
     public String e_a="";
@@ -165,7 +165,6 @@ public class PopupManager {
 
     // 방송 시작 첫 제목 설정
     public void create_title(LayoutInflater inflater, TextView title_text, LocalfileManager LM) {
-
         View mView = inflater.inflate(R.layout.init_channel, null);
         final EditText newtitle = mView.findViewById(R.id.init_title);
         Button btn_cancel = mView.findViewById(R.id.init_cancel);
@@ -233,7 +232,11 @@ public class PopupManager {
                     e_t_m = numberpicker_m.getValue();
                     e_t_s = numberpicker_s.getValue();
                     alertDialog.dismiss();
-                }
+            if(e_a.equals("") || e_n.equals("") || (e_t_s < 1 && e_t_m < 1 && e_t_s < 1)){
+                makecoupon.setText("이벤트 설정");
+            }else{
+                makecoupon.setText("이벤트 수정");}
+            }
         );
 
         alertDialog.show();
@@ -264,9 +267,6 @@ public class PopupManager {
         coupon_name_txt.setText(e_n);
         coupon_ect_txt.setText(e_a);
 
-        //초*1000
-        //분*1000*60
-        //시*1000*60*60
         save_time_before = (e_t_h*1000*60*60) + (e_t_m*1000*60) + (e_t_s*1000); //시간 int로 저장
         save_time = e_t_h + e_t_m + e_t_s;
         alert01.setView(mView01);
@@ -295,7 +295,7 @@ public class PopupManager {
         coupon_btn_cancel_01.setOnClickListener((View view) -> alertDialog.dismiss());
 
         coupon_btn_ok_01.setOnClickListener((View view) -> alertDialog.dismiss());
-        e_n = ""; e_a = ""; e_t_h = 0; e_t_m = 0; e_t_s = 0;
+        e_n =""; e_a =""; e_t_h = 0; e_t_m = 0; e_t_s = 0;
         alertDialog.show();
     }
 
@@ -324,7 +324,7 @@ public class PopupManager {
         Button selectAllButton = mView.findViewById(R.id.select_all);
         Button ban = mView.findViewById(R.id.ben);
         Button sendcoupon =  mView.findViewById(R.id.show_event);
-        Button makecoupon =  mView.findViewById(R.id.custom_event);
+        makecoupon =  mView.findViewById(R.id.custom_event);
         EditText search = mView.findViewById(R.id.searchPeople);
         SwipeRefreshLayout mSwipeRefreshLayout = mView.findViewById(R.id.swipeRefresh);
         mSwipeRefreshLayout.setOnRefreshListener(() -> {
@@ -395,9 +395,9 @@ public class PopupManager {
                 }
         );
 
-        makecoupon.setOnClickListener((View v) ->
-            btn_editPopUp(inflater)
-        );
+        makecoupon.setOnClickListener((View v) ->{
+            btn_editPopUp(inflater);
+        });
 
         sendcoupon.setOnClickListener((View v) -> {
                     if(e_a.equals("") || e_n.equals("") || (e_t_s < 1 && e_t_m < 1 && e_t_s < 1)){
@@ -417,6 +417,7 @@ public class PopupManager {
                         // 모든 선택 상태 초기화.
                         listview.clearChoices();
                         adapter.notifyDataSetChanged();
+                        makecoupon.setText("이벤트 설정");
                     }
                 }
         );
@@ -460,11 +461,6 @@ public class PopupManager {
 
         // listview 생성 및 adapter 지정.
         ListView listView = mView_c.findViewById(R.id.listView);
-
-//        listView.setAdapter(adapter1);
-//        listView.setAdapter(adapter2);
-//        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-
         final AlertDialog.Builder alert05 = new AlertDialog.Builder(mContext);
 
         Button btn_Exit = mView_c.findViewById(R.id.btnExit);
@@ -672,10 +668,7 @@ public class PopupManager {
         coupon_name_txt.setText(name);
         coupon_ect_txt.setText(info);
 
-        //초*1000
-        //분*1000*60
-        //시*1000*60*60
-        save_time_before = (h * 1000 * 60 * 60) + (m * 1000 * 60) + (s * 1000); //시간 int로 저장
+        save_time_before = (h * 1000 * 60 * 60) + (m * 1000 * 60) + (s * 1000);
         save_time = h * 3600 + m * 60 + s;
         alert01.setView(mView01);
 
@@ -892,19 +885,18 @@ public class PopupManager {
         );
 
         btn_Select.setOnClickListener((View view) -> {
-                    int pos2;
-                    pos2 = listView.getCheckedItemPosition();
-                    if(pos2 != ListView.INVALID_POSITION){
-                        long t = System.currentTimeMillis()-time;
-                        String current_item = category_items.get(pos2);
-                        sendbirdConnection.selectCategory(current_item);
-                        LM_time.savetimeline(t,current_item+"\n");
-                        category_items.remove(pos2);
-                        listView.clearChoices();
-                        adapter1.notifyDataSetChanged();
-                    }
-                }
-        );
+            long t = System.currentTimeMillis()-time;
+            int pos2;
+            pos2 = listView.getCheckedItemPosition();
+            if(pos2 != ListView.INVALID_POSITION){
+                String current_item = category_items.get(pos2);
+                sendbirdConnection.selectCategory(current_item);
+                LM_time.savetimeline(t,current_item+"\n");
+                category_items.remove(pos2);
+                listView.clearChoices();
+                adapter1.notifyDataSetChanged();
+            }
+        });
         alertDialog.show();
     }
 
