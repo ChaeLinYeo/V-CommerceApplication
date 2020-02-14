@@ -662,10 +662,7 @@ public class PopupManager {
         coupon_name_txt.setText(name);
         coupon_ect_txt.setText(info);
 
-        //초*1000
-        //분*1000*60
-        //시*1000*60*60
-        save_time_before = (h * 1000 * 60 * 60) + (m * 1000 * 60) + (s * 1000); //시간 int로 저장
+        save_time_before = (h * 1000 * 60 * 60) + (m * 1000 * 60) + (s * 1000);
         save_time = h * 3600 + m * 60 + s;
         alert01.setView(mView01);
 
