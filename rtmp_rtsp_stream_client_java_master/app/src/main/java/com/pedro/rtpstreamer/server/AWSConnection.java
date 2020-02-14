@@ -90,12 +90,15 @@ public class AWSConnection {
 
     public static void downloadFile(String fileName, String localPath, Context context) {
 
+        String key = "test/"+fileName+".txt";
+
         Amplify.Storage.downloadFile(
-            fileName, localPath,
+            key, localPath,
             new ResultListener<StorageDownloadFileResult>() {
                 @Override
                 public void onResult(StorageDownloadFileResult result) {
                     Log.i("StorageQuickStart", "Successfully downloaded: " + result.getFile().getName());
+                    awsListner.downloadComplete();
                 }
 
                 @Override

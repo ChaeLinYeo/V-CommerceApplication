@@ -435,6 +435,7 @@ public class BroadcastMain extends AppCompatActivity
             broadcastManager.setBroadcastChannel(SendbirdConnection.getBroadcastChannelNum());
             broadcastManager.manageBroadcast(0);
             LM_time = new LocalfileManager(SendbirdConnection.getUserId()+":"+systemtime+":"+SendbirdConnection.getBroadcastChannelNum()+"_timeline.txt");
+            LM_time.savetimeline(0, "null");
             Log.d("channel complete",""+SendbirdConnection.getBroadcastChannelNum());
             if(LM == null) Log.e("PKR","LM is null");
             PM.create_Category(getLayoutInflater());
