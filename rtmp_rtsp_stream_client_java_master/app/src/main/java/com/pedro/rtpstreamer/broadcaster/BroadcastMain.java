@@ -6,10 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.animation.ValueAnimator;
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -44,12 +42,8 @@ import com.sendbird.android.User;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -60,17 +54,11 @@ import gun0912.tedbottompicker.TedBottomSheetDialogFragment;
 @RequiresApi(api = Build.VERSION_CODES.P)
 public class BroadcastMain extends AppCompatActivity
         implements View.OnClickListener, View.OnTouchListener, SurfaceHolder.Callback,
-                    BroadcastListener, SendbirdListner.ForBroadcaster {
+                    BroadcastListener{
 
     Context context;
     private BroadcastManager broadcastManager = BroadcastManager.getInstance();
     private Button broadcastBtn;
-
-    ////////////////////////////////////////////////
-    //sendbird USER_ID
-    private Random r = new Random();
-    private int usernumber = r.nextInt(10000);
-    private String USER_ID = "broadcaster_"+usernumber;
 
     // 로티 애니메이션뷰 선언
     LottieAnimationView songLikeAnimButton;
@@ -105,7 +93,7 @@ public class BroadcastMain extends AppCompatActivity
 
         ///////////////////////
 //        sendbirdConnection = SendbirdConnection.getInstance();
-        SendbirdConnection.setupSendbird(this, USER_ID, 0);
+        SendbirdConnection.setupSendbird(this, true, sendbirdListner);
         ///////////////////////
 
         mExampleChatController = new ExampleChatController(this, findViewById(R.id.ChatListView), R.layout.chatline, R.id.chat_line_textview, R.id.chat_line_timeview);
@@ -227,7 +215,7 @@ public class BroadcastMain extends AppCompatActivity
 
             case R.id.b_start_stop:
                 if(canStart){
-                    SendbirdConnection.getCtrl(this);
+                    SendbirdConnection.getCtrl();
                 }else{
                     broadcastManager.manageBroadcast(0);
                 }
@@ -264,6 +252,7 @@ public class BroadcastMain extends AppCompatActivity
 
         }
     };
+
     ////////////////////////////////////////////////////////////////////////
     //View.OnTouchListener
     @Override
@@ -336,7 +325,7 @@ public class BroadcastMain extends AppCompatActivity
         canStart = true;
         LM.savefinal(systemtime,Integer.toString(heart_final), "heart");
         LM.savefinal(systemtime,Integer.toString(SendbirdConnection.getViewNum()),"count");
-        LM.savefinal(systemtime,USER_ID,"user_id");
+        LM.savefinal(systemtime,SendbirdConnection.getUserId(),"user_id");
         LM.LMEnd();
         LM_time.LMEnd();
         AWSConnection.uploadFile(broadcastManager.getBroadcastName()+".txt", LM.getFileName(), this);
@@ -385,55 +374,67 @@ public class BroadcastMain extends AppCompatActivity
         PM.btn_Text(getLayoutInflater(), broadcastManager);
     }
 
-    @Override
-    public void getChannelComplete(boolean possible){
-        if(possible){
-            LM = new LocalfileManager(USER_ID+":"+systemtime+":"+SendbirdConnection.getChannelNum()+".txt");
-            PM.create_title(getLayoutInflater(), title_text, LM);
-
-
-        } else{
-            Toast.makeText(getApplicationContext(), "모든 방송 채널이 사용중입니다.", Toast.LENGTH_LONG).show();
+    private SendbirdListner sendbirdListner = new SendbirdListner() {
+        @Override
+        public void getCtrlComplete() {
+            super.getCtrlComplete();
+            SendbirdConnection.getBroadcastChannel();
         }
-    }
 
-    @Override
-    public void channelCreateComplete(){
-        PM.PopupEnd();
-        canStart = false;
-        broadcastManager.setBroadcastChannel(SendbirdConnection.getChannelNum());
-        broadcastManager.manageBroadcast(0);
-        LM_time = new LocalfileManager(USER_ID+":"+systemtime+":"+SendbirdConnection.getChannelNum()+"_timeline.txt");
-        Log.d("channel complete",""+SendbirdConnection.getChannelNum());
-        if(LM == null) Log.e("PKR","LM is null");
-        PM.create_Category(getLayoutInflater());
-    }
-
-    @Override
-    public void getUserListComplete(String peopleNum){
-        people.setText(peopleNum);
-    }
-
-    @Override
-    public void messageReceived(String customType, String data, long messagetime){
-        long time = messagetime - systemtime;
-        switch(customType) {
-            case "alarm":
-                AlarmPlayer(data);
-                break;
-            case "chat" :
-                mExampleChatController.add(data);
-                LM.savechat(time, data);
-                break;
-
-            case "like":
-                LM.saveheart(time);
-                break;
+        @Override
+        public void getChannelComplete(boolean success) {
+            super.getChannelComplete(success);
+            if(success){
+                LM = new LocalfileManager(SendbirdConnection.getUserId()+":"+systemtime+":"+SendbirdConnection.getBroadcastChannelNum()+".txt");
+                PM.create_title(getLayoutInflater(), title_text, LM);
+            } else{
+                Toast.makeText(getApplicationContext(), "모든 방송 채널이 사용중입니다.", Toast.LENGTH_LONG).show();
+            }
         }
-    }
 
-    @Override
-    public void metaCounterUpdated(int heart){
-        LikePlayer(heart);
-    }
+        @Override
+        public void messageReceived(String customType, String data, long messagetime) {
+            super.messageReceived(customType, data, messagetime);
+            long time = messagetime - systemtime;
+            switch(customType) {
+                case "alarm":
+                    AlarmPlayer(data);
+                    break;
+                case "chat" :
+                    mExampleChatController.add(data);
+                    LM.savechat(time, data);
+                    break;
+
+                case "like":
+                    LM.saveheart(time);
+                    break;
+            }
+        }
+
+        @Override
+        public void metaCounterUpdated(int heart) {
+            super.metaCounterUpdated(heart);
+            LikePlayer(heart);
+        }
+
+        @Override
+        public void channelCreateComplete() {
+            super.channelCreateComplete();
+            PM.PopupEnd();
+            canStart = false;
+            broadcastManager.setBroadcastChannel(SendbirdConnection.getBroadcastChannelNum());
+            broadcastManager.manageBroadcast(0);
+            LM_time = new LocalfileManager(SendbirdConnection.getUserId()+":"+systemtime+":"+SendbirdConnection.getBroadcastChannelNum()+"_timeline.txt");
+            LM_time.savetimeline(0, "null\n");
+            Log.d("channel complete",""+SendbirdConnection.getBroadcastChannelNum());
+            if(LM == null) Log.e("PKR","LM is null");
+            PM.create_Category(getLayoutInflater());
+        }
+
+        @Override
+        public void getUserListComplete(String peopleNum) {
+            super.getUserListComplete(peopleNum);
+            people.setText(peopleNum);
+        }
+    };
 }

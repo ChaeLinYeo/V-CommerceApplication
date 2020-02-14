@@ -58,6 +58,7 @@ public class LocalfileManager {
         try{
             writer.append(time+"/"+data);
             writer.flush();
+            Log.d("PKRRR","write timeline");
         }catch(IOException e){
             Log.d("error",""+e.getMessage());
         }

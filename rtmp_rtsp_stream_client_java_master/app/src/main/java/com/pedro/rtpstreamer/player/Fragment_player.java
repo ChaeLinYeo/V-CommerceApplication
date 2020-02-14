@@ -11,7 +11,6 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
-import android.util.EventLog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +30,7 @@ import com.bambuser.broadcaster.SurfaceViewWithAutoAR;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.pedro.rtpstreamer.R;
+import com.pedro.rtpstreamer.server.SendbirdConnection;
 import com.pedro.rtpstreamer.utils.ExampleChatController;
 import com.pedro.rtpstreamer.utils.PopupManager;
 import com.pedro.rtpstreamer.utils.fragmentListener;
@@ -45,15 +45,11 @@ import com.sendbird.android.UserListQuery;
 import com.sendbird.android.UserMessage;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.StringTokenizer;
 
-import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 
 public class Fragment_player extends Fragment
@@ -86,13 +82,13 @@ public class Fragment_player extends Fragment
     private OpenChannel mChannel;
     private String mChannelUrl;
 
-    TextView alarm;
-    TextView heart;
-    TextView people;
-    TextView title;
-    TextView notify;
-    ImageView cover;
-    TextView streamer_nickname;
+    private TextView alarm;
+    private TextView heart;
+    private TextView people;
+    private TextView title;
+    private TextView notify;
+    private ImageView cover;
+    private TextView streamer_nickname;
 
     // 쿠폰 이름, 내용, 시간, 분, 초
     ///////////////////////////////////////////////////////////
@@ -103,7 +99,7 @@ public class Fragment_player extends Fragment
     private ImageView img_preview;
     private SurfaceViewWithAutoAR mVideoSurfaceView;
 
-    private int numFrag;
+    private int fragPosition;
     private int channelNum;
 
     private fragmentListener cL;
@@ -111,12 +107,18 @@ public class Fragment_player extends Fragment
 
     private int onoff = 1; //1은 on, 0은 off
 
-    Fragment_player(int numFrag, int channelNum, String mChannelUrl){
-        this.numFrag = numFrag;
-        this.channelNum = channelNum;
-        this.mChannelUrl = mChannelUrl;
+//    Fragment_player(int fragPosition, int channelNum, String mChannelUrl){
+//        this.fragPosition = fragPosition;
+//        this.channelNum = channelNum;
+//        this.mChannelUrl = mChannelUrl;
+//
+//        Log.d("fragment",""+fragPosition+"/"+channelNum+"/"+mChannelUrl);
+//    }
 
-        Log.d("fragment",""+numFrag+"/"+channelNum+"/"+mChannelUrl);
+    Fragment_player(int fragPosition){
+        this.fragPosition = fragPosition;
+        this.channelNum = SendbirdConnection.getLiveChannelNum(this.fragPosition);
+        this.mChannelUrl = SendbirdConnection.getChannelUrl(this.channelNum);
     }
 
     @Override
@@ -170,7 +172,7 @@ public class Fragment_player extends Fragment
         streamer_nickname = view.findViewById(R.id.nickname);
 
         ///////////////////////////////////////
-        cL.createComplete(numFrag);
+        cL.createComplete(fragPosition);
 
         return view;
     }
@@ -192,7 +194,7 @@ public class Fragment_player extends Fragment
 
 
         mMessageSendButton.setOnClickListener( (View v) -> {
-            String text = PlayerMain.USER_ID+" : "+mMessageEditText.getText().toString();
+            String text = SendbirdConnection.getUserId() +" : "+mMessageEditText.getText().toString();
             mExampleChatController.add(text);
             mMessageEditText.setText("");
             mIMM.hideSoftInputFromWindow(mMessageEditText.getWindowToken(), 0);
@@ -202,7 +204,7 @@ public class Fragment_player extends Fragment
         FollowButton.setOnClickListener((View view) -> {
             if(!is_follow){//팔로우 안한 상태에서 클릭하면
                 FollowButton.setText("팔로우 취소");
-                String text = PlayerMain.USER_ID+"님이 팔로우 하셨습니다.";
+                String text = SendbirdConnection.getUserId()+"님이 팔로우 하셨습니다.";
                 sendUserMessage(text, "alarm");
                 AlarmPlayer(text);
             }
@@ -436,7 +438,7 @@ public class Fragment_player extends Fragment
         while(ui.hasMoreTokens()){
             String cid = ui.nextToken();
             Log.d("compare", cid);
-            if(cid.equals(PlayerMain.USER_ID)) {
+            if(cid.equals(SendbirdConnection.getUserId())) {
                 Log.d("same", cid);
                 IsPlay = true;
                 break;
@@ -533,10 +535,6 @@ public class Fragment_player extends Fragment
             @Override
             public void onMetaDataCreated(BaseChannel channel, Map<String, String> metaDataMap) {
                 super.onMetaDataCreated(channel, metaDataMap);
-//                pm.clearCategoryI();
-//                for(String key : metaDataMap.keySet()){
-//                    pm.addCategoryI(key);
-//                }
                 pm.clearCategoryI();
                 pm.clearSCategory();
                 for(Map.Entry<String, String> entry : metaDataMap.entrySet()){
@@ -606,13 +604,13 @@ public class Fragment_player extends Fragment
 
     private void getChannel(){
         SendBird.init(getString(R.string.sendbird_app_id), getContext());
-        SendBird.connect(PlayerMain.USER_ID,
+        SendBird.connect(SendbirdConnection.getUserId(),
                 (User user, SendBirdException e) -> {
                     if (e != null) {    // Error.
                         Log.d("connect error","connect : 1" );
                         return;
                     }
-                    updateCurrentUserInfo(PlayerMain.USER_ID);
+                    updateCurrentUserInfo(SendbirdConnection.getUserId());
                 }
         );
 

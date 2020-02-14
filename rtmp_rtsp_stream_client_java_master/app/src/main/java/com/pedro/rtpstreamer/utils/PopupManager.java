@@ -455,11 +455,6 @@ public class PopupManager {
 
         // listview 생성 및 adapter 지정.
         ListView listView = mView_c.findViewById(R.id.listView);
-
-//        listView.setAdapter(adapter1);
-//        listView.setAdapter(adapter2);
-//        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-
         final AlertDialog.Builder alert05 = new AlertDialog.Builder(mContext);
 
         Button btn_Exit = mView_c.findViewById(R.id.btnExit);
