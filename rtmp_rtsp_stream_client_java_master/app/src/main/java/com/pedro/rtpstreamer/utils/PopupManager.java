@@ -161,8 +161,7 @@ public class PopupManager {
     }
 
     // 방송 시작 첫 제목 설정
-    public void create_title(LayoutInflater inflater, TextView title_text) {
-
+    public void create_title(LayoutInflater inflater, TextView title_text, LocalfileManager LM) {
         View mView = inflater.inflate(R.layout.init_channel, null);
         final EditText newtitle = mView.findViewById(R.id.init_title);
         Button btn_cancel = mView.findViewById(R.id.init_cancel);
@@ -179,6 +178,7 @@ public class PopupManager {
                     String init_t = newtitle.getText().toString();
                     SendbirdConnection.createChannel(init_t);
                     title_text.setText(init_t);
+                    LM.savetitle(0, title_text.getText().toString());
                 }
         );
         Toast.makeText(mContext.getApplicationContext(), "방송 시작 전, 방송의 제목을 입력해주세요.", Toast.LENGTH_LONG).show();
@@ -290,7 +290,7 @@ public class PopupManager {
         coupon_btn_cancel_01.setOnClickListener((View view) -> alertDialog.dismiss());
 
         coupon_btn_ok_01.setOnClickListener((View view) -> alertDialog.dismiss());
-        e_n = null; e_a = null; e_t_h = 0; e_t_m = 0; e_t_s = 0;
+        e_n =""; e_a =""; e_t_h = 0; e_t_m = 0; e_t_s = 0;
         alertDialog.show();
     }
 

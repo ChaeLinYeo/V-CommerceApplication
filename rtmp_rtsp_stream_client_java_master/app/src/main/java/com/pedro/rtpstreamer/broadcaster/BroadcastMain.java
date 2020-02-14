@@ -388,9 +388,10 @@ public class BroadcastMain extends AppCompatActivity
     @Override
     public void getChannelComplete(boolean possible){
         if(possible){
-            PM.create_title(getLayoutInflater(), title_text);
             LM = new LocalfileManager(USER_ID+":"+systemtime+":"+SendbirdConnection.getChannelNum()+".txt");
-            LM.savetitle(0, title_text.getText().toString());
+            PM.create_title(getLayoutInflater(), title_text, LM);
+
+
         } else{
             Toast.makeText(getApplicationContext(), "모든 방송 채널이 사용중입니다.", Toast.LENGTH_LONG).show();
         }
