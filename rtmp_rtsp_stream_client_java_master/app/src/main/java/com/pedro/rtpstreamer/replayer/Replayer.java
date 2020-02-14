@@ -67,7 +67,7 @@ public class Replayer extends AppCompatActivity
     private ExampleChatController ECC;
     private LottieAnimationView songLikeAnimButton;
     private int nextIndex=0;
-    private int nextTimeline=0;
+    private int nextTimeline=1;
     ArrayList<Pair> CL;
     ArrayList<Pair> TL;
 
@@ -139,7 +139,7 @@ public class Replayer extends AppCompatActivity
             case R.id.playBtn:
                 if(mediaState==0) {
                     nextIndex = 0;
-                    nextTimeline=0;
+                    nextTimeline=1;
                     setUri();
                 }
                 else if(mediaState==1) mMediaPlayer.pause();
@@ -174,7 +174,7 @@ public class Replayer extends AppCompatActivity
                     }
                 }
 
-                for(int i=0; i<TL.size();i++){
+                for(int i=1; i<TL.size();i++){
                     if(TL.get(i).getTime() >= d){
                         Log.d("PKRTS","nexttimeline : "+nextTimeline);
                         nextTimeline = i;
@@ -247,7 +247,7 @@ public class Replayer extends AppCompatActivity
         TextView p = findViewById(R.id.peoplenum);
         p.setText(finalViewNum);
 
-        for(int i=0; i<TL.size(); i++){
+        for(int i=1; i<TL.size(); i++){
             timeLine.add(TL.get(i).getType());
         }
 
@@ -422,7 +422,7 @@ public class Replayer extends AppCompatActivity
 
         listView.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
                 Log.d("PKRA","category time : "+TL.get(position).getTime());
-                nextTimeline = position;
+                nextTimeline = position+1;
                 Log.d("PKRTT","nexttimeline : "+nextTimeline);
                 mMediaPlayer.setTime(TL.get(position).getTime());
                 byTimeLine = true;

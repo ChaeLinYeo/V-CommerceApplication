@@ -60,9 +60,6 @@ public class BroadcastMain extends AppCompatActivity
     private BroadcastManager broadcastManager = BroadcastManager.getInstance();
     private Button broadcastBtn;
 
-    //init title
-    String init_t = null;
-
     // 로티 애니메이션뷰 선언
     LottieAnimationView songLikeAnimButton;
 
@@ -72,9 +69,6 @@ public class BroadcastMain extends AppCompatActivity
     TextView people;
     TextView broadcast_notice;
     TextView system_notice;
-
-    //카테고리용 변수
-    ArrayList<String> category_items = new ArrayList<>();
 
     //examplechatcontroller
     ExampleChatController mExampleChatController;
@@ -175,8 +169,10 @@ public class BroadcastMain extends AppCompatActivity
                                     // here is selected image uri list
                                     //Bitmap bitmap = loadBitmap(uriList.toString());
                                     try {
-                                        Bitmap bm = MediaStore.Images.Media.getBitmap(getContentResolver(), uriList.get(0));
-                                        broadcastManager.setImage(bm);
+                                        if(uriList.size()!= 0) {
+                                            Bitmap bm = MediaStore.Images.Media.getBitmap(getContentResolver(), uriList.get(0));
+                                            broadcastManager.setImage(bm);
+                                        }
                                     } catch (FileNotFoundException e) {
                                         e.printStackTrace();
                                     } catch (IOException e) {
@@ -215,8 +211,6 @@ public class BroadcastMain extends AppCompatActivity
                 } else{
                     broadcastManager.setTexture(2);
                 }
-//                broadcastManager.setTexture(2);
-//                broadcastManager.setTexture(2);
                 break;
 
             case R.id.b_start_stop:
@@ -232,11 +226,10 @@ public class BroadcastMain extends AppCompatActivity
                 break;
 
             case R.id.categoryButton:
-                PM.btn_Category(getLayoutInflater(), LM_time,  category_items, systemtime);
+                PM.btn_Category(getLayoutInflater(), LM_time,  systemtime);
                 break;
         }
     }
-
 
     //For Broadcast info
     public View.OnClickListener broadcastClickListner = (View view) -> {
@@ -257,9 +250,6 @@ public class BroadcastMain extends AppCompatActivity
                 PM.btn_showDialog2(getLayoutInflater(), broadcast_notice);
                 break;
 
-            case R.id.custom_event:
-                PM.btn_editPopUp(getLayoutInflater());
-                break;
         }
     };
 
@@ -340,7 +330,8 @@ public class BroadcastMain extends AppCompatActivity
         LM_time.LMEnd();
         AWSConnection.uploadFile(broadcastManager.getBroadcastName()+".txt", LM.getFileName(), this);
         AWSConnection.uploadFile(broadcastManager.getBroadcastName()+"_timeLine.txt", LM_time.getFileName(), this);
-        category_items.clear();
+        PM.clearCategoryI();
+        PM.clearSCategory();
     }
 
     @Override
@@ -394,9 +385,8 @@ public class BroadcastMain extends AppCompatActivity
         public void getChannelComplete(boolean success) {
             super.getChannelComplete(success);
             if(success){
-                PM.create_title(getLayoutInflater(), title_text);
                 LM = new LocalfileManager(SendbirdConnection.getUserId()+":"+systemtime+":"+SendbirdConnection.getBroadcastChannelNum()+".txt");
-                LM.savetitle(0, title_text.getText().toString());
+                PM.create_title(getLayoutInflater(), title_text, LM);
             } else{
                 Toast.makeText(getApplicationContext(), "모든 방송 채널이 사용중입니다.", Toast.LENGTH_LONG).show();
             }
@@ -435,7 +425,7 @@ public class BroadcastMain extends AppCompatActivity
             broadcastManager.setBroadcastChannel(SendbirdConnection.getBroadcastChannelNum());
             broadcastManager.manageBroadcast(0);
             LM_time = new LocalfileManager(SendbirdConnection.getUserId()+":"+systemtime+":"+SendbirdConnection.getBroadcastChannelNum()+"_timeline.txt");
-            LM_time.savetimeline(0, "null");
+            LM_time.savetimeline(0, "null\n");
             Log.d("channel complete",""+SendbirdConnection.getBroadcastChannelNum());
             if(LM == null) Log.e("PKR","LM is null");
             PM.create_Category(getLayoutInflater());
