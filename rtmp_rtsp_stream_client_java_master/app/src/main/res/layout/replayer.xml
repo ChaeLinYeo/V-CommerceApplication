@@ -64,11 +64,43 @@
             android:textColor="#fff"
             android:textSize="15sp" />
 
+        <Button
+            android:id="@+id/refollowButton"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_below="@+id/replaynickname"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="30dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="10dp"
+            android:background="#FF0000"
+            android:clickable="true"
+            android:focusable="true"
+            android:text="팔로우"
+            android:textColor="#fff"
+            android:textSize="15sp" />
+
+        <Button
+            android:id="@+id/redeclare"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_below="@+id/replaynickname"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="10dp"
+            android:layout_toEndOf="@id/refollowButton"
+            android:background="#FF0000"
+            android:clickable="true"
+            android:focusable="true"
+            android:text="신고"
+            android:textColor="#fff"
+            android:textSize="15sp" />
+
         <TextView
             android:id="@+id/reheartnum"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/replaynickname"
+            android:layout_below="@id/refollowButton"
             android:layout_marginStart="0dp"
             android:layout_marginTop="10dp"
             android:layout_toEndOf="@+id/imageView"
@@ -80,19 +112,19 @@
             android:id="@+id/imageView"
             android:layout_width="20dp"
             android:layout_height="17dp"
-            android:layout_below="@+id/replaynickname"
+            android:layout_below="@id/refollowButton"
             android:layout_alignParentStart="true"
             android:layout_marginStart="40dp"
-            android:layout_marginTop="17dp"
+            android:layout_marginTop="10dp"
             app:srcCompat="@drawable/heart2" />
 
         <TextView
             android:id="@+id/peoplenum"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/replaynickname"
-            android:layout_marginTop="10dp"
+            android:layout_below="@id/redeclare"
             android:layout_marginStart="5dp"
+            android:layout_marginTop="10dp"
             android:layout_toEndOf="@id/eyeImage"
             android:text=" 0 "
             android:textColor="#fff"
@@ -102,9 +134,9 @@
             android:id="@+id/eyeImage"
             android:layout_width="16dp"
             android:layout_height="16dp"
-            android:layout_below="@id/replaynickname"
+            android:layout_below="@id/redeclare"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="17dp"
+            android:layout_marginTop="10dp"
             android:layout_marginEnd="0dp"
             android:layout_toEndOf="@id/reheartnum"
             app:srcCompat="@drawable/icon" />

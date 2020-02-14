@@ -224,9 +224,6 @@ public class Fragment_player extends Fragment
     private boolean toggleSongLikeAnimButton(){
 
         songLikeAnimButton.setVisibility(View.VISIBLE);
-        // 애니메이션을 한번 실행시킨다.
-        // Custom animation speed or duration.
-        // ofFloat(시작 시간, 종료 시간).setDuration(지속시간)
         ValueAnimator animator = ValueAnimator.ofFloat(0f, 0.5f).setDuration(500);
 
         animator.addUpdateListener((ValueAnimator animation) -> {
@@ -349,12 +346,6 @@ public class Fragment_player extends Fragment
             case "event_someone" :
                 EEventPlayer(data);
                 break;
-            case "effect" :
-                // 방송자가 이펙트를 눌렀을 경우 (송출부시작)
-                // effecturl의 경우 방송자가 선택한 것의 url을 받음
-                // ex. "effectonoff=off\neffecturl=http://naver.com"
-//                EffectPlayer(Data);
-                break;
             default :
                 break;
         }
@@ -438,31 +429,6 @@ public class Fragment_player extends Fragment
 
     public void AlarmPlayer(String data){
         alarm.setText(data);
-    }
-
-    public static void EffectPlayer(String data) {
-        int index = 2;
-        String[] str = new String[index];
-        String[] r_data= new String[index];
-        int i = 0;
-        StringTokenizer st = new StringTokenizer(data, "\n");
-        while(st.hasMoreTokens()) {
-            str[i] = st.nextToken();
-            i++;
-        }
-        i = 0;
-        while(i < index) {
-            StringTokenizer st2 = new StringTokenizer(str[i],"=");
-            st2.nextToken();
-            r_data[i] = st2.nextToken();
-            i++;
-        }
-        if(r_data[0].equals("off")) {
-            //effect 재생 멈춤
-        } else {
-            //effect 재생 시작
-
-        }
     }
 
     public void displayRoundImageFromUrl(final Context context, final String url, final ImageView imageView) {
