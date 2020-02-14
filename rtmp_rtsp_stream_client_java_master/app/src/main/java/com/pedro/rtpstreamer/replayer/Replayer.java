@@ -137,7 +137,8 @@ public class Replayer extends AppCompatActivity
     public void onClick(View view){
         switch(view.getId()){
             case R.id.playBtn:
-                if(mediaState==0) {
+                Log.d("PKR", "mediaState"+mediaState);
+                if(mediaState == 0) {
                     nextIndex = 0;
                     nextTimeline=1;
                     setUri();
@@ -258,6 +259,9 @@ public class Replayer extends AppCompatActivity
         try {
             mMediaPlayer.release();
             mLibVLC.release();
+            mMediaPlayer = null;
+            mLibVLC = null;
+            mediaState = 0;
         } catch (Exception e) {
 
         }
@@ -295,8 +299,6 @@ public class Replayer extends AppCompatActivity
                                     else loadingPanel.setVisibility(GONE);
                                     break;
 
-//                                    case MediaPlayer.Event.
-
                                 case MediaPlayer.Event.Playing:
                                     Log.d("mediaP","playing");
                                     playBtn.setText("stop");
@@ -305,9 +307,10 @@ public class Replayer extends AppCompatActivity
 
                                 case MediaPlayer.Event.TimeChanged:
                                     long d = mMediaPlayer.getTime(); //ms
+                                    Log.d("PKRE","time : "+d);
                                     if(nextIndex < CL.size()-2) {
                                         Pair cp = CL.get(nextIndex);
-                                        Log.d("PKR2", "time : " + cp.getTime() + "/" + d + " type : " + cp.getType() + "msg : " + cp.getMsg());
+//                                        Log.d("PKR2", "time : " + cp.getTime() + "/" + d + " type : " + cp.getType() + "msg : " + cp.getMsg());
                                         if (cp.getTime() <= d) {
                                             playChat(cp);
                                             nextIndex++;
@@ -330,13 +333,21 @@ public class Replayer extends AppCompatActivity
                                     mediaState=2;
                                     break;
 
-                                case MediaPlayer.Event.Stopped:
-                                    Log.d("mHandler","stop");
+                                case MediaPlayer.Event.EndReached:
+                                    mMediaPlayer.setMedia(media);
                                     playBtn.setText("start");
-                                    seekBar.setProgress(1000);
-                                    mediaState=0;
-                                    removeUri();
+                                    mMediaPlayer.setTime(0);
+                                    seekBar.setProgress(0);
+                                    mediaState=3;
                                     byTimeLine = false;
+                                    break;
+
+                                case MediaPlayer.Event.Stopped:
+//                                    Log.d("mHandler","stop");
+//                                    playBtn.setText("start");
+//                                    seekBar.setProgress(1000);
+//                                    mediaState=0;
+//                                    byTimeLine = false;
                                     break;
                             }
                         });
@@ -421,18 +432,24 @@ public class Replayer extends AppCompatActivity
         btn_Exit.setOnClickListener((View view) -> alertDialog.dismiss());
 
         listView.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
-                Log.d("PKRA","category time : "+TL.get(position).getTime());
-                nextTimeline = position+1;
+                Log.d("PKRA","category time : "+TL.get(position+1).getTime());
+                nextTimeline = position+2;
                 Log.d("PKRTT","nexttimeline : "+nextTimeline);
-                mMediaPlayer.setTime(TL.get(position).getTime());
+                mMediaPlayer.setTime(TL.get(position+1).getTime());
                 byTimeLine = true;
                 int mediaPosition = (int) (mMediaPlayer.getPosition()*1000);
                 seekBar.setProgress(mediaPosition);
-                currTimeline.setText("현재 "+TL.get(position).getType()+"을(를) 판매 중입니다");
+                currTimeline.setText("현재 "+TL.get(position+1).getType()+"을(를) 판매 중입니다");
                 alertDialog.dismiss();
             }
         );
 
         alertDialog.show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        removeUri();
     }
 }
