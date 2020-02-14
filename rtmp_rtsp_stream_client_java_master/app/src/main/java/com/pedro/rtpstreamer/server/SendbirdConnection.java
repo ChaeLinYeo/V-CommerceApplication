@@ -302,30 +302,24 @@ public class SendbirdConnection {
         SendBird.removeChannelHandler(StaticVariable.CHANNEL_HANDLER_ID);
     }
 
-    //앱을 종료시 센드버드에서 로그아웃 시켜주는 메소드 아직은 사용 X
-//    private void disconnect() {
-//        SendBird.unregisterPushTokenAllForCurrentUser(
-//            (SendBirdException e) -> {
-//                if (e != null) {
-//                    // Error!
-//                    Log.d(" ","onunregister");
-//                    e.printStackTrace();
-//                    // Don't return because we still need to disconnect.
-//                }
-//                ConnectionManager.logout(
-//                    () -> {
-//                        try {
-//                            PreferenceUtils.setConnected(false);
-//                        }catch (Exception ex) {
-//                            Log.d("logout", "");
-//                            ex.printStackTrace();
-//                        }
-//                        Log.d("","connect : onDisconnected : " );
-//                    }
-//                );
-//            }
-//        );
-//    }
+    private void disconnect() {
+        SendBird.unregisterPushTokenAllForCurrentUser(
+            (SendBirdException e) -> {
+                if (e != null) {
+                    // Error!
+                    Log.d(" ","onunregister");
+                    e.printStackTrace();
+                    // Don't return because we still need to disconnect.
+                }
+                SendBird.disconnect(new SendBird.DisconnectHandler() {
+                    @Override
+                    public void onDisconnected() {
+                        // A current user is disconnected from SendBird server.
+                    }
+                });
+            }
+        );
+    }
 
     public static int getViewNum(){return viewNum;}
 }
