@@ -856,19 +856,18 @@ public class PopupManager {
         );
 
         btn_Select.setOnClickListener((View view) -> {
-                    int pos2;
-                    pos2 = listView.getCheckedItemPosition();
-                    if(pos2 != ListView.INVALID_POSITION){
-                        long t = System.currentTimeMillis()-time;
-                        String current_item = category_items.get(pos2);
-                        sendbirdConnection.selectCategory(current_item);
-                        LM_time.savetimeline(t,current_item+"\n");
-                        category_items.remove(pos2);
-                        listView.clearChoices();
-                        adapter1.notifyDataSetChanged();
-                    }
-                }
-        );
+            long t = System.currentTimeMillis()-time;
+            int pos2;
+            pos2 = listView.getCheckedItemPosition();
+            if(pos2 != ListView.INVALID_POSITION){
+                String current_item = category_items.get(pos2);
+                sendbirdConnection.selectCategory(current_item);
+                LM_time.savetimeline(t,current_item+"\n");
+                category_items.remove(pos2);
+                listView.clearChoices();
+                adapter1.notifyDataSetChanged();
+            }
+        });
         alertDialog.show();
     }
 
