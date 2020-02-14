@@ -162,7 +162,6 @@ public class PopupManager {
 
     // 방송 시작 첫 제목 설정
     public void create_title(LayoutInflater inflater, TextView title_text, LocalfileManager LM) {
-
         View mView = inflater.inflate(R.layout.init_channel, null);
         final EditText newtitle = mView.findViewById(R.id.init_title);
         Button btn_cancel = mView.findViewById(R.id.init_cancel);
@@ -291,7 +290,7 @@ public class PopupManager {
         coupon_btn_cancel_01.setOnClickListener((View view) -> alertDialog.dismiss());
 
         coupon_btn_ok_01.setOnClickListener((View view) -> alertDialog.dismiss());
-        e_n = ""; e_a = ""; e_t_h = 0; e_t_m = 0; e_t_s = 0;
+        e_n =""; e_a =""; e_t_h = 0; e_t_m = 0; e_t_s = 0;
         alertDialog.show();
     }
 
@@ -456,11 +455,6 @@ public class PopupManager {
 
         // listview 생성 및 adapter 지정.
         ListView listView = mView_c.findViewById(R.id.listView);
-
-//        listView.setAdapter(adapter1);
-//        listView.setAdapter(adapter2);
-//        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-
         final AlertDialog.Builder alert05 = new AlertDialog.Builder(mContext);
 
         Button btn_Exit = mView_c.findViewById(R.id.btnExit);
