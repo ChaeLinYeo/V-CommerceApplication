@@ -71,15 +71,15 @@ public class PopupManager {
     //신고 사유 기술용 변수
     private String txt_dummy_save;
 
-    private int save_time_before;
-    private int save_time;
-
     //이벤트 쿠폰 팝업용 변수
     public String e_n = "";
     public String e_a="";
     public int e_t_h=0;
     public int e_t_m=0;
     public int e_t_s=0;
+    private int save_time_before;
+    private int save_time;
+
     //create_title의 팝업 끄는것을 PM밖에서 통제하기위해
     AlertDialog alertDialog;
 
@@ -103,7 +103,7 @@ public class PopupManager {
         View mView_c = inflater.inflate(R.layout.popup_category, null);
 
         // ArrayAdapter 생성. 아이템 View를 선택(multiple choice)가능하도록 만듦.
-        ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(mContext, android.R.layout.simple_list_item_multiple_choice, category_items) ;
+        ArrayAdapter<String> adapter1 = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_multiple_choice, category_items) ;
 
         // listview 생성 및 adapter 지정.
         ListView listView = mView_c.findViewById(R.id.listView) ;
@@ -161,7 +161,7 @@ public class PopupManager {
     }
 
     // 방송 시작 첫 제목 설정
-    public void create_title(LayoutInflater inflater, TextView title_text) {
+    public void create_title(LayoutInflater inflater, TextView title_text, LocalfileManager LM) {
 
         View mView = inflater.inflate(R.layout.init_channel, null);
         final EditText newtitle = mView.findViewById(R.id.init_title);
@@ -179,6 +179,7 @@ public class PopupManager {
                     String init_t = newtitle.getText().toString();
                     SendbirdConnection.createChannel(init_t);
                     title_text.setText(init_t);
+                    LM.savetitle(0, title_text.getText().toString());
                 }
         );
         Toast.makeText(mContext.getApplicationContext(), "방송 시작 전, 방송의 제목을 입력해주세요.", Toast.LENGTH_LONG).show();
@@ -195,6 +196,8 @@ public class PopupManager {
         final EditText txt_coupon_ect = mView.findViewById(R.id.blabla02);
         Button coupon_btn_ok_02 = mView.findViewById(R.id.coupon_btn_ok_02);
         Button coupon_btn_cancel_02 = mView.findViewById(R.id.coupon_btn_cancel_02);
+        if(!e_n.equals("")) {txt_coupon_name.setText(e_n);}
+        if(!e_a.equals("")) {txt_coupon_ect.setText(e_a);}
 
         NumberPicker numberpicker_h= mView.findViewById(R.id.hour);
         NumberPicker numberpicker_m= mView.findViewById(R.id.minute);
@@ -208,15 +211,15 @@ public class PopupManager {
         //시
         numberpicker_h.setMinValue(0);
         numberpicker_h.setMaxValue(23);
-        numberpicker_h.setValue(0);
+        numberpicker_h.setValue(e_t_h);
         //분
         numberpicker_m.setMinValue(0);
         numberpicker_m.setMaxValue(59);
-        numberpicker_m.setValue(0);
+        numberpicker_m.setValue(e_t_m);
         //초
         numberpicker_s.setMinValue(0);
         numberpicker_s.setMaxValue(59);
-        numberpicker_s.setValue(0);
+        numberpicker_s.setValue(e_t_s);
 
         coupon_btn_cancel_02.setOnClickListener((View view) -> alertDialog.dismiss());
 
@@ -288,7 +291,7 @@ public class PopupManager {
         coupon_btn_cancel_01.setOnClickListener((View view) -> alertDialog.dismiss());
 
         coupon_btn_ok_01.setOnClickListener((View view) -> alertDialog.dismiss());
-        e_n = null; e_a = null; e_t_h = 0; e_t_m = 0; e_t_s = 0;
+        e_n = ""; e_a = ""; e_t_h = 0; e_t_m = 0; e_t_s = 0;
         alertDialog.show();
     }
 
@@ -317,6 +320,7 @@ public class PopupManager {
         Button selectAllButton = mView.findViewById(R.id.select_all);
         Button ban = mView.findViewById(R.id.ben);
         Button sendcoupon =  mView.findViewById(R.id.show_event);
+        Button makecoupon =  mView.findViewById(R.id.custom_event);
         EditText search = mView.findViewById(R.id.searchPeople);
         SwipeRefreshLayout mSwipeRefreshLayout = mView.findViewById(R.id.swipeRefresh);
         mSwipeRefreshLayout.setOnRefreshListener(() -> {
@@ -387,19 +391,29 @@ public class PopupManager {
                 }
         );
 
+        makecoupon.setOnClickListener((View v) ->
+            btn_editPopUp(inflater)
+        );
+
         sendcoupon.setOnClickListener((View v) -> {
-                    SparseBooleanArray checkedItems = listview.getCheckedItemPositions();
-                    int count = adapter.getCount() ;
-                    couponuser.clear();
-                    for (int i = count-1; i >= 0; i--) {
-                        if (checkedItems.get(i)) {
-                            couponuser.add(userList.get(i).getUserId());
+                    if(e_a.equals("") || e_n.equals("") || (e_t_s < 1 && e_t_m < 1 && e_t_s < 1)){
+                        Log.d("dd", e_a +"," + e_n);
+                        Log.d("ddd", Integer.toString(e_t_h)+","+Integer.toString(e_t_m)+","+Integer.toString(e_t_s));
+                        Toast.makeText(mContext.getApplicationContext(), "쿠폰 정보를 입력하세요", Toast.LENGTH_LONG).show();
+                    }else{
+                        SparseBooleanArray checkedItems = listview.getCheckedItemPositions();
+                        int count = adapter.getCount();
+                        couponuser.clear();
+                        for (int i = count - 1; i >= 0; i--) {
+                            if (checkedItems.get(i)) {
+                                couponuser.add(userList.get(i).getUserId());
+                            }
                         }
+                        btn_showPopUp(inflater);
+                        // 모든 선택 상태 초기화.
+                        listview.clearChoices();
+                        adapter.notifyDataSetChanged();
                     }
-                    btn_showPopUp(inflater);
-                    // 모든 선택 상태 초기화.
-                    listview.clearChoices() ;
-                    adapter.notifyDataSetChanged();
                 }
         );
 
@@ -786,12 +800,12 @@ public class PopupManager {
     }
 
     //카테고리 설정하는 팝업창
-    public void btn_Category(LayoutInflater inflater, LocalfileManager LM_time, ArrayList<String> initcate, long time) {
+    public void btn_Category(LayoutInflater inflater, LocalfileManager LM_time, long time) {
         SendbirdConnection sendbirdConnection = SendbirdConnection.getInstance();
         View mView_c = inflater.inflate(R.layout.popup_category, null);
 
         // ArrayAdapter 생성. 아이템 View를 선택(multiple choice)가능하도록 만듦.
-        category_items = initcate;
+
         ArrayAdapter<String> adapter1 = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_multiple_choice, category_items) ;
 
         // listview 생성 및 adapter 지정.
