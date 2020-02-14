@@ -11,6 +11,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.AdapterView;
@@ -30,6 +31,7 @@ import com.pedro.rtpstreamer.server.AWSConnection;
 import com.pedro.rtpstreamer.server.AWSListner;
 import com.pedro.rtpstreamer.server.AWSfileManager;
 import com.pedro.rtpstreamer.server.Pair;
+import com.pedro.rtpstreamer.server.SendbirdConnection;
 import com.pedro.rtpstreamer.utils.ExampleChatController;
 import com.pedro.rtpstreamer.utils.StaticVariable;
 
@@ -86,6 +88,9 @@ public class Replayer extends AppCompatActivity
     private Button OnOffButton;
     private int onoff = 1;
 
+    private boolean is_follow = false;
+    private Button FollowButton;	//팔로우버튼
+
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -112,6 +117,7 @@ public class Replayer extends AppCompatActivity
         loadingPanel = findViewById(R.id.loadingPanel);
         currTimeline = findViewById(R.id.curr_category);
         OnOffButton = findViewById(R.id.btn_onoff2);
+        FollowButton = findViewById(R.id.refollowButton);
 
         ECC = new ExampleChatController(context, listView, R.layout.chatline, R.id.chat_line_textview, R.id.chat_line_timeview);
         ECC.show();
@@ -148,6 +154,14 @@ public class Replayer extends AppCompatActivity
 
             case R.id.timelineButton:
                 popTimeLine();
+                break;
+
+            case R.id.refollowButton:
+                btn_follow();
+                break;
+
+            case R.id.redeclare:
+                select_Declare(getLayoutInflater());
                 break;
         }
     }
@@ -432,6 +446,47 @@ public class Replayer extends AppCompatActivity
                 alertDialog.dismiss();
             }
         );
+
+        alertDialog.show();
+    }
+
+    public void btn_follow(){
+        if(!is_follow){//팔로우 안한 상태에서 클릭하면
+            FollowButton.setText("팔로우 취소");
+        }
+        else{//팔로우 한 상태에서 클릭하면
+            FollowButton.setText("팔로우");
+        }
+        is_follow = !is_follow;//상태 바꿈
+    }
+
+    public void select_Declare(LayoutInflater inflater) {
+        final AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        View mView = inflater.inflate(R.layout.declare_popup01, null);
+
+        //신고항목
+        final Button txt_input1 = mView.findViewById(R.id.txt_input1);
+        final Button txt_input2 = mView.findViewById(R.id.txt_input2);
+        final Button txt_input3 = mView.findViewById(R.id.txt_input3);
+        final Button txt_input4 = mView.findViewById(R.id.txt_input4);
+        final Button txt_input5 = mView.findViewById(R.id.txt_input5);
+        final Button txt_input6 = mView.findViewById(R.id.txt_input6);
+
+        //취소, 다음
+        Button btn_cancel01 = mView.findViewById(R.id.btn_cancel1);
+        Button btn_ok01 = mView.findViewById(R.id.btn_ok1);
+
+        alert.setView(mView);
+
+        final AlertDialog alertDialog = alert.create();
+        alertDialog.setCanceledOnTouchOutside(false);
+
+
+        btn_cancel01.setOnClickListener((View view) -> alertDialog.dismiss());
+
+        btn_ok01.setOnClickListener((View view) -> {
+            alertDialog.dismiss();
+        });
 
         alertDialog.show();
     }

@@ -203,9 +203,9 @@ public class BroadcastMain extends AppCompatActivity
                             .showMultiImage(new TedBottomSheetDialogFragment.OnMultiImageSelectedListener() {
                                 @Override
                                 public void onImagesSelected(List<Uri> uriList) {
-                                    // here is selected image uri list
-                                    //Bitmap bitmap = loadBitmap(uriList.toString());
-                                    broadcastManager.setUri(uriList.get(0));
+                                    if(uriList.size() != 0){
+                                        broadcastManager.setUri(uriList.get(0));
+                                    }
                                 }
                             });
                 } else{

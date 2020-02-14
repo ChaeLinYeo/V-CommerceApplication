@@ -83,6 +83,9 @@ public class PopupManager {
     //create_title의 팝업 끄는것을 PM밖에서 통제하기위해
     AlertDialog alertDialog;
 
+    private final Handler handler = new Handler();
+    TextView coupon_time_txt;
+
     public PopupManager(Context context){
         mContext = context;
     }
@@ -272,6 +275,7 @@ public class PopupManager {
         alertDialog.setCanceledOnTouchOutside(false);
 
         Thread thread = new Thread(() -> {
+
             String timeText= save_time + "초 뒤 사라짐";
             coupon_time_txt.setText(timeText);
             // n초가 지나면 다이얼로그 닫기
@@ -661,7 +665,7 @@ public class PopupManager {
         View mView01 = inflater.inflate(R.layout.popup, null);
         final TextView coupon_name_txt = (TextView) mView01.findViewById(R.id.blabla011);
         final TextView coupon_ect_txt = (TextView) mView01.findViewById(R.id.blabla022);
-        final TextView coupon_time_txt = (TextView) mView01.findViewById(R.id.blabla033);  //n초뒤 사라짐 이라고 띄우는 부분
+        coupon_time_txt = (TextView) mView01.findViewById(R.id.blabla033);  //n초뒤 사라짐 이라고 띄우는 부분
         Button coupon_btn_cancel_01 = (Button) mView01.findViewById(R.id.coupon_btn_cancel_01);
         Button coupon_btn_ok_01 = (Button) mView01.findViewById(R.id.coupon_btn_ok_01);
 
@@ -678,22 +682,41 @@ public class PopupManager {
         final AlertDialog alertDialog = alert01.create();
         alertDialog.setCanceledOnTouchOutside(false);
 
-        Thread thread = new Thread(new Runnable() {
+//        Thread thread = new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+////                coupon_time_txt.setText(save_time + "초 뒤 사라짐");
+//                // n초가 지나면 다이얼로그 닫기
+//                TimerTask task = new TimerTask() {
+//                    @Override
+//                    public void run() {
+//                        Update();
+//                        save_time--;
+//                        alertDialog.dismiss();
+//                    }
+//                };
+//                Timer timer = new Timer();
+//                timer.schedule(task, save_time_before);
+//            }
+//        });
+//        thread.start();
+
+        TimerTask task = new TimerTask(){
             @Override
             public void run() {
-                coupon_time_txt.setText(save_time + "초 뒤 사라짐");
-                // n초가 지나면 다이얼로그 닫기
-                TimerTask task = new TimerTask() {
+//                Update();
+                save_time--;
+                coupon_time_txt.post(new Runnable() {
                     @Override
                     public void run() {
-                        alertDialog.dismiss();
+                        coupon_time_txt.setText(save_time + "초 뒤 사라짐");
                     }
-                };
-                Timer timer = new Timer();
-                timer.schedule(task, save_time_before);
+                });
+                alertDialog.dismiss();
             }
-        });
-        thread.start();
+        };
+        Timer timer = new Timer();
+        timer.schedule(task, save_time_before);
 
         coupon_btn_cancel_01.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -711,6 +734,15 @@ public class PopupManager {
         });
         alertDialog.show();
     }
+
+//    protected void Update(){
+//        Runnable updater = new Runnable() {
+//            public void run() {
+//                coupon_time_txt.setText(save_time + "초 뒤 사라짐");
+//            }
+//        };
+//        handler.post(updater);
+//    }
 
     public void clearCategoryI(){
         category_items.clear();
@@ -777,18 +809,22 @@ public class PopupManager {
         red.setOnClickListener((View view) -> {
             color = Color.RED;
             select_color.setText("현재 선택된 색 : 빨강");
+            text.setTextColor(Color.RED);
         });
         black.setOnClickListener((View view) -> {
             color = Color.BLACK;
             select_color.setText("현재 선택된 색 : 검정");
+            text.setTextColor(Color.BLACK);
         });
         blue.setOnClickListener((View view) -> {
             color = Color.BLUE;
             select_color.setText("현재 선택된 색 : 파랑");
+            text.setTextColor(Color.BLUE);
         });
         green.setOnClickListener((View view) -> {
             color = Color.GREEN;
             select_color.setText("현재 선택된 색 : 초록");
+            text.setTextColor(Color.GREEN);
         });
         btn_Accept.setOnClickListener((View view) -> {
             if(!text.getText().toString().equals("")){
