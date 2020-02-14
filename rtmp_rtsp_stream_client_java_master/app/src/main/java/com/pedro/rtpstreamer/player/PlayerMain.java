@@ -198,7 +198,7 @@ public class PlayerMain extends AppCompatActivity
         @Override
         public void getCtrlComplete() {
             Log.d("PKR","getctrl complete");
-            SendbirdConnection.getLiveChannelUrl();
+            SendbirdConnection.getLiveChannelUrlList();
         }
 
         @Override

@@ -55,10 +55,10 @@ public class PopupManager {
 
     private Context mContext;
 
-    private ArrayList<String> category_items = new ArrayList<>();//카테고리 아이템들
-    ArrayList<String> selected_items = new ArrayList<>();
-    ArrayList<String> temp = new ArrayList<>();
-    ArrayList<String> couponuser = new ArrayList<>();
+    private static ArrayList<String> category_items = new ArrayList<>();//카테고리 아이템들
+    private static ArrayList<String> selected_items = new ArrayList<>();
+    private static ArrayList<String> temp = new ArrayList<>();
+    private ArrayList<String> couponuser = new ArrayList<>();
 
     //신고 선택 구분용 변수
     //0은 선택 안된 것, 1은 선택 된 것.
@@ -87,7 +87,7 @@ public class PopupManager {
         mContext = context;
     }
 
-    public void setCC(){
+    public static void setCC(){
         temp.clear();
         int last = selected_items.size();
         if(last > 0) {
@@ -706,17 +706,17 @@ public class PopupManager {
         alertDialog.show();
     }
 
-    public void clearCategoryI(){
+    public static void clearCategoryI(){
         category_items.clear();
     }
-    public void clearSCategory() { selected_items.clear(); }
+    public static void clearSCategory() { selected_items.clear(); }
 
-    public void addCategoryI(String item){
+    public static void addCategoryI(String item){
         category_items.add(item);
     }
-    public void addSCategory(String item) { selected_items.add(item); }
+    public static void addSCategory(String item) { selected_items.add(item); }
 
-    public void setCategory(List<String> cate) {
+    public static void setCategory(List<String> cate) {
         ArrayList<String> aL = (ArrayList<String>)cate;
         category_items = aL;
     }

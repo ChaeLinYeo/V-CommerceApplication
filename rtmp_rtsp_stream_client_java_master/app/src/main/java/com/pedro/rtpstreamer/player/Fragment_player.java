@@ -21,7 +21,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.bambuser.broadcaster.BroadcastPlayer;
@@ -31,23 +30,13 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.pedro.rtpstreamer.R;
 import com.pedro.rtpstreamer.server.SendbirdConnection;
+import com.pedro.rtpstreamer.server.SendbirdListner;
 import com.pedro.rtpstreamer.utils.ExampleChatController;
 import com.pedro.rtpstreamer.utils.PopupManager;
 import com.pedro.rtpstreamer.utils.fragmentListener;
-import com.sendbird.android.BaseChannel;
-import com.sendbird.android.BaseMessage;
-import com.sendbird.android.OpenChannel;
-import com.sendbird.android.PreviousMessageListQuery;
-import com.sendbird.android.SendBird;
-import com.sendbird.android.SendBirdException;
-import com.sendbird.android.User;
-import com.sendbird.android.UserListQuery;
-import com.sendbird.android.UserMessage;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.StringTokenizer;
 
 import com.bumptech.glide.request.RequestOptions;
@@ -79,7 +68,7 @@ public class Fragment_player extends Fragment
     ///////////////////////////////////////////////////////////
     private static final String CHANNEL_HANDLER_ID = "CHANNEL_HANDLER_OPEN_CHAT";
 
-    private OpenChannel mChannel;
+//    private OpenChannel mChannel;
     private String mChannelUrl;
 
     private TextView alarm;
@@ -118,7 +107,7 @@ public class Fragment_player extends Fragment
     Fragment_player(int fragPosition){
         this.fragPosition = fragPosition;
         this.channelNum = SendbirdConnection.getLiveChannelNum(this.fragPosition);
-        this.mChannelUrl = SendbirdConnection.getChannelUrl(this.channelNum);
+        this.mChannelUrl = SendbirdConnection.getPlayChannelUrl(this.channelNum);
     }
 
     @Override
@@ -179,9 +168,9 @@ public class Fragment_player extends Fragment
 
     /////////////////////////////////////////////////////////////////
     private void init(){
+        SendbirdConnection.setSendbirdListner(sendbirdListner);
 
-        getChannel();
-        connect();
+        SendbirdConnection.getPlayChannel(channelNum);
 
         mExampleChatController = new ExampleChatController(mContext, listView, R.layout.chatline, R.id.chat_line_textview, R.id.chat_line_timeview);
         mExampleChatController.show();
@@ -198,14 +187,14 @@ public class Fragment_player extends Fragment
             mExampleChatController.add(text);
             mMessageEditText.setText("");
             mIMM.hideSoftInputFromWindow(mMessageEditText.getWindowToken(), 0);
-            sendUserMessage(text, "chat");
+            SendbirdConnection.sendUserMessage(text, "chat");
         });
 
         FollowButton.setOnClickListener((View view) -> {
             if(!is_follow){//팔로우 안한 상태에서 클릭하면
                 FollowButton.setText("팔로우 취소");
                 String text = SendbirdConnection.getUserId()+"님이 팔로우 하셨습니다.";
-                sendUserMessage(text, "alarm");
+                SendbirdConnection.sendUserMessage(text, "alarm");
                 AlarmPlayer(text);
             }
             else{//팔로우 한 상태에서 클릭하면
@@ -322,9 +311,8 @@ public class Fragment_player extends Fragment
         Log.d("btn onclick","click");
         switch(view.getId()){
             case R.id.buy_button:
-                if(getAllcategory()) {
-                    pm.btn_buy(getLayoutInflater());
-                }
+                SendbirdConnection.getAllMetaData();
+                pm.btn_buy(getLayoutInflater());
                 break;
 
             case R.id.menu_share:
@@ -336,44 +324,30 @@ public class Fragment_player extends Fragment
                 break;
 
             case R.id.HeartIcon:
-                sendUserMessage("","like");
-                if(toggleSongLikeAnimButton()){
-                    HashMap<String, Integer> counters = new HashMap<String, Integer>();
-                    counters.put("heart", 1);
-                    mChannel.increaseMetaCounters(counters, new BaseChannel.MetaCounterHandler() {
-                        @Override
-                        public void onResult(Map<String, Integer> map, SendBirdException e) {
-                            if (e != null) {    // Error.
-                                return;
-                            }
-                            heart.setText(Integer.toString(map.get("heart")));
-                        }
-                    });
-                }
+                SendbirdConnection.sendUserMessage("", "like");
+                SendbirdConnection.increaseMetaCounters();
                 break;
         }
     }
 
 
-    public void msgfilter(BaseChannel baseChannel, BaseMessage baseMessage){
-        String Custom_Type = baseMessage.getCustomType();
-        String Data = baseMessage.getData();
-        switch(Custom_Type) {
+    public void msgfilter(String customType, String data){
+        switch(customType) {
             case "notice":
-                notify.setText(Data);
+                notify.setText(data);
                 //mExampleChatController.add2(Data);
                 break;
             case "alarm":
-                AlarmPlayer(Data);
+                AlarmPlayer(data);
                 break;
             case "chat" :
-                mExampleChatController.add(Data);
+                mExampleChatController.add(data);
                 break;
             case "event_everyone" :
-                EventPlayer(Data);
+                EventPlayer(data);
                 break;
             case "event_someone" :
-                EEventPlayer(Data);
+                EEventPlayer(data);
                 break;
             case "effect" :
                 // 방송자가 이펙트를 눌렀을 경우 (송출부시작)
@@ -491,195 +465,6 @@ public class Fragment_player extends Fragment
         }
     }
 
-    private void sendUserMessage(String text, String type) {
-        if(mChannel == null) {
-            Log.d("sendU", "channel is null");
-            return;
-        }
-        mChannel.sendUserMessage(text, text, type, new BaseChannel.SendUserMessageHandler() {
-            @Override
-            public void onSent(UserMessage userMessage, SendBirdException e) {
-                if (e != null) {
-                    // Error!
-                    Toast.makeText(
-                            getContext(),
-                            "Send failed with error " + e.getCode() + ": " + e.getMessage(), Toast.LENGTH_SHORT)
-                            .show();
-                    return;
-                }
-                Log.d("send1 success","");
-            }
-        });
-        Log.d("send success", text);
-    }
-
-    public void connect(){
-
-        SendBird.addChannelHandler(CHANNEL_HANDLER_ID, new SendBird.ChannelHandler() {
-            @Override
-            public void onMessageReceived(BaseChannel baseChannel, BaseMessage baseMessage) {
-                Log.d(TAG, "connect : onMessageReceived 1" + mChannelUrl);
-                // Add new message to view
-                if (baseChannel.getUrl().equals(mChannelUrl)) {
-                    Log.d(TAG, "connect : onMessageReceived 2");
-                    msgfilter(baseChannel, baseMessage);
-                }
-            }
-
-            @Override
-            public void onMetaCountersUpdated(BaseChannel channel, Map<String, Integer> metaCounterMap) {
-                super.onMetaCountersUpdated(channel, metaCounterMap);
-                LikePlayer(metaCounterMap.get("heart"));
-            }
-
-            @Override
-            public void onMetaDataCreated(BaseChannel channel, Map<String, String> metaDataMap) {
-                super.onMetaDataCreated(channel, metaDataMap);
-                pm.clearCategoryI();
-                pm.clearSCategory();
-                for(Map.Entry<String, String> entry : metaDataMap.entrySet()){
-                    if(entry.getValue().equals("select")){
-                        pm.addSCategory(entry.getKey());
-                    }else {
-                        pm.addCategoryI(entry.getKey());
-                    }
-                }
-                pm.setCC();
-            }
-
-            @Override
-            public void onMetaDataUpdated(BaseChannel channel, Map<String, String> metaDataMap) {
-                super.onMetaDataUpdated(channel, metaDataMap);
-                pm.clearCategoryI();
-                pm.clearSCategory();
-                for(Map.Entry<String, String> entry : metaDataMap.entrySet()){
-                    if(entry.getValue().equals("select")){
-                        pm.addSCategory(entry.getKey());
-                    }else {
-                        pm.addCategoryI(entry.getKey());
-                    }
-                }
-                pm.setCC();
-            }
-
-            @Override
-            public void onMetaDataDeleted(BaseChannel channel, List<String> keys) {
-                super.onMetaDataDeleted(channel, keys);
-                pm.setCategory(keys);
-            }
-
-            @Override
-            public void onChannelChanged(BaseChannel channel) {
-                super.onChannelChanged(channel);
-                title.setText(channel.getName());
-            }
-        });
-    }
-
-    public boolean getAllcategory(){
-        pm.clearSCategory();
-        pm.clearCategoryI();
-        mChannel.getAllMetaData(new BaseChannel.MetaDataHandler() {
-            @Override
-            public void onResult(Map<String, String> map, SendBirdException e) {
-                for(Map.Entry<String, String> entry : map.entrySet()){
-                    if(entry.getValue().equals("select")){
-                        pm.addSCategory(entry.getKey());
-                    }else {
-                        pm.addCategoryI(entry.getKey());
-                    }
-                }
-                pm.setCC();
-            }
-        });
-        return true;
-    }
-    private void updateCurrentUserInfo(final String userNickname) {
-        SendBird.updateCurrentUserInfo(userNickname, null,
-                (SendBirdException e) -> {
-                    if (e != null) Log.e("nickname",e.getMessage()+" : "+e.getCode());
-                }
-        );
-    }
-
-    private void getChannel(){
-        SendBird.init(getString(R.string.sendbird_app_id), getContext());
-        SendBird.connect(SendbirdConnection.getUserId(),
-                (User user, SendBirdException e) -> {
-                    if (e != null) {    // Error.
-                        Log.d("connect error","connect : 1" );
-                        return;
-                    }
-                    updateCurrentUserInfo(SendbirdConnection.getUserId());
-                }
-        );
-
-        Log.d("getCh", ""+mChannelUrl);
-        OpenChannel.getChannel(mChannelUrl, new OpenChannel.OpenChannelGetHandler() {
-            @Override
-            public void onResult(final OpenChannel openChannel, SendBirdException e) {
-                if (e != null) {    // Error.
-                    Log.d("getchannel",""+e.getMessage());
-                    return;
-                }
-                openChannel.enter(new OpenChannel.OpenChannelEnterHandler() {
-                    @Override
-                    public void onResult(SendBirdException e) {
-                        if (e != null) {    // Error.
-                            Log.d("getc","enter error");
-                            e.printStackTrace();
-                            return;
-                        }
-                        mChannel = openChannel;
-                        getUserList();
-                        displayRoundImageFromUrl(getContext(), mChannel.getCoverUrl(), cover);
-                        loadInitialMessageList(20);
-                        title.setText(mChannel.getName());
-                        streamer_nickname.setText(mChannel.getOperators().get(0).getNickname());
-                    }
-                });
-            }
-        });
-    }
-
-    private void getUserList() {
-        UserListQuery userListQuery = mChannel.createParticipantListQuery();
-        userListQuery.next(new UserListQuery.UserListQueryResultHandler() {
-            @Override
-            public void onResult(List<User> list, SendBirdException e) {
-                if (e != null) {
-                    // Error!
-                    return;
-                }
-                people.setText(Integer.toString(list.size()));
-            }
-        });
-    }
-
-    private void loadInitialMessageList(int numMessages) {
-        PreviousMessageListQuery mPrevMessageListQuery = mChannel.createPreviousMessageListQuery();
-        mPrevMessageListQuery.load(numMessages, true, new PreviousMessageListQuery.MessageListQueryResult() {
-            @Override
-            public void onResult(List<BaseMessage> list, SendBirdException e) {
-                if (e != null) {
-                    // Error!
-                    e.printStackTrace();
-                    return;
-                }
-                for(BaseMessage b : list){
-                    if(b.getCustomType().equals("chat")){
-                        mExampleChatController.add(b.getData());
-                    }else if(b.getCustomType().equals("alarm")){
-                        alarm.setText(b.getData());
-                    }else if(b.getCustomType().equals(("notice"))){
-                        notify.setText(b.getData());
-                    }
-                }
-                //mChatAdapter.setMessageList(list);
-            }
-        });
-    }
-
     public void displayRoundImageFromUrl(final Context context, final String url, final ImageView imageView) {
         RequestOptions myOptions = new RequestOptions()
                 .centerCrop()
@@ -699,4 +484,45 @@ public class Fragment_player extends Fragment
                     }
                 });
     }
+
+    private SendbirdListner sendbirdListner = new SendbirdListner() {
+        @Override
+        public void getUserListComplete(String peopleNum) {
+            super.getUserListComplete(peopleNum);
+            people.setText(peopleNum);
+        }
+
+        @Override
+        public void getPlayChannelComplete(String coverUrl, String titleString, String operator){
+            displayRoundImageFromUrl(getContext(), coverUrl, cover);
+            title.setText(titleString);
+            streamer_nickname.setText(operator);
+        }
+
+        @Override
+        public void onMessageReceived(String customType, String data){
+            msgfilter(customType, data);
+        }
+
+        @Override
+        public void metaCounterUpdated(int heart){
+            LikePlayer(heart);
+        }
+
+        @Override
+        public void loadInitialMessage(String type, String data){
+            if(type.equals("chat")){
+                mExampleChatController.add(data);
+            }else if(type.equals("alarm")){
+                alarm.setText(data);
+            }else if(type.equals(("notice"))){
+                notify.setText(data);
+            }
+        }
+
+        @Override
+        public void onTitleChanged(String titleString){
+            title.setText(titleString);
+        }
+    };
 }

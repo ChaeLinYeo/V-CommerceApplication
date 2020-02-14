@@ -1,5 +1,7 @@
 package com.pedro.rtpstreamer.server;
 
+import com.sendbird.android.BaseMessage;
+
 public abstract class SendbirdListner {
 
 //    public interface ForBroadcaster {
@@ -24,4 +26,8 @@ public abstract class SendbirdListner {
     public void metaCounterUpdated(int heart){}
     public void channelCreateComplete(){}
     public void getUserListComplete(String peopleNum){}
+    public void getPlayChannelComplete(String coverUrl, String title, String operator){}
+    public void onMessageReceived(String customType, String data){}
+    public void loadInitialMessage(String type, String data){}
+    public void onTitleChanged(String titleString){}
 }
