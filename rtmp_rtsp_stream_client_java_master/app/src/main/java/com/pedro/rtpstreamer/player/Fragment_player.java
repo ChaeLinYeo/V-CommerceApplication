@@ -56,7 +56,6 @@ public class Fragment_player extends Fragment
     private static String TAG = "Fragment_player";
     private static String TAG1 = "Frag1";
 
-    /////////////////////////////////////////////////////////////
     private EditText mMessageEditText;
     private Button mMessageSendButton;
     private Button FollowButton;	//팔로우버튼
@@ -73,11 +72,10 @@ public class Fragment_player extends Fragment
 
     // 좋아요 클릭 여부
     private boolean is_follow = false;
-
+    private boolean canChat = true;
     private ListView listView;
     private String mChannelUrl;
 
-    private TextView alarm;
     private TextView heart;
     private TextView people;
     private TextView title;
@@ -85,9 +83,6 @@ public class Fragment_player extends Fragment
 //    private ExpandableTextView notify;
     private ImageView cover;
     private TextView streamer_nickname;
-
-    // 쿠폰 이름, 내용, 시간, 분, 초
-    ///////////////////////////////////////////////////////////
 
     private BroadcastPlayer mBroadcastPlayer;
 
@@ -140,7 +135,6 @@ public class Fragment_player extends Fragment
 
         pm = new PopupManager(getContext());
 
-        ///////////////////////////////////////
         // 로티 애니메이션뷰 리소스 아이디연결
         songLikeAnimButton = view.findViewById(R.id.button_song_like_animation);
 
@@ -157,12 +151,9 @@ public class Fragment_player extends Fragment
         view.findViewById(R.id.menu_share).setOnClickListener(this);
         view.findViewById(R.id.HeartIcon).setOnClickListener(this);
 
-        alarm = view.findViewById(R.id.system_notice);
         heart = view.findViewById(R.id.heartnum);
-        //시청인원
         people = view.findViewById(R.id.peoplenum);
         title = view.findViewById(R.id.titleSpace);
-
         notify = view.findViewById(R.id.broadcast_notice2);
         //더보기
 //        notify = view.findViewById(R.id.broadcast_notice2);
@@ -181,7 +172,6 @@ public class Fragment_player extends Fragment
     /////////////////////////////////////////////////////////////////
     private void init(){
         SendbirdConnection.setSendbirdListner(sendbirdListner);
-
         SendbirdConnection.getPlayChannel(channelNum);
 
         mExampleChatController = new ExampleChatController(mContext, listView, R.layout.chatline, R.id.chat_line_textview, R.id.chat_line_timeview);
@@ -195,11 +185,15 @@ public class Fragment_player extends Fragment
 
 
         mMessageSendButton.setOnClickListener( (View v) -> {
-            String text = SendbirdConnection.getUserId() +" : "+mMessageEditText.getText().toString();
-            mExampleChatController.add(text);
-            mMessageEditText.setText("");
-            mIMM.hideSoftInputFromWindow(mMessageEditText.getWindowToken(), 0);
-            SendbirdConnection.sendUserMessage(text, "chat");
+            if(canChat) {
+                String text = SendbirdConnection.getUserId() + " : " + mMessageEditText.getText().toString();
+                mExampleChatController.add(text);
+                mMessageEditText.setText("");
+                mIMM.hideSoftInputFromWindow(mMessageEditText.getWindowToken(), 0);
+                SendbirdConnection.sendUserMessage(text, "chat");
+            }else{
+                mMessageEditText.setText("채팅 불가");
+            }
         });
 
         FollowButton.setOnClickListener((View view) -> {
@@ -260,7 +254,6 @@ public class Fragment_player extends Fragment
 
     void playStart(String resourceUri,String id, final String previewUri){ //package private
         init();
-        Log.d(TAG1, "playStart / chat "+mChannelUrl+"/ resourceUri "+resourceUri);
         Picasso.with(getActivity()).load(previewUri).into(img_preview);
         img_preview.setVisibility(View.VISIBLE);
         if (mBroadcastPlayer != null) mBroadcastPlayer.close();
@@ -445,16 +438,16 @@ public class Fragment_player extends Fragment
     public void AlarmPlayer(String data, int type){
         switch(type){
             case 1:
-                alarm.setText(data);
-                alarm.setBackgroundColor(mContext.getResources().getColor(android.R.color.holo_blue_bright));
+                system_notice.setText(data);
+                system_notice.setBackgroundColor(mContext.getResources().getColor(android.R.color.holo_blue_bright));
                 break;
             case 2:
-                alarm.setText(data);
-                alarm.setBackgroundColor(mContext.getResources().getColor(android.R.color.holo_red_light));
+                system_notice.setText(data);
+                system_notice.setBackgroundColor(mContext.getResources().getColor(android.R.color.holo_red_light));
                 break;
             case 3:
-                alarm.setText(data);
-                alarm.setBackgroundColor(mContext.getResources().getColor(android.R.color.holo_green_light));
+                system_notice.setText(data);
+                system_notice.setBackgroundColor(mContext.getResources().getColor(android.R.color.holo_green_light));
                 break;
         }
 
@@ -478,6 +471,13 @@ public class Fragment_player extends Fragment
                         imageView.setImageDrawable(circularBitmapDrawable);
                     }
                 });
+    }
+
+    private void setUseableEditText(EditText et, boolean useable) {
+        et.setClickable(useable);
+        et.setEnabled(useable);
+        et.setFocusable(useable);
+        et.setFocusableInTouchMode(useable);
     }
 
     private SendbirdListner sendbirdListner = new SendbirdListner() {
@@ -529,6 +529,21 @@ public class Fragment_player extends Fragment
             super.userenter(enterduser);
             AlarmPlayer(enterduser + "님이 들어오셨습니다.", 1);
         }
+
+        @Override
+        public void Imbanned(){
+            super.Imbanned();
+            canChat = false;
+            setUseableEditText(mMessageEditText,false);
+        }
+
+        @Override
+        public void Imunbanned(){
+            super.Imunbanned();
+            canChat = true;
+            setUseableEditText(mMessageEditText,true);
+        }
+
     };
 
 

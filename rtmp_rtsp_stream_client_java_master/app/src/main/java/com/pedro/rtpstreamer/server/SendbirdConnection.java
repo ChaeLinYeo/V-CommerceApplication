@@ -155,7 +155,7 @@ public class SendbirdConnection {
             }
         });
 
-        SendBird.addChannelHandler(CHANNEL_HANDLER_ID, new SendBird.ChannelHandler() {
+        SendBird.addChannelHandler(StaticVariable.CHANNEL_HANDLER_ID, new SendBird.ChannelHandler() {
             @Override
             public void onMessageReceived(BaseChannel baseChannel, BaseMessage baseMessage) {
                 if (baseChannel.getUrl().equals(mChannelUrl)) {
@@ -197,6 +197,22 @@ public class SendbirdConnection {
             public void onChannelChanged(BaseChannel channel) {
                 super.onChannelChanged(channel);
                 sendbirdListner.onTitleChanged(channel.getName());
+            }
+
+            @Override
+            public void onUserBanned(BaseChannel channel, User user) {
+                super.onUserBanned(channel, user);
+                if(user.getUserId().equals(USER_ID)){
+                    sendbirdListner.Imbanned();
+                }
+            }
+
+            @Override
+            public void onUserUnbanned(BaseChannel channel, User user) {
+                super.onUserUnbanned(channel, user);
+                if(user.getUserId().equals(USER_ID)){
+                    sendbirdListner.Imunbanned();
+                }
             }
         });
     }
