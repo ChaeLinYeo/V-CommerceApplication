@@ -164,6 +164,12 @@ public class SendbirdConnection {
             }
 
             @Override
+            public void onUserEntered(OpenChannel channel, User user) {
+                super.onUserEntered(channel, user);
+                sendbirdListner.userenter(user.getNickname());
+            }
+
+            @Override
             public void onMetaCountersUpdated(BaseChannel channel, Map<String, Integer> metaCounterMap) {
                 super.onMetaCountersUpdated(channel, metaCounterMap);
                 sendbirdListner.metaCounterUpdated(metaCounterMap.get("heart"));

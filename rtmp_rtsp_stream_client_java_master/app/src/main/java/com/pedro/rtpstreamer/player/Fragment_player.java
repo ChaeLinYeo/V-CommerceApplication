@@ -68,10 +68,6 @@ public class Fragment_player extends Fragment
     private boolean is_follow = false;
 
     private ListView listView;
-    ///////////////////////////////////////////////////////////
-    private static final String CHANNEL_HANDLER_ID = "CHANNEL_HANDLER_OPEN_CHAT";
-
-//    private OpenChannel mChannel;
     private String mChannelUrl;
 
     private TextView alarm;
@@ -198,7 +194,7 @@ public class Fragment_player extends Fragment
                 FollowButton.setText("팔로우 취소");
                 String text = SendbirdConnection.getUserId()+"님이 팔로우 하셨습니다.";
                 SendbirdConnection.sendUserMessage(text, "alarm");
-//                AlarmPlayer(text);
+                AlarmPlayer(text,3);
             }
             else{//팔로우 한 상태에서 클릭하면
                 FollowButton.setText("팔로우");
@@ -340,7 +336,7 @@ public class Fragment_player extends Fragment
                 //mExampleChatController.add2(Data);
                 break;
             case "alarm":
-//                AlarmPlayer(data);
+                AlarmPlayer(data,3);
                 break;
             case "chat" :
                 mExampleChatController.add(data);
@@ -436,11 +432,15 @@ public class Fragment_player extends Fragment
         switch(type){
             case 1:
                 alarm.setText(data);
-                alarm.setBackgroundColor(Color.RED);
+                alarm.setBackgroundColor(mContext.getResources().getColor(android.R.color.holo_blue_bright));
                 break;
             case 2:
                 alarm.setText(data);
-                alarm.setBackgroundColor(Color.GREEN);
+                alarm.setBackgroundColor(mContext.getResources().getColor(android.R.color.holo_red_light));
+                break;
+            case 3:
+                alarm.setText(data);
+                alarm.setBackgroundColor(mContext.getResources().getColor(android.R.color.holo_green_light));
                 break;
         }
 
@@ -488,6 +488,9 @@ public class Fragment_player extends Fragment
         @Override
         public void metaCounterUpdated(int heart){
             LikePlayer(heart);
+            if(heart % 100 == 0){
+                AlarmPlayer(heart+"회 돌파~", 2);
+            }
         }
 
         @Override
@@ -495,7 +498,7 @@ public class Fragment_player extends Fragment
             if(type.equals("chat")){
                 mExampleChatController.add(data);
             }else if(type.equals("alarm")){
-                alarm.setText(data);
+                AlarmPlayer(data,2);//alarm.setText(data);
             }else if(type.equals(("notice"))){
                 notify.setText(data);
             }
@@ -504,6 +507,12 @@ public class Fragment_player extends Fragment
         @Override
         public void onTitleChanged(String titleString){
             title.setText(titleString);
+        }
+
+        @Override
+        public void userenter(String enterduser) {
+            super.userenter(enterduser);
+            AlarmPlayer(enterduser + "님이 들어오셨습니다.", 1);
         }
     };
 }

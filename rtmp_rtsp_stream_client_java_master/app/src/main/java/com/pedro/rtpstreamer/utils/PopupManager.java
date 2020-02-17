@@ -406,8 +406,6 @@ public class PopupManager {
 
         sendcoupon.setOnClickListener((View v) -> {
                     if(e_a.equals("") || e_n.equals("") || (e_t_s < 1 && e_t_m < 1 && e_t_s < 1)){
-                        Log.d("dd", e_a +"," + e_n);
-                        Log.d("ddd", Integer.toString(e_t_h)+","+Integer.toString(e_t_m)+","+Integer.toString(e_t_s));
                         Toast.makeText(mContext.getApplicationContext(), "쿠폰 정보를 입력하세요", Toast.LENGTH_LONG).show();
                     }else{
                         SparseBooleanArray checkedItems = listview.getCheckedItemPositions();
