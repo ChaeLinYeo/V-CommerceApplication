@@ -200,17 +200,19 @@ public class SendbirdConnection {
             }
 
             @Override
-            public void onUserBanned(BaseChannel channel, User user) {
-                super.onUserBanned(channel, user);
+            public void onUserMuted(BaseChannel channel, User user) {
+                super.onUserMuted(channel, user);
                 if(user.getUserId().equals(USER_ID)){
+                    Log.d("banned",USER_ID);
                     sendbirdListner.Imbanned();
                 }
             }
 
             @Override
-            public void onUserUnbanned(BaseChannel channel, User user) {
+            public void onUserUnmuted(BaseChannel channel, User user) {
                 super.onUserUnbanned(channel, user);
                 if(user.getUserId().equals(USER_ID)){
+                    Log.d("unbanned",USER_ID);
                     sendbirdListner.Imunbanned();
                 }
             }
@@ -294,6 +296,7 @@ public class SendbirdConnection {
                 super.onUserEntered(channel, user);
                 viewNum++;
                 getUserList(true);
+                sendbirdListner.userenter(user.getNickname());
             }
 
             @Override
@@ -372,13 +375,16 @@ public class SendbirdConnection {
     }}
 
     public static void banUser(int position){
-        mOpenChannel.muteUserWithUserId(UserList.get(position).getUserId(), "ban by operater", 10,
-                (SendBirdException e) -> {
+        mOpenChannel.muteUserWithUserId(UserList.get(position).getUserId(), (SendBirdException e) -> {
                     if(e!=null) Log.e("banUser", ""+e.getMessage()+e.getCode());
                 }
         );
     }
-
+    public static void unbanUser(int position){
+        mOpenChannel.unmuteUserWithUserId(UserList.get(position).getUserId(), (SendBirdException e) -> {
+            if(e!=null) Log.e("unbanUser", ""+e.getMessage()+e.getCode());
+        });
+    }
     ///////////////CATEGORY///////////////
     public static void addCategory(String item){
         updateMetaData(mOpenChannel, item, item);

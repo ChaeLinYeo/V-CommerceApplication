@@ -327,6 +327,7 @@ public class PopupManager {
         Button btn_cancel = mView.findViewById(R.id.popup_cancel);
         Button selectAllButton = mView.findViewById(R.id.select_all);
         Button ban = mView.findViewById(R.id.ben);
+        Button unban = mView.findViewById(R.id.unben);
         Button sendcoupon =  mView.findViewById(R.id.show_event);
         makecoupon =  mView.findViewById(R.id.custom_event);
         EditText search = mView.findViewById(R.id.searchPeople);
@@ -383,6 +384,20 @@ public class PopupManager {
                     for (int i = count-1; i >= 0; i--) {
                         if (checkedItems.get(i)) {
                             SendbirdConnection.banUser(i);
+                        }
+                    }
+                    // 모든 선택 상태 초기화.
+                    listview.clearChoices() ;
+                    adapter.notifyDataSetChanged();
+                }
+        );
+
+        unban.setOnClickListener((View v) -> {
+                    SparseBooleanArray checkedItems = listview.getCheckedItemPositions();
+                    int count = adapter.getCount() ;
+                    for (int i = count-1; i >= 0; i--) {
+                        if (checkedItems.get(i)) {
+                            SendbirdConnection.unbanUser(i);
                         }
                     }
                     // 모든 선택 상태 초기화.

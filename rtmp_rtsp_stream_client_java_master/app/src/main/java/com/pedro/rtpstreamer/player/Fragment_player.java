@@ -418,6 +418,9 @@ public class Fragment_player extends Fragment
         if(toggleSongLikeAnimButton())  {
             heart.setText(Integer.toString(newheart));
         }
+        if(newheart % 100 == 0){
+            AlarmPlayer(newheart+"회 돌파~", 2);
+        }
     }
 
     public void AlarmPlayer(String data, int type){
@@ -487,9 +490,6 @@ public class Fragment_player extends Fragment
         @Override
         public void metaCounterUpdated(int heart){
             LikePlayer(heart);
-            if(heart % 100 == 0){
-                AlarmPlayer(heart+"회 돌파~", 2);
-            }
         }
 
         @Override
@@ -517,6 +517,7 @@ public class Fragment_player extends Fragment
         @Override
         public void Imbanned(){
             super.Imbanned();
+            Log.d("ban", "cantchat");
             canChat = false;
             setUseableEditText(mMessageEditText,false);
         }
@@ -524,6 +525,7 @@ public class Fragment_player extends Fragment
         @Override
         public void Imunbanned(){
             super.Imunbanned();
+            Log.d("notban", "canchat");
             canChat = true;
             setUseableEditText(mMessageEditText,true);
         }
