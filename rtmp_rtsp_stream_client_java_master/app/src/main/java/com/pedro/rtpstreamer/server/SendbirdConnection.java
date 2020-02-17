@@ -375,13 +375,16 @@ public class SendbirdConnection {
     }}
 
     public static void banUser(int position){
-        mOpenChannel.muteUserWithUserId(UserList.get(position).getUserId(), "ban by operater", 10,
-                (SendBirdException e) -> {
+        mOpenChannel.muteUserWithUserId(UserList.get(position).getUserId(), (SendBirdException e) -> {
                     if(e!=null) Log.e("banUser", ""+e.getMessage()+e.getCode());
                 }
         );
     }
-
+    public static void unbanUser(int position){
+        mOpenChannel.unmuteUserWithUserId(UserList.get(position).getUserId(), (SendBirdException e) -> {
+            if(e!=null) Log.e("unbanUser", ""+e.getMessage()+e.getCode());
+        });
+    }
     ///////////////CATEGORY///////////////
     public static void addCategory(String item){
         updateMetaData(mOpenChannel, item, item);
