@@ -198,7 +198,7 @@ public class Fragment_player extends Fragment
                 FollowButton.setText("팔로우 취소");
                 String text = SendbirdConnection.getUserId()+"님이 팔로우 하셨습니다.";
                 SendbirdConnection.sendUserMessage(text, "alarm");
-                AlarmPlayer(text);
+//                AlarmPlayer(text);
             }
             else{//팔로우 한 상태에서 클릭하면
                 FollowButton.setText("팔로우");
@@ -340,7 +340,7 @@ public class Fragment_player extends Fragment
                 //mExampleChatController.add2(Data);
                 break;
             case "alarm":
-                AlarmPlayer(data);
+//                AlarmPlayer(data);
                 break;
             case "chat" :
                 mExampleChatController.add(data);
