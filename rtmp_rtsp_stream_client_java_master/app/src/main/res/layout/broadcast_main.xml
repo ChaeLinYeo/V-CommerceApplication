@@ -257,4 +257,32 @@
 
     </org.videolan.libvlc.util.VLCVideoLayout>
 
+    <RelativeLayout
+        android:id="@+id/BroadcastLoadingPanel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:id="@+id/BroadcastLoadingProgress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:layout_marginBottom="10dp"
+            android:layout_alignLeft="@id/BroadcstLoadingText"
+            android:layout_alignRight="@id/BroadcstLoadingText"/>
+
+        <TextView
+            android:id="@+id/BroadcstLoadingText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/BroadcastLoadingProgress"
+            android:gravity="center_horizontal"
+            android:text="업로드 중입니다.\n 앱을 종료하지 말아주세요"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
 </FrameLayout>

@@ -92,6 +92,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/appColor"
+            android:text="벤해제"
+            android:textColor="#fff"
+            android:textSize="15sp"
+            android:layout_weight="1"
+            android:layout_marginRight="1dp"
+            android:id="@+id/unben"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/appColor"
             android:text="전체선택"
             android:textColor="#fff"
             android:textSize="15sp"
