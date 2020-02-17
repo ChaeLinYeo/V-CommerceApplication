@@ -170,7 +170,6 @@ public class Fragment_player extends Fragment
         if(fa != null) mIMM = (InputMethodManager) fa.getSystemService(Context.INPUT_METHOD_SERVICE);
         else return;
 
-
         mMessageSendButton.setOnClickListener( (View v) -> {
             if(canChat) {
                 String text = SendbirdConnection.getUserId() + " : " + mMessageEditText.getText().toString();

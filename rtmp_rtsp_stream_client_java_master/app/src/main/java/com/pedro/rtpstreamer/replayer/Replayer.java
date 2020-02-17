@@ -31,7 +31,6 @@ import com.pedro.rtpstreamer.server.AWSConnection;
 import com.pedro.rtpstreamer.server.AWSListner;
 import com.pedro.rtpstreamer.server.AWSfileManager;
 import com.pedro.rtpstreamer.server.Pair;
-import com.pedro.rtpstreamer.server.SendbirdConnection;
 import com.pedro.rtpstreamer.utils.ExampleChatController;
 import com.pedro.rtpstreamer.utils.StaticVariable;
 
@@ -48,7 +47,7 @@ import static android.view.View.VISIBLE;
 
 @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
 public class Replayer extends AppCompatActivity
-    implements View.OnClickListener, AWSListner {
+    implements View.OnClickListener {
 
     Context context;
 
@@ -97,7 +96,7 @@ public class Replayer extends AppCompatActivity
         setContentView(R.layout.replayer);
         context = this;
 
-        AWSConnection.setAwsListner(this);
+        AWSConnection.setAwsListner(awsListner);
 
         String path = Environment.getExternalStorageDirectory().getAbsolutePath();
         AWSConnection.downloadFile("myUploadedFileName", path+"/chatDown/chat.txt", context);
@@ -114,7 +113,7 @@ public class Replayer extends AppCompatActivity
         heart=findViewById(R.id.reheartnum);
         playBtn.setOnClickListener(this);
         seekBar.setOnSeekBarChangeListener(seekBarChangeListener);
-        loadingPanel = findViewById(R.id.loadingPanel);
+        loadingPanel = findViewById(R.id.ReplayLoadingPanel);
         currTimeline = findViewById(R.id.curr_category);
         OnOffButton = findViewById(R.id.btn_onoff2);
         FollowButton = findViewById(R.id.refollowButton);
@@ -411,17 +410,20 @@ public class Replayer extends AppCompatActivity
         animator.start();
     }
 
-    @Override
-    public void downloadComplete(){
-        completeFile++;
-        if(completeFile == 2){
-            CL = new ArrayList<>();
-            TL = new ArrayList<>();
-            setLog();
+    AWSListner awsListner = new AWSListner() {
+        @Override
+        public void downloadComplete() {
+            super.downloadComplete();
+            completeFile++;
+            if(completeFile == 2){
+                CL = new ArrayList<>();
+                TL = new ArrayList<>();
+                setLog();
 
-            setUri();
+                setUri();
+            }
         }
-    }
+    };
 
     public void popTimeLine(){
         View mView_c = getLayoutInflater().inflate(R.layout.popup_timeline, null);

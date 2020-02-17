@@ -33,6 +33,7 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.pedro.rtplibrary.view.OpenGlView;
 import com.pedro.rtpstreamer.R;
 import com.pedro.rtpstreamer.server.AWSConnection;
+import com.pedro.rtpstreamer.server.AWSListner;
 import com.pedro.rtpstreamer.server.LocalfileManager;
 import com.pedro.rtpstreamer.server.SendbirdConnection;
 import com.pedro.rtpstreamer.server.SendbirdListner;
@@ -93,6 +94,8 @@ public class BroadcastMain extends AppCompatActivity
         ///////////////////////
 //        sendbirdConnection = SendbirdConnection.getInstance();
         SendbirdConnection.setupSendbird(this, true, sendbirdListner);
+
+        AWSConnection.setAwsListner(awsListner);
         ///////////////////////
 
         mExampleChatController = new ExampleChatController(this, findViewById(R.id.ChatListView), R.layout.chatline, R.id.chat_line_textview, R.id.chat_line_timeview);
@@ -449,6 +452,25 @@ public class BroadcastMain extends AppCompatActivity
         public void getUserListComplete(String peopleNum) {
             super.getUserListComplete(peopleNum);
             people.setText(peopleNum);
+        }
+    };
+
+    private AWSListner awsListner = new AWSListner() {
+        @Override
+        public void startUpload(){
+            findViewById(R.id.BroadcastLoadingPanel).setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        public void uploadComplete(boolean success) {
+            super.uploadComplete(success);
+            if(success) {
+                findViewById(R.id.BroadcastLoadingPanel).setVisibility(View.GONE);
+                Toast.makeText(BroadcastMain.this, "정상적으로 저장되었습니다.", Toast.LENGTH_SHORT).show();
+            } else {
+                findViewById(R.id.BroadcastLoadingPanel).setVisibility(View.GONE);
+                Toast.makeText(BroadcastMain.this, "저장에 실패하였습니다. \n관리자에게 문의해주세요", Toast.LENGTH_SHORT).show();
+            }
         }
     };
 }

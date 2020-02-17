@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 import android.net.Uri;
 import android.os.Build;
@@ -18,9 +17,6 @@ import android.view.View;
 
 import androidx.annotation.RequiresApi;
 
-import com.amplifyframework.core.Amplify;
-import com.amplifyframework.core.ResultListener;
-import com.amplifyframework.storage.result.StorageUploadFileResult;
 import com.pedro.encoder.input.gl.SpriteGestureController;
 import com.pedro.encoder.input.gl.render.filters.object.ImageObjectFilterRender;
 import com.pedro.encoder.input.gl.render.filters.object.SurfaceFilterRender;
@@ -29,7 +25,6 @@ import com.pedro.encoder.input.video.CameraOpenException;
 import com.pedro.encoder.utils.gl.TranslateTo;
 import com.pedro.rtplibrary.rtmp.RtmpCamera1;
 import com.pedro.rtplibrary.view.OpenGlView;
-import com.pedro.rtpstreamer.R;
 import com.pedro.rtpstreamer.server.AWSConnection;
 import com.pedro.rtpstreamer.utils.StaticVariable;
 

@@ -19,10 +19,11 @@ import java.io.File;
 
 public class AWSConnection {
 
-    private static AWSListner awsListner;
+    private static AWSListner awsListner = null;
     private static TransferUtility transferUtility;
 
     public static void uploadFile(String fileName, String localPath, Context context) {
+        if(awsListner != null) awsListner.startUpload();
         Log.d("upload", ""+localPath);
         Amplify.Storage.uploadFile(
             fileName, localPath,
@@ -30,11 +31,13 @@ public class AWSConnection {
                 @Override
                 public void onResult(StorageUploadFileResult result) {
                     Log.i("StorageQuickStart", "Successfully uploaded: " + result.getKey());
+                    if(awsListner != null) awsListner.uploadComplete(true);
                 }
 
                 @Override
                 public void onError(Throwable error) {
                     Log.e("StorageQuickstart", "Upload error.", error);
+                    if(awsListner != null) awsListner.uploadComplete(false);
                 }
             }
         );
@@ -183,7 +186,7 @@ public class AWSConnection {
 //        );
 //    }
 
-    public static void setAwsListner(Context context){
-        awsListner = (AWSListner) context;
+    public static void setAwsListner(AWSListner awsListner1){
+        awsListner = awsListner1;
     }
 }
