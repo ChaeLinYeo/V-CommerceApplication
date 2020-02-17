@@ -13,6 +13,8 @@ import androidx.fragment.app.FragmentActivity;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -219,6 +221,8 @@ public class Fragment_player extends Fragment
             }
         });
     }
+
+
 
     // 좋아요 로띠 애니메이션을 실행 시키는 메소드
     private boolean toggleSongLikeAnimButton(){
