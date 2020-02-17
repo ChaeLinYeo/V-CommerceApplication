@@ -420,7 +420,7 @@ public class Fragment_player extends Fragment
             heart.setText(Integer.toString(newheart));
         }
         if(newheart % 100 == 0){
-            AlarmPlayer(heart+"회 돌파~", 2);
+            AlarmPlayer(newheart+"회 돌파~", 2);
         }
     }
 
@@ -491,7 +491,6 @@ public class Fragment_player extends Fragment
         @Override
         public void metaCounterUpdated(int heart){
             LikePlayer(heart);
-
         }
 
         @Override

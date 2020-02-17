@@ -296,6 +296,7 @@ public class SendbirdConnection {
                 super.onUserEntered(channel, user);
                 viewNum++;
                 getUserList(true);
+                sendbirdListner.userenter(user.getNickname());
             }
 
             @Override
