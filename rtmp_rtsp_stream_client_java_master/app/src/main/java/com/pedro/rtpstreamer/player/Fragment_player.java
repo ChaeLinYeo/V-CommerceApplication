@@ -66,9 +66,6 @@ public class Fragment_player extends Fragment
 
     private ListView listView;
     ///////////////////////////////////////////////////////////
-    private static final String CHANNEL_HANDLER_ID = "CHANNEL_HANDLER_OPEN_CHAT";
-
-//    private OpenChannel mChannel;
     private String mChannelUrl;
 
     private TextView alarm;
