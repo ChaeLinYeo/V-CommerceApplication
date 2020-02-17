@@ -198,6 +198,22 @@ public class SendbirdConnection {
                 super.onChannelChanged(channel);
                 sendbirdListner.onTitleChanged(channel.getName());
             }
+
+            @Override
+            public void onUserBanned(BaseChannel channel, User user) {
+                super.onUserBanned(channel, user);
+                if(user.getUserId().equals(USER_ID)){
+                    sendbirdListner.Imbanned();
+                }
+            }
+
+            @Override
+            public void onUserUnbanned(BaseChannel channel, User user) {
+                super.onUserUnbanned(channel, user);
+                if(user.getUserId().equals(USER_ID)){
+                    sendbirdListner.Imunbanned();
+                }
+            }
         });
     }
 
