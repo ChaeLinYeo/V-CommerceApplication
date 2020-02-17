@@ -324,9 +324,13 @@ public class SendbirdConnection {
         UserListQuery userListQuery = mOpenChannel.createParticipantListQuery();
         userListQuery.next((List<User> list, SendBirdException e) -> {
             if (e != null) return;
-            if(isOperator) UserList = setUserList(list);
-            else UserList = list;
-            sendbirdListner.getUserListComplete(Integer.toString(UserList.size()));
+            if(isOperator) {UserList = setUserList(list);
+                sendbirdListner.getUserListComplete(Integer.toString(UserList.size()));}
+            else {
+                UserList = list;
+                sendbirdListner.getUserListComplete(Integer.toString(UserList.size()-1));
+            }
+
         });
     }
 

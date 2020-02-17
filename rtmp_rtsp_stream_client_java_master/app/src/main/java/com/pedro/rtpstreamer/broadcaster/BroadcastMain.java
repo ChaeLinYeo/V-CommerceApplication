@@ -75,8 +75,7 @@ public class BroadcastMain extends AppCompatActivity
     PopupManager PM;
     boolean canStart = true;
     long systemtime;
-    ////////////////////////////////////////////////
-//    private SendbirdConnection sendbirdConnection;
+
     private LocalfileManager LM;
     private LocalfileManager LM_time;
     private int heart_final;
@@ -166,8 +165,6 @@ public class BroadcastMain extends AppCompatActivity
                             .showMultiImage(new TedBottomSheetDialogFragment.OnMultiImageSelectedListener() {
                                 @Override
                                 public void onImagesSelected(List<Uri> uriList) {
-                                    // here is selected image uri list
-                                    //Bitmap bitmap = loadBitmap(uriList.toString());
                                     try {
                                         if(uriList.size()!= 0) {
                                             Bitmap bm = MediaStore.Images.Media.getBitmap(getContentResolver(), uriList.get(0));
@@ -423,7 +420,6 @@ public class BroadcastMain extends AppCompatActivity
             LM_time = new LocalfileManager(SendbirdConnection.getUserId()+":"+systemtime+":"+SendbirdConnection.getBroadcastChannelNum()+"_timeline.txt");
             LM_time.savetimeline(0, "null\n");
             Log.d("channel complete",""+SendbirdConnection.getBroadcastChannelNum());
-            if(LM == null) Log.e("PKR","LM is null");
             PM.create_Category(getLayoutInflater());
         }
 
