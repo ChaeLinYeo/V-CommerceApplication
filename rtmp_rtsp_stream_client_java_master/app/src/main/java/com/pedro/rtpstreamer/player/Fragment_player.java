@@ -7,11 +7,17 @@ import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -26,6 +32,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.aqoong.lib.expandabletextview.ExpandableTextView;
 import com.bambuser.broadcaster.BroadcastPlayer;
 import com.bambuser.broadcaster.PlayerState;
 import com.bambuser.broadcaster.SurfaceViewWithAutoAR;
@@ -75,6 +82,7 @@ public class Fragment_player extends Fragment
     private TextView people;
     private TextView title;
     private TextView notify;
+//    private ExpandableTextView notify;
     private ImageView cover;
     private TextView streamer_nickname;
 
@@ -155,7 +163,12 @@ public class Fragment_player extends Fragment
         people = view.findViewById(R.id.peoplenum);
         title = view.findViewById(R.id.titleSpace);
 
-        notify = view.findViewById(R.id.broadcast_notice);
+        notify = view.findViewById(R.id.broadcast_notice2);
+        //더보기
+//        notify = view.findViewById(R.id.broadcast_notice2);
+//        notify.setText("any text", "더보기");
+//        notify.setState(ExpandableTextView.STATE.COLLAPSE.EXPAND);
+
         cover = view.findViewById(R.id.imageButton3);
         streamer_nickname = view.findViewById(R.id.nickname);
 
@@ -332,7 +345,8 @@ public class Fragment_player extends Fragment
     public void msgfilter(String customType, String data){
         switch(customType) {
             case "notice":
-                notify.setText(data);
+//                notify.setText(data);
+                setReadMore(notify, data, 2);
                 //mExampleChatController.add2(Data);
                 break;
             case "alarm":
@@ -500,7 +514,8 @@ public class Fragment_player extends Fragment
             }else if(type.equals("alarm")){
                 AlarmPlayer(data,2);//alarm.setText(data);
             }else if(type.equals(("notice"))){
-                notify.setText(data);
+//                notify.setText(data);
+                setReadMore(notify, data, 2);
             }
         }
 
@@ -515,4 +530,57 @@ public class Fragment_player extends Fragment
             AlarmPlayer(enterduser + "님이 들어오셨습니다.", 1);
         }
     };
+
+
+    public static void setReadMore(final TextView view, final String text, final int maxLine) {
+        final Context context = view.getContext();
+        final String expanedText = " ... 더보기";
+
+        if (view.getTag() != null && view.getTag().equals(text)) { //Tag로 전값 의 text를 비교하여똑같으면 실행하지 않음.
+            return;
+        }
+        view.setTag(text); //Tag에 text 저장
+        view.setText(text); // setText를 미리 하셔야  getLineCount()를 호출가능
+        view.post(new Runnable() { //getLineCount()는 UI 백그라운드에서만 가져올수 있음
+            @Override
+            public void run() {
+                if (view.getLineCount() >= maxLine) { //Line Count가 설정한 MaxLine의 값보다 크다면 처리시작
+
+                    int lineEndIndex = view.getLayout().getLineVisibleEnd(maxLine - 1); //Max Line 까지의 text length
+
+                    String[] split = text.split("\n"); //text를 자름
+                    int splitLength = 0;
+
+                    String lessText = "";
+                    for (String item : split) {
+                        splitLength += item.length() + 1;
+                        if (splitLength >= lineEndIndex) { //마지막 줄일때!
+                            if (item.length() >= expanedText.length()) {
+                                lessText += item.substring(0, item.length() - (expanedText.length())) + expanedText;
+                            } else {
+                                lessText += item + expanedText;
+                            }
+                            break; //종료
+                        }
+                        lessText += item + "\n";
+                    }
+                    SpannableString spannableString = new SpannableString(lessText);
+                    spannableString.setSpan(new ClickableSpan() {//클릭이벤트
+                        @Override
+                        public void onClick(View v) {
+                            view.setText(text);
+                        }
+
+                        @Override
+                        public void updateDrawState(TextPaint ds) { //컬러 처리
+                            ds.setColor(ContextCompat.getColor(context, R.color.blue));
+                        }
+                    }, spannableString.length() - expanedText.length(), spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    view.setText(spannableString);
+                    view.setMovementMethod(LinkMovementMethod.getInstance());
+                }
+            }
+        });
+    }
+
 }
