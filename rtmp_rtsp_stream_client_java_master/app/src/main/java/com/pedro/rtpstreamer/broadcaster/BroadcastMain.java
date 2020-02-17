@@ -75,8 +75,7 @@ public class BroadcastMain extends AppCompatActivity
     PopupManager PM;
     boolean canStart = true;
     long systemtime;
-    ////////////////////////////////////////////////
-//    private SendbirdConnection sendbirdConnection;
+
     private LocalfileManager LM;
     private LocalfileManager LM_time;
     private int heart_final;
@@ -166,8 +165,6 @@ public class BroadcastMain extends AppCompatActivity
                             .showMultiImage(new TedBottomSheetDialogFragment.OnMultiImageSelectedListener() {
                                 @Override
                                 public void onImagesSelected(List<Uri> uriList) {
-                                    // here is selected image uri list
-                                    //Bitmap bitmap = loadBitmap(uriList.toString());
                                     try {
                                         if(uriList.size()!= 0) {
                                             Bitmap bm = MediaStore.Images.Media.getBitmap(getContentResolver(), uriList.get(0));
@@ -346,11 +343,26 @@ public class BroadcastMain extends AppCompatActivity
             heart_final = num;
             heart.setText(Integer.toString(num));
         }
+        if(num % 100 == 0)
+            AlarmPlayer(num + "회 돌파~", 2);
+    }
+    public void AlarmPlayer(String data, int type) {
+        switch (type) {
+            case 1:
+                system_notice.setText(data);
+                system_notice.setBackgroundColor(context.getResources().getColor(android.R.color.holo_blue_bright));
+                break;
+            case 2:
+                system_notice.setText(data);
+                system_notice.setBackgroundColor(context.getResources().getColor(android.R.color.holo_red_light));
+                break;
+            case 3:
+                system_notice.setText(data);
+                system_notice.setBackgroundColor(context.getResources().getColor(android.R.color.holo_green_light));
+                break;
+        }
     }
 
-    public void AlarmPlayer(String data){
-        system_notice.setText(data);
-    }
     // 좋아요 로띠 애니메이션을 실행 시키는 메소드
     private boolean toggleSongLikeAnimButton(){
         songLikeAnimButton.setVisibility(View.VISIBLE);
@@ -378,6 +390,12 @@ public class BroadcastMain extends AppCompatActivity
         }
 
         @Override
+        public void userenter(String enterduser) {
+            super.userenter(enterduser);
+            AlarmPlayer(enterduser + "님이 들어오셨습니다.", 1);
+        }
+
+        @Override
         public void getChannelComplete(boolean success) {
             super.getChannelComplete(success);
             if(success){
@@ -394,8 +412,9 @@ public class BroadcastMain extends AppCompatActivity
             long time = messagetime - systemtime;
             switch(customType) {
                 case "alarm":
-                    AlarmPlayer(data);
+                    AlarmPlayer(data, 3);
                     break;
+
                 case "chat" :
                     mExampleChatController.add(data);
                     LM.savechat(time, data);
@@ -423,7 +442,6 @@ public class BroadcastMain extends AppCompatActivity
             LM_time = new LocalfileManager(SendbirdConnection.getUserId()+":"+systemtime+":"+SendbirdConnection.getBroadcastChannelNum()+"_timeline.txt");
             LM_time.savetimeline(0, "null\n");
             Log.d("channel complete",""+SendbirdConnection.getBroadcastChannelNum());
-            if(LM == null) Log.e("PKR","LM is null");
             PM.create_Category(getLayoutInflater());
         }
 

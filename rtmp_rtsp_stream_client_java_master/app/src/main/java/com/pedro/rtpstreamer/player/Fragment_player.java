@@ -3,6 +3,7 @@ package com.pedro.rtpstreamer.player;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,6 +14,8 @@ import androidx.fragment.app.FragmentActivity;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -46,7 +49,6 @@ public class Fragment_player extends Fragment
     private static String TAG = "Fragment_player";
     private static String TAG1 = "Frag1";
 
-    /////////////////////////////////////////////////////////////
     private EditText mMessageEditText;
     private Button mMessageSendButton;
     private Button FollowButton;	//팔로우버튼
@@ -63,21 +65,16 @@ public class Fragment_player extends Fragment
 
     // 좋아요 클릭 여부
     private boolean is_follow = false;
-
+    private boolean canChat = true;
     private ListView listView;
-    ///////////////////////////////////////////////////////////
     private String mChannelUrl;
 
-    private TextView alarm;
     private TextView heart;
     private TextView people;
     private TextView title;
     private TextView notify;
     private ImageView cover;
     private TextView streamer_nickname;
-
-    // 쿠폰 이름, 내용, 시간, 분, 초
-    ///////////////////////////////////////////////////////////
 
     private BroadcastPlayer mBroadcastPlayer;
 
@@ -130,7 +127,6 @@ public class Fragment_player extends Fragment
 
         pm = new PopupManager(getContext());
 
-        ///////////////////////////////////////
         // 로티 애니메이션뷰 리소스 아이디연결
         songLikeAnimButton = view.findViewById(R.id.button_song_like_animation);
 
@@ -147,12 +143,9 @@ public class Fragment_player extends Fragment
         view.findViewById(R.id.menu_share).setOnClickListener(this);
         view.findViewById(R.id.HeartIcon).setOnClickListener(this);
 
-        alarm = view.findViewById(R.id.system_notice);
         heart = view.findViewById(R.id.heartnum);
-        //시청인원
         people = view.findViewById(R.id.peoplenum);
         title = view.findViewById(R.id.titleSpace);
-
         notify = view.findViewById(R.id.broadcast_notice);
         cover = view.findViewById(R.id.imageButton3);
         streamer_nickname = view.findViewById(R.id.nickname);
@@ -166,7 +159,6 @@ public class Fragment_player extends Fragment
     /////////////////////////////////////////////////////////////////
     private void init(){
         SendbirdConnection.setSendbirdListner(sendbirdListner);
-
         SendbirdConnection.getPlayChannel(channelNum);
 
         mExampleChatController = new ExampleChatController(mContext, listView, R.layout.chatline, R.id.chat_line_textview, R.id.chat_line_timeview);
@@ -180,11 +172,15 @@ public class Fragment_player extends Fragment
 
 
         mMessageSendButton.setOnClickListener( (View v) -> {
-            String text = SendbirdConnection.getUserId() +" : "+mMessageEditText.getText().toString();
-            mExampleChatController.add(text);
-            mMessageEditText.setText("");
-            mIMM.hideSoftInputFromWindow(mMessageEditText.getWindowToken(), 0);
-            SendbirdConnection.sendUserMessage(text, "chat");
+            if(canChat) {
+                String text = SendbirdConnection.getUserId() + " : " + mMessageEditText.getText().toString();
+                mExampleChatController.add(text);
+                mMessageEditText.setText("");
+                mIMM.hideSoftInputFromWindow(mMessageEditText.getWindowToken(), 0);
+                SendbirdConnection.sendUserMessage(text, "chat");
+            }else{
+                mMessageEditText.setText("채팅 불가");
+            }
         });
 
         FollowButton.setOnClickListener((View view) -> {
@@ -192,7 +188,7 @@ public class Fragment_player extends Fragment
                 FollowButton.setText("팔로우 취소");
                 String text = SendbirdConnection.getUserId()+"님이 팔로우 하셨습니다.";
                 SendbirdConnection.sendUserMessage(text, "alarm");
-                AlarmPlayer(text);
+                AlarmPlayer(text,3);
             }
             else{//팔로우 한 상태에서 클릭하면
                 FollowButton.setText("팔로우");
@@ -216,6 +212,8 @@ public class Fragment_player extends Fragment
             }
         });
     }
+
+
 
     // 좋아요 로띠 애니메이션을 실행 시키는 메소드
     private boolean toggleSongLikeAnimButton(){
@@ -243,7 +241,6 @@ public class Fragment_player extends Fragment
 
     void playStart(String resourceUri,String id, final String previewUri){ //package private
         init();
-        Log.d(TAG1, "playStart / chat "+mChannelUrl+"/ resourceUri "+resourceUri);
         Picasso.with(getActivity()).load(previewUri).into(img_preview);
         img_preview.setVisibility(View.VISIBLE);
         if (mBroadcastPlayer != null) mBroadcastPlayer.close();
@@ -332,7 +329,7 @@ public class Fragment_player extends Fragment
                 //mExampleChatController.add2(Data);
                 break;
             case "alarm":
-                AlarmPlayer(data);
+                AlarmPlayer(data,3);
                 break;
             case "chat" :
                 mExampleChatController.add(data);
@@ -424,8 +421,22 @@ public class Fragment_player extends Fragment
         }
     }
 
-    public void AlarmPlayer(String data){
-        alarm.setText(data);
+    public void AlarmPlayer(String data, int type){
+        switch(type){
+            case 1:
+                system_notice.setText(data);
+                system_notice.setBackgroundColor(mContext.getResources().getColor(android.R.color.holo_blue_bright));
+                break;
+            case 2:
+                system_notice.setText(data);
+                system_notice.setBackgroundColor(mContext.getResources().getColor(android.R.color.holo_red_light));
+                break;
+            case 3:
+                system_notice.setText(data);
+                system_notice.setBackgroundColor(mContext.getResources().getColor(android.R.color.holo_green_light));
+                break;
+        }
+
     }
 
     public void displayRoundImageFromUrl(final Context context, final String url, final ImageView imageView) {
@@ -446,6 +457,13 @@ public class Fragment_player extends Fragment
                         imageView.setImageDrawable(circularBitmapDrawable);
                     }
                 });
+    }
+
+    private void setUseableEditText(EditText et, boolean useable) {
+        et.setClickable(useable);
+        et.setEnabled(useable);
+        et.setFocusable(useable);
+        et.setFocusableInTouchMode(useable);
     }
 
     private SendbirdListner sendbirdListner = new SendbirdListner() {
@@ -470,6 +488,9 @@ public class Fragment_player extends Fragment
         @Override
         public void metaCounterUpdated(int heart){
             LikePlayer(heart);
+            if(heart % 100 == 0){
+                AlarmPlayer(heart+"회 돌파~", 2);
+            }
         }
 
         @Override
@@ -477,7 +498,7 @@ public class Fragment_player extends Fragment
             if(type.equals("chat")){
                 mExampleChatController.add(data);
             }else if(type.equals("alarm")){
-                alarm.setText(data);
+                AlarmPlayer(data,2);//alarm.setText(data);
             }else if(type.equals(("notice"))){
                 notify.setText(data);
             }
@@ -487,5 +508,26 @@ public class Fragment_player extends Fragment
         public void onTitleChanged(String titleString){
             title.setText(titleString);
         }
+
+        @Override
+        public void userenter(String enterduser) {
+            super.userenter(enterduser);
+            AlarmPlayer(enterduser + "님이 들어오셨습니다.", 1);
+        }
+
+        @Override
+        public void Imbanned(){
+            super.Imbanned();
+            canChat = false;
+            setUseableEditText(mMessageEditText,false);
+        }
+
+        @Override
+        public void Imunbanned(){
+            super.Imunbanned();
+            canChat = true;
+            setUseableEditText(mMessageEditText,true);
+        }
+
     };
 }

@@ -85,7 +85,7 @@ public class PopupManager {
 
     private final Handler handler = new Handler();
     TextView coupon_time_txt;
-
+    ListView listview;
     public PopupManager(Context context){
         mContext = context;
     }
@@ -299,7 +299,8 @@ public class PopupManager {
         alertDialog.show();
     }
 
-
+    List<String> searchlist;
+    List<String> alllist;
     //시청자 목록 보는 팝업창
     public void btn_showPeople(LayoutInflater inflater) {
         View mView = inflater.inflate(R.layout.popup_people, null);
@@ -308,13 +309,16 @@ public class PopupManager {
         List<User> userList = SendbirdConnection.getUserList(true);
 
         //리스트뷰에 보여주기 위한 리스트 생성
-        ArrayList<String> ShowList = new ArrayList<>();
+        alllist = new ArrayList<>();
         for(User user : userList){
-            ShowList.add(user.getUserId() + "(" + user.getNickname() + ")");
+            alllist.add(user.getUserId() + "(" + user.getNickname() + ")");
         }
+        searchlist = new ArrayList<>();
+        searchlist.addAll(alllist);
+
         // listview 생성 및 adapter 지정.
-        final ListView listview = mView.findViewById(R.id.listview1);
-        final ArrayAdapter adapter = new ArrayAdapter(mContext, android.R.layout.simple_list_item_multiple_choice, ShowList) ;
+        listview = mView.findViewById(R.id.listview1);
+        final ArrayAdapter adapter = new ArrayAdapter(mContext, android.R.layout.simple_list_item_multiple_choice, searchlist) ;
 
         listview.setAdapter(adapter) ;
 
@@ -327,13 +331,14 @@ public class PopupManager {
         makecoupon =  mView.findViewById(R.id.custom_event);
         EditText search = mView.findViewById(R.id.searchPeople);
         SwipeRefreshLayout mSwipeRefreshLayout = mView.findViewById(R.id.swipeRefresh);
+
         mSwipeRefreshLayout.setOnRefreshListener(() -> {
                     mSwipeRefreshLayout.setRefreshing(true);
                     new Handler().postDelayed(() -> {
-                                ShowList.clear();
+                                alllist.clear();
                                 List<User> reuserList = SendbirdConnection.getUserList(true);
                                 for(User user : reuserList){
-                                    ShowList.add(user.getUserId() + "(" + user.getNickname() + ")");
+                                    alllist.add(user.getUserId() + "(" + user.getNickname() + ")");
                                 }
                                 listview.setAdapter(adapter);
                                 mSwipeRefreshLayout.setRefreshing(false);
@@ -401,8 +406,6 @@ public class PopupManager {
 
         sendcoupon.setOnClickListener((View v) -> {
                     if(e_a.equals("") || e_n.equals("") || (e_t_s < 1 && e_t_m < 1 && e_t_s < 1)){
-                        Log.d("dd", e_a +"," + e_n);
-                        Log.d("ddd", Integer.toString(e_t_h)+","+Integer.toString(e_t_m)+","+Integer.toString(e_t_s));
                         Toast.makeText(mContext.getApplicationContext(), "쿠폰 정보를 입력하세요", Toast.LENGTH_LONG).show();
                     }else{
                         SparseBooleanArray checkedItems = listview.getCheckedItemPositions();
@@ -426,14 +429,6 @@ public class PopupManager {
     }
 
     public void searching(String charText, ArrayAdapter A) {
-        List<String> searchlist = new ArrayList<>();
-        List<String> alllist = new ArrayList<>();
-        ///////////////////////////////////////////////
-        List<User> userList = SendbirdConnection.getUserList(false);
-        ///////////////////////////////////////////////
-        for(User user : userList){
-            alllist.add(user.getUserId() + "(" + user.getNickname() + ")");
-        }
         // 문자 입력시마다 리스트를 지우고 새로 뿌려준다.
         searchlist.clear();
 

@@ -164,6 +164,12 @@ public class SendbirdConnection {
             }
 
             @Override
+            public void onUserEntered(OpenChannel channel, User user) {
+                super.onUserEntered(channel, user);
+                sendbirdListner.userenter(user.getNickname());
+            }
+
+            @Override
             public void onMetaCountersUpdated(BaseChannel channel, Map<String, Integer> metaCounterMap) {
                 super.onMetaCountersUpdated(channel, metaCounterMap);
                 sendbirdListner.metaCounterUpdated(metaCounterMap.get("heart"));
@@ -191,6 +197,22 @@ public class SendbirdConnection {
             public void onChannelChanged(BaseChannel channel) {
                 super.onChannelChanged(channel);
                 sendbirdListner.onTitleChanged(channel.getName());
+            }
+
+            @Override
+            public void onUserBanned(BaseChannel channel, User user) {
+                super.onUserBanned(channel, user);
+                if(user.getUserId().equals(USER_ID)){
+                    sendbirdListner.Imbanned();
+                }
+            }
+
+            @Override
+            public void onUserUnbanned(BaseChannel channel, User user) {
+                super.onUserUnbanned(channel, user);
+                if(user.getUserId().equals(USER_ID)){
+                    sendbirdListner.Imunbanned();
+                }
             }
         });
     }
@@ -324,9 +346,13 @@ public class SendbirdConnection {
         UserListQuery userListQuery = mOpenChannel.createParticipantListQuery();
         userListQuery.next((List<User> list, SendBirdException e) -> {
             if (e != null) return;
-            if(isOperator) UserList = setUserList(list);
-            else UserList = list;
-            sendbirdListner.getUserListComplete(Integer.toString(UserList.size()));
+            if(isOperator) {UserList = setUserList(list);
+                sendbirdListner.getUserListComplete(Integer.toString(UserList.size()));}
+            else {
+                UserList = list;
+                sendbirdListner.getUserListComplete(Integer.toString(UserList.size()-1));
+            }
+
         });
     }
 

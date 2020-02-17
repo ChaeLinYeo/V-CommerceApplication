@@ -436,6 +436,7 @@ public class Replayer extends AppCompatActivity
 
         final AlertDialog.Builder alert05 = new AlertDialog.Builder(this);
 
+
         Button btn_Exit = mView_c.findViewById(R.id.timelineExit);
 
         alert05.setView(mView_c);
@@ -457,7 +458,6 @@ public class Replayer extends AppCompatActivity
                 alertDialog.dismiss();
             }
         );
-
         alertDialog.show();
     }
 
@@ -501,5 +501,4 @@ public class Replayer extends AppCompatActivity
 
         alertDialog.show();
     }
-
 }
