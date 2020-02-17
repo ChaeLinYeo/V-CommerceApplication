@@ -91,8 +91,6 @@
                     android:focusableInTouchMode="true"
                     android:focusable="true"
 
-                    android:ellipsize="end"
-                    android:maxLines="1"
                     android:text="0123456789\n0123456789"/>
 
 
@@ -117,16 +115,6 @@
                             android:clickable="true"
                             android:focusable="true"
                             app:srcCompat="@drawable/buyicon" />
-
-                        <Button
-                            android:id="@+id/btn_onoff"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:background="#fff"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:text="OFF"
-                            android:textColor="#000000" />
 
                         <ImageButton
                             android:id="@+id/button_open_channel_chat_upload"
@@ -252,7 +240,7 @@
                     android:layout_below="@+id/followButton"
                     android:layout_marginStart="0dp"
                     android:layout_marginTop="10dp"
-                    android:layout_toEndOf="@+id/imageView"
+                    android:layout_toEndOf="@id/imageView"
                     android:text=" 0 "
                     android:textColor="#fff"
                     android:textSize="18sp" />

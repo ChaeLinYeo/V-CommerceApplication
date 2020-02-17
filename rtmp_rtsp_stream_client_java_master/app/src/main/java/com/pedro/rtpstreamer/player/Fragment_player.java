@@ -27,7 +27,9 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -38,6 +40,7 @@ import com.bambuser.broadcaster.PlayerState;
 import com.bambuser.broadcaster.SurfaceViewWithAutoAR;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.facebook.share.Share;
 import com.pedro.rtpstreamer.R;
 import com.pedro.rtpstreamer.server.SendbirdConnection;
 import com.pedro.rtpstreamer.server.SendbirdListner;
@@ -59,9 +62,13 @@ public class Fragment_player extends Fragment
     private EditText mMessageEditText;
     private Button mMessageSendButton;
     private Button FollowButton;	//팔로우버튼
-    private Button OnOffButton; //채팅온오프
     private TextView system_notice; //각종알림
     private InputMethodManager mIMM;
+    private Button DeclareButton;
+    private ImageButton ShareButton;
+    private ImageView heartimg, eyeimg;
+    private LinearLayout BottomBar;
+
 
     private ExampleChatController mExampleChatController;
 
@@ -142,9 +149,13 @@ public class Fragment_player extends Fragment
         mMessageSendButton =  view.findViewById(R.id.button_open_channel_chat_send);
         mMessageEditText = view.findViewById(R.id.edittext_chat_message);
         FollowButton = view.findViewById(R.id.followButton);
-        OnOffButton = view.findViewById(R.id.btn_onoff);
         system_notice = view.findViewById(R.id.system_notice);
         listView = view.findViewById(R.id.ChatListView);
+        DeclareButton = view.findViewById(R.id.declare);
+        ShareButton = view.findViewById(R.id.menu_share);
+        heartimg = view.findViewById(R.id.imageView);
+        eyeimg = view.findViewById(R.id.heartImage);
+        BottomBar = view.findViewById(R.id.layout_open_chat_chatbox);
 
         view.findViewById(R.id.buy_button).setOnClickListener(this);
         view.findViewById(R.id.declare).setOnClickListener(this);
@@ -154,11 +165,7 @@ public class Fragment_player extends Fragment
         heart = view.findViewById(R.id.heartnum);
         people = view.findViewById(R.id.peoplenum);
         title = view.findViewById(R.id.titleSpace);
-        notify = view.findViewById(R.id.broadcast_notice2);
-        //더보기
-//        notify = view.findViewById(R.id.broadcast_notice2);
-//        notify.setText("any text", "더보기");
-//        notify.setState(ExpandableTextView.STATE.COLLAPSE.EXPAND);
+        notify = view.findViewById(R.id.broadcast_notice);
 
         cover = view.findViewById(R.id.imageButton3);
         streamer_nickname = view.findViewById(R.id.nickname);
@@ -209,18 +216,36 @@ public class Fragment_player extends Fragment
             is_follow = !is_follow;//상태 바꿈
         });
 
-        //채팅과 각종알림 온오프
-        OnOffButton.setOnClickListener((View view) -> {
+
+        title.setOnClickListener((View view) -> {
             if(onoff == 1){
                 mExampleChatController.hide();
                 system_notice.setVisibility(View.GONE);
-                OnOffButton.setText("ON");
+                FollowButton.setVisibility(View.GONE);
+                DeclareButton.setVisibility(View.GONE);
+                ShareButton.setVisibility(View.GONE);
+                notify.setVisibility(View.GONE);
+                heartimg.setVisibility(View.GONE);
+                eyeimg.setVisibility(View.GONE);
+                BottomBar.setVisibility(View.GONE);
+                heart.setVisibility(View.GONE);
+                people.setVisibility(View.GONE);
+                songLikeAnimButton.setVisibility(View.GONE);
                 onoff = 0;
             }
             else if(onoff == 0){
                 mExampleChatController.show();
                 system_notice.setVisibility(View.VISIBLE);
-                OnOffButton.setText("OFF");
+                FollowButton.setVisibility(View.VISIBLE);
+                DeclareButton.setVisibility(View.VISIBLE);
+                ShareButton.setVisibility(View.VISIBLE);
+                notify.setVisibility(View.VISIBLE);
+                heartimg.setVisibility(View.VISIBLE);
+                eyeimg.setVisibility(View.VISIBLE);
+                BottomBar.setVisibility(View.VISIBLE);
+                heart.setVisibility(View.VISIBLE);
+                people.setVisibility(View.VISIBLE);
+                songLikeAnimButton.setVisibility(View.VISIBLE);
                 onoff = 1;
             }
         });
@@ -338,8 +363,8 @@ public class Fragment_player extends Fragment
     public void msgfilter(String customType, String data){
         switch(customType) {
             case "notice":
-//                notify.setText(data);
-                setReadMore(notify, data, 2);
+                notify.setText(data);
+//                setReadMore(notify, data, 2);
                 //mExampleChatController.add2(Data);
                 break;
             case "alarm":
@@ -514,8 +539,8 @@ public class Fragment_player extends Fragment
             }else if(type.equals("alarm")){
                 AlarmPlayer(data,2);//alarm.setText(data);
             }else if(type.equals(("notice"))){
-//                notify.setText(data);
-                setReadMore(notify, data, 2);
+                notify.setText(data);
+//                setReadMore(notify, data, 2);
             }
         }
 
