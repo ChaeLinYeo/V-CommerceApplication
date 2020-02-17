@@ -200,17 +200,19 @@ public class SendbirdConnection {
             }
 
             @Override
-            public void onUserBanned(BaseChannel channel, User user) {
-                super.onUserBanned(channel, user);
+            public void onUserMuted(BaseChannel channel, User user) {
+                super.onUserMuted(channel, user);
                 if(user.getUserId().equals(USER_ID)){
+                    Log.d("banned",USER_ID);
                     sendbirdListner.Imbanned();
                 }
             }
 
             @Override
-            public void onUserUnbanned(BaseChannel channel, User user) {
+            public void onUserUnmuted(BaseChannel channel, User user) {
                 super.onUserUnbanned(channel, user);
                 if(user.getUserId().equals(USER_ID)){
+                    Log.d("unbanned",USER_ID);
                     sendbirdListner.Imunbanned();
                 }
             }

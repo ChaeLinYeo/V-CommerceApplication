@@ -346,6 +346,7 @@ public class BroadcastMain extends AppCompatActivity
         if(num % 100 == 0)
             AlarmPlayer(num + "회 돌파~", 2);
     }
+
     public void AlarmPlayer(String data, int type) {
         switch (type) {
             case 1:
