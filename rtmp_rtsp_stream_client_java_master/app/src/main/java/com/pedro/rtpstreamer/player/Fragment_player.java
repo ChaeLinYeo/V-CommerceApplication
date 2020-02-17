@@ -3,6 +3,7 @@ package com.pedro.rtpstreamer.player;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -431,8 +432,18 @@ public class Fragment_player extends Fragment
         }
     }
 
-    public void AlarmPlayer(String data){
-        alarm.setText(data);
+    public void AlarmPlayer(String data, int type){
+        switch(type){
+            case 1:
+                alarm.setText(data);
+                alarm.setBackgroundColor(Color.RED);
+                break;
+            case 2:
+                alarm.setText(data);
+                alarm.setBackgroundColor(Color.GREEN);
+                break;
+        }
+
     }
 
     public void displayRoundImageFromUrl(final Context context, final String url, final ImageView imageView) {
