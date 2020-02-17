@@ -155,7 +155,7 @@ public class SendbirdConnection {
             }
         });
 
-        SendBird.addChannelHandler(CHANNEL_HANDLER_ID, new SendBird.ChannelHandler() {
+        SendBird.addChannelHandler(StaticVariable.CHANNEL_HANDLER_ID, new SendBird.ChannelHandler() {
             @Override
             public void onMessageReceived(BaseChannel baseChannel, BaseMessage baseMessage) {
                 if (baseChannel.getUrl().equals(mChannelUrl)) {

@@ -159,7 +159,6 @@ public class Fragment_player extends Fragment
     /////////////////////////////////////////////////////////////////
     private void init(){
         SendbirdConnection.setSendbirdListner(sendbirdListner);
-
         SendbirdConnection.getPlayChannel(channelNum);
 
         mExampleChatController = new ExampleChatController(mContext, listView, R.layout.chatline, R.id.chat_line_textview, R.id.chat_line_timeview);
@@ -242,7 +241,6 @@ public class Fragment_player extends Fragment
 
     void playStart(String resourceUri,String id, final String previewUri){ //package private
         init();
-        Log.d(TAG1, "playStart / chat "+mChannelUrl+"/ resourceUri "+resourceUri);
         Picasso.with(getActivity()).load(previewUri).into(img_preview);
         img_preview.setVisibility(View.VISIBLE);
         if (mBroadcastPlayer != null) mBroadcastPlayer.close();
