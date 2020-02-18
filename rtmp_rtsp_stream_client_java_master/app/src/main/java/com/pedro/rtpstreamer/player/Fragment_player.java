@@ -174,11 +174,15 @@ public class Fragment_player extends Fragment
 
         mMessageSendButton.setOnClickListener( (View v) -> {
             if(canChat) {
-                String text = SendbirdConnection.getUserId() + " : " + mMessageEditText.getText().toString();
-                mExampleChatController.add(text);
-                mMessageEditText.setText("");
-                mIMM.hideSoftInputFromWindow(mMessageEditText.getWindowToken(), 0);
-                SendbirdConnection.sendUserMessage(text, "chat");
+                if(!mMessageEditText.getText().toString().equals("")) {
+                    String text = SendbirdConnection.getUserId() + " : " + mMessageEditText.getText().toString();
+                    mExampleChatController.add(text);
+                    mMessageEditText.setText("");
+                    mIMM.hideSoftInputFromWindow(mMessageEditText.getWindowToken(), 0);
+                    SendbirdConnection.sendUserMessage(text, "chat");
+                }else{
+                    Toast.makeText(mContext.getApplicationContext(), "채팅창에 내용을 입력하세요", Toast.LENGTH_LONG).show();
+                }
             }else{
                 mMessageEditText.setText("채팅 불가");
             }

@@ -100,7 +100,6 @@ public class PopupManager {
         temp.clear();
         int last = selected_items.size();
         if(last > 0) {
-            Log.d("btn_buy", selected_items.get(last-1));
             temp.add(selected_items.get(last - 1));
             selected_items.remove(last - 1);
         }
