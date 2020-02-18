@@ -35,7 +35,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
-import com.aqoong.lib.expandabletextview.ExpandableTextView;
 import com.bambuser.broadcaster.BroadcastPlayer;
 import com.bambuser.broadcaster.PlayerState;
 import com.bambuser.broadcaster.SurfaceViewWithAutoAR;
@@ -90,7 +89,6 @@ public class Fragment_player extends Fragment
     private TextView people;
     private TextView title;
     private TextView notify;
-//    private ExpandableTextView notify;
     private ImageView cover;
     private TextView streamer_nickname;
 
@@ -586,6 +584,7 @@ public class Fragment_player extends Fragment
             Log.d("notban", "canchat");
             canChat = true;
             setUseableEditText(mMessageEditText,true);
+            mMessageEditText.setText("");
         }
 
     };
