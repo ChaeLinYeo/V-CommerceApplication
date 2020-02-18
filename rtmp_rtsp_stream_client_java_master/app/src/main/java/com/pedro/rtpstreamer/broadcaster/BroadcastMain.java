@@ -1,9 +1,7 @@
 package com.pedro.rtpstreamer.broadcaster;
 
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
@@ -11,20 +9,11 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.MediaStore;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.util.SparseBooleanArray;
 import android.view.View;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.WindowManager;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Button;
@@ -42,10 +31,7 @@ import com.pedro.rtpstreamer.utils.PopupManager;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import gun0912.tedbottompicker.TedBottomPicker;
 import gun0912.tedbottompicker.TedBottomSheetDialogFragment;
@@ -316,7 +302,6 @@ public class BroadcastMain extends AppCompatActivity
 
     @Override
     public void broadcastStop(){
-        Log.d("PKR","broadcast stop");
         broadcastBtn.setText(R.string.start_button);
         SendbirdConnection.broadcastfinish();
         canStart = true;
@@ -447,7 +432,6 @@ public class BroadcastMain extends AppCompatActivity
             broadcastManager.manageBroadcast(0);
             LM_time = new LocalfileManager(SendbirdConnection.getUserId()+":"+systemtime+":"+SendbirdConnection.getBroadcastChannelNum()+"_timeline.txt");
             LM_time.savetimeline(0, "null\n");
-            Log.d("channel complete",""+SendbirdConnection.getBroadcastChannelNum());
             PM.create_Category(getLayoutInflater());
         }
 
