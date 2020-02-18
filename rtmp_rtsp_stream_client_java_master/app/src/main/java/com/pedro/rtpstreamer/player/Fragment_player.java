@@ -31,6 +31,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
@@ -68,6 +69,8 @@ public class Fragment_player extends Fragment
     private ImageButton ShareButton;
     private ImageView heartimg, eyeimg;
     private LinearLayout BottomBar;
+    private RelativeLayout BackGround;
+    private RelativeLayout BackGround2;
 
 
     private ExampleChatController mExampleChatController;
@@ -104,6 +107,7 @@ public class Fragment_player extends Fragment
     private PopupManager pm;
 
     private int onoff = 1; //1은 on, 0은 off
+    private int back_onoff = 1; //1은 on, 0은 off
 
 //    Fragment_player(int fragPosition, int channelNum, String mChannelUrl){
 //        this.fragPosition = fragPosition;
@@ -156,6 +160,8 @@ public class Fragment_player extends Fragment
         heartimg = view.findViewById(R.id.imageView);
         eyeimg = view.findViewById(R.id.heartImage);
         BottomBar = view.findViewById(R.id.layout_open_chat_chatbox);
+        BackGround = view.findViewById(R.id.background);
+        BackGround = view.findViewById(R.id.rl_Live);
 
         view.findViewById(R.id.buy_button).setOnClickListener(this);
         view.findViewById(R.id.declare).setOnClickListener(this);
@@ -246,6 +252,18 @@ public class Fragment_player extends Fragment
                 people.setVisibility(View.VISIBLE);
                 songLikeAnimButton.setVisibility(View.VISIBLE);
                 onoff = 1;
+            }
+        });
+
+
+        BackGround.setOnClickListener((View view) -> {
+            if(back_onoff == 1){
+                BackGround2.setVisibility(View.GONE);
+                back_onoff = 0;
+            }
+            else if(back_onoff == 0){
+                BackGround2.setVisibility(View.VISIBLE);
+                back_onoff = 1;
             }
         });
     }

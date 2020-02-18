@@ -116,6 +116,16 @@
                             android:focusable="true"
                             app:srcCompat="@drawable/buyicon" />
 
+<!--                        <Button-->
+<!--                            android:id="@+id/btn_onoff"-->
+<!--                            android:layout_width="48dp"-->
+<!--                            android:layout_height="48dp"-->
+<!--                            android:background="#fff"-->
+<!--                            android:clickable="true"-->
+<!--                            android:focusable="true"-->
+<!--                            android:text="OFF"-->
+<!--                            android:textColor="#000000" />-->
+
                         <ImageButton
                             android:id="@+id/button_open_channel_chat_upload"
                             android:layout_width="2dp"
@@ -207,6 +217,15 @@
                     android:textSize="15sp"
                     android:clickable="true"
                     android:focusable="true"/>
+
+                <RelativeLayout
+                    android:id="@+id/background"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_above="@+id/layout_open_chat_chatbox"
+                    android:layout_below="@+id/nickname"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginBottom="0dp" />
 
 
                 <com.airbnb.lottie.LottieAnimationView
@@ -328,6 +347,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/broadcaster" />
+
 
         </RelativeLayout>
 
