@@ -108,7 +108,7 @@ public class BroadcastMain extends AppCompatActivity
         system_notice = findViewById(R.id.system_notice);
 
         //공지 수정 팝업 후 적용됨
-        broadcast_notice =findViewById(R.id.broadcast_notice);
+        broadcast_notice = findViewById(R.id.broadcast_notice);
         broadcast_notice.setOnClickListener(broadcastClickListner);
 
         //좋아요 개수

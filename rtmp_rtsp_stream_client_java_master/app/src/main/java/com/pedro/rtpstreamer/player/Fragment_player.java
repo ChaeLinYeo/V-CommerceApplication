@@ -64,8 +64,8 @@ public class Fragment_player extends Fragment
     private ImageButton ShareButton;
     private ImageView heartimg, eyeimg;
     private LinearLayout BottomBar;
-    private RelativeLayout BackGround;
-    private RelativeLayout BackGround2;
+    private SurfaceViewWithAutoAR BackGround;
+    private RelativeLayout BackGroundResource;
 
 
     private ExampleChatController mExampleChatController;
@@ -139,8 +139,8 @@ public class Fragment_player extends Fragment
         heartimg = view.findViewById(R.id.imageView);
         eyeimg = view.findViewById(R.id.heartImage);
         BottomBar = view.findViewById(R.id.layout_open_chat_chatbox);
-        BackGround = view.findViewById(R.id.background);
-        BackGround2 = view.findViewById(R.id.rl_Live);
+        BackGround = view.findViewById(R.id.VideoSurfaceView);
+        BackGroundResource = view.findViewById(R.id.rl_Live);
 
         view.findViewById(R.id.buy_button).setOnClickListener(this);
         view.findViewById(R.id.declare).setOnClickListener(this);
@@ -234,11 +234,11 @@ public class Fragment_player extends Fragment
 
         BackGround.setOnClickListener((View view) -> {
             if(back_onoff == 1){
-                BackGround2.setVisibility(View.GONE);
+                BackGroundResource.setVisibility(View.INVISIBLE);
                 back_onoff = 0;
             }
             else if(back_onoff == 0){
-                BackGround2.setVisibility(View.VISIBLE);
+                BackGroundResource.setVisibility(View.VISIBLE);
                 back_onoff = 1;
             }
         });
@@ -248,7 +248,6 @@ public class Fragment_player extends Fragment
 
     // 좋아요 로띠 애니메이션을 실행 시키는 메소드
     private boolean toggleSongLikeAnimButton(){
-
         songLikeAnimButton.setVisibility(View.VISIBLE);
         ValueAnimator animator = ValueAnimator.ofFloat(0f, 0.5f).setDuration(500);
 

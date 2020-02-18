@@ -218,15 +218,6 @@
                     android:clickable="true"
                     android:focusable="true"/>
 
-                <RelativeLayout
-                    android:id="@+id/background"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_above="@+id/layout_open_chat_chatbox"
-                    android:layout_below="@+id/nickname"
-                    android:layout_marginTop="0dp"
-                    android:layout_marginBottom="0dp" />
-
 
                 <com.airbnb.lottie.LottieAnimationView
                     android:id="@+id/button_song_like_animation"
