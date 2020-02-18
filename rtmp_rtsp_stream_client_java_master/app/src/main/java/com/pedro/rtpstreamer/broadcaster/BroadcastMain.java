@@ -39,7 +39,6 @@ import com.pedro.rtpstreamer.server.SendbirdConnection;
 import com.pedro.rtpstreamer.server.SendbirdListner;
 import com.pedro.rtpstreamer.utils.ExampleChatController;
 import com.pedro.rtpstreamer.utils.PopupManager;
-import com.sendbird.android.User;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -92,7 +91,6 @@ public class BroadcastMain extends AppCompatActivity
         setupBroadcast();
 
         ///////////////////////
-//        sendbirdConnection = SendbirdConnection.getInstance();
         SendbirdConnection.setupSendbird(this, true, sendbirdListner);
 
         AWSConnection.setAwsListner(awsListner);

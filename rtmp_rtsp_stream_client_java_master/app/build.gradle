@@ -105,4 +105,7 @@ dependencies {
 
     //bottom sheet https://github.com/ParkSangGwon/TedBottomPicker
     implementation 'gun0912.ted:tedbottompicker:2.0.1'
+
+    //더보기
+    implementation 'com.github.aqoong:ExpandableTextView:1.0.1'
 }
