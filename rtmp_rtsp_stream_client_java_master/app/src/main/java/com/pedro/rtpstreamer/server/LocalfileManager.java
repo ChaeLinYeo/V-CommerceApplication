@@ -93,4 +93,13 @@ public class LocalfileManager {
     public String getFileName(){
         return fileName;
     }
+
+    public static void removeFile(String localPath){
+        File f = new File(localPath);
+        if(f.delete()){
+            Log.i("file","file delete success");
+        } else{
+            Log.i("file","file delete fail");
+        }
+    }
 }

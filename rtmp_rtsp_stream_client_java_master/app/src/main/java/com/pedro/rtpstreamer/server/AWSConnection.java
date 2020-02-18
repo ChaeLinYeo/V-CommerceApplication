@@ -15,7 +15,6 @@ public class AWSConnection {
         if(awsListner != null) awsListner.startUpload();
 
         try{
-            Log.d("upload", ""+localPath);
             Amplify.Storage.uploadFile(
                 fileName, localPath,
                 new ResultListener<StorageUploadFileResult>() {
@@ -23,6 +22,7 @@ public class AWSConnection {
                     public void onResult(StorageUploadFileResult result) {
                         Log.i("StorageQuickStart", "Successfully uploaded: " + result.getKey());
                         if(awsListner != null) awsListner.uploadComplete(true);
+                        LocalfileManager.removeFile(localPath);
                     }
 
                     @Override
@@ -54,7 +54,7 @@ public class AWSConnection {
 
                     @Override
                     public void onError(Throwable error) {
-                        Log.e("StorageQuickStart", error.getMessage());
+                        Log.e("StorageQuickStart", ""+error.getMessage());
                     }
                 }
             );
