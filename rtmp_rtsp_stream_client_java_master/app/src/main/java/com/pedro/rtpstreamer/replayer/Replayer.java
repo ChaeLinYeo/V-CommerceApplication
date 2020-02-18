@@ -187,9 +187,9 @@ public class Replayer extends AppCompatActivity
                 heart.setVisibility(View.GONE);
                 eyeimg.setVisibility(View.GONE);
                 people.setVisibility(View.GONE);
-                playbar.setVisibility(View.GONE);
                 etc.setVisibility(View.GONE);
                 heartlayout.setVisibility(View.GONE);
+                playbar.setVisibility(View.VISIBLE);
                 back_onoff = 0;
             }
             else if(back_onoff == 0){
@@ -203,7 +203,7 @@ public class Replayer extends AppCompatActivity
                 heart.setVisibility(View.VISIBLE);
                 eyeimg.setVisibility(View.VISIBLE);
                 people.setVisibility(View.VISIBLE);
-                playbar.setVisibility(View.VISIBLE);
+//                playbar.setVisibility(View.VISIBLE);
                 etc.setVisibility(View.VISIBLE);
                 heartlayout.setVisibility(View.VISIBLE);
                 back_onoff = 1;
