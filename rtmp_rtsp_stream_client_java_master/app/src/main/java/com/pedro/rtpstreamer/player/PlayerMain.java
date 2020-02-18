@@ -118,7 +118,6 @@ public class PlayerMain extends AppCompatActivity
                 return;
         }
 
-        findViewById(R.id.PlayerLoadingPanel).setVisibility(View.VISIBLE);
         SendbirdConnection.getCtrl();
     }
 
@@ -205,7 +204,10 @@ public class PlayerMain extends AppCompatActivity
         @Override
         public void getChannelComplete(boolean success) {
             Log.d("PKR","getchannel complete");
-            if (SendbirdConnection.isLive(selectedChannelNum)) setBroadcast();
+            if (SendbirdConnection.isLive(selectedChannelNum)) {
+                findViewById(R.id.PlayerLoadingPanel).setVisibility(View.VISIBLE);
+                setBroadcast();
+            }
             else Toast.makeText(getApplicationContext(), "This channel is not onAir", Toast.LENGTH_LONG).show();
         }
     };

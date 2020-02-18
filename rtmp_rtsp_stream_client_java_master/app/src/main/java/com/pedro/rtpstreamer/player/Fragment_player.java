@@ -68,7 +68,6 @@ public class Fragment_player extends Fragment
     private SurfaceViewWithAutoAR BackGround;
     private RelativeLayout BackGroundResource;
 
-
     private ExampleChatController mExampleChatController;
 
     private Context mContext;

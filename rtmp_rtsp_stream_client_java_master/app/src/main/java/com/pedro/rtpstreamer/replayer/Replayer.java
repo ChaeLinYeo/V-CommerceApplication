@@ -100,6 +100,9 @@ public class Replayer extends AppCompatActivity
     private FrameLayout heartlayout;
     private SurfaceView surfaceView;
 
+    private TextView currentPlayTime;
+    private TextView maxPlayTime;
+
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -126,14 +129,17 @@ public class Replayer extends AppCompatActivity
         loadingPanel = findViewById(R.id.ReplayLoadingPanel);
         currTimeline = findViewById(R.id.curr_category);
         FollowButton = findViewById(R.id.refollowButton);
+        
         DeclareButton = findViewById(R.id.redeclare);
         heartimg = findViewById(R.id.imageView);
         eyeimg = findViewById(R.id.eyeImage);
         cover = findViewById(R.id.imageButton3);
         playbar = findViewById(R.id.playbar);
         etc = findViewById(R.id.etc);
-        heartlayout = findViewById(R.id.heartlayout);
+        heartlayout = findViewById(R.id.heartBox);
         surfaceView = findViewById(R.id.video_layout);
+        currentPlayTime = findViewById(R.id.currentPlayTime);
+        maxPlayTime = findViewById(R.id.maxPlayTime);
 
         ECC = new ExampleChatController(context, listView, R.layout.chatline, R.id.chat_line_textview, R.id.chat_line_timeview);
         ECC.show();
@@ -354,6 +360,17 @@ public class Replayer extends AppCompatActivity
         return p;
     }
 
+    public String getStringForTime(long time){
+        int s = (int) time/1000;
+        int m = s>60 ? s/60 : 0;
+        if(m>0) s = s%60;
+
+        String mm = m<10 ? "0"+m : ""+m;
+        String ss = s<10 ? "0"+s : ""+s;
+
+        return mm+":"+ss;
+    }
+
     //////////////////////////////////////////////
     //handler for play uri
     @SuppressLint("HandlerLeak")
@@ -383,10 +400,15 @@ public class Replayer extends AppCompatActivity
                                     Log.d("mediaP","playing");
                                     playBtn.setText("stop");
                                     mediaState=1;
+                                    long dd = mMediaPlayer.getLength();
+                                    Log.d("PKRD",""+dd);
+                                    maxPlayTime.setText(getStringForTime(dd));
                                     break;
 
                                 case MediaPlayer.Event.TimeChanged:
                                     long d = mMediaPlayer.getTime(); //ms
+                                    currentPlayTime.setText(getStringForTime(d));
+
                                     Log.d("PKRE","time : "+d);
                                     if(nextIndex < CL.size()-2) {
                                         Pair cp = CL.get(nextIndex);
@@ -423,11 +445,6 @@ public class Replayer extends AppCompatActivity
                                     break;
 
                                 case MediaPlayer.Event.Stopped:
-//                                    Log.d("mHandler","stop");
-//                                    playBtn.setText("start");
-//                                    seekBar.setProgress(1000);
-//                                    mediaState=0;
-//                                    byTimeLine = false;
                                     break;
                             }
                         });
