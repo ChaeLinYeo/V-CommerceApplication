@@ -147,7 +147,6 @@ public class Replayer extends AppCompatActivity
     public void onClick(View view){
         switch(view.getId()){
             case R.id.playBtn:
-                Log.d("PKR", "mediaState"+mediaState);
                 if(mediaState == 0) {
                     nextIndex = 0;
                     nextTimeline=1;
@@ -175,7 +174,6 @@ public class Replayer extends AppCompatActivity
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             if(fromUser && mediaState != 0){
-                Log.d("PKRR","progresschanged");
                 float pr = ((float) progress) / 1000f;
                 mMediaPlayer.setPosition(pr);
                 long d = mMediaPlayer.getTime();
@@ -195,14 +193,12 @@ public class Replayer extends AppCompatActivity
 
                 for(int i=1; i<TL.size();i++){
                     if(TL.get(i).getTime() >= d){
-                        Log.d("PKRTS","nexttimeline : "+nextTimeline);
                         nextTimeline = i;
                         if(i>0) currTimeline.setText("현재 "+TL.get(i-1).getType()+"을(를) 판매 중입니다");
                         break;
                     }
                 }
             } else if(byTimeLine){
-                Log.d("PKRR","progresschanged byTimeLine");
                 long d = mMediaPlayer.getTime();
                 for(int i=0; i<CL.size(); i++){
                     if(CL.get(i).getTime() >= d) {
@@ -270,7 +266,6 @@ public class Replayer extends AppCompatActivity
             timeLine.add(TL.get(i).getType());
         }
 
-        Log.d("PKRA","end setlog");
     }
 
     public void removeUri(){
@@ -329,11 +324,9 @@ public class Replayer extends AppCompatActivity
                                     break;
 
                                 case MediaPlayer.Event.Playing:
-                                    Log.d("mediaP","playing");
                                     playBtn.setText("stop");
                                     mediaState=1;
                                     long dd = mMediaPlayer.getLength();
-                                    Log.d("PKRD",""+dd);
                                     maxPlayTime.setText(getStringForTime(dd));
                                     break;
 
@@ -341,19 +334,15 @@ public class Replayer extends AppCompatActivity
                                     long d = mMediaPlayer.getTime(); //ms
                                     currentPlayTime.setText(getStringForTime(d));
 
-                                    Log.d("PKRE","time : "+d);
                                     if(nextIndex < CL.size()-2) {
                                         Pair cp = CL.get(nextIndex);
-//                                        Log.d("PKR2", "time : " + cp.getTime() + "/" + d + " type : " + cp.getType() + "msg : " + cp.getMsg());
                                         if (cp.getTime() <= d) {
                                             playChat(cp);
                                             nextIndex++;
                                         }
                                     }
                                     if(nextTimeline < TL.size()) {
-                                        Log.d("PKRT","nexttimeline : "+nextTimeline);
                                         if (TL.get(nextTimeline).getTime() <= d) {
-                                            Log.d("PKRTC","nexttimeline changed : "+TL.get(nextTimeline).getType());
                                             currTimeline.setText("현재 "+TL.get(nextTimeline).getType()+"을(를) 판매 중입니다");
                                             nextTimeline++;
                                         }
@@ -406,7 +395,6 @@ public class Replayer extends AppCompatActivity
 
             case "like" :
                 heartAni();
-                Log.d("PKR","play heart");
                 break;
         }
     }
@@ -465,9 +453,7 @@ public class Replayer extends AppCompatActivity
         btn_Exit.setOnClickListener((View view) -> alertDialog.dismiss());
 
         listView.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
-                Log.d("PKRA","category time : "+TL.get(position+1).getTime());
                 nextTimeline = position+2;
-                Log.d("PKRTT","nexttimeline : "+nextTimeline);
                 mMediaPlayer.setTime(TL.get(position+1).getTime());
                 byTimeLine = true;
                 int mediaPosition = (int) (mMediaPlayer.getPosition()*1000);
