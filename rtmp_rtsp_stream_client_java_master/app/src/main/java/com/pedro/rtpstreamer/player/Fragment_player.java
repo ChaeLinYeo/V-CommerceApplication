@@ -159,7 +159,7 @@ public class Fragment_player extends Fragment
         eyeimg = view.findViewById(R.id.heartImage);
         BottomBar = view.findViewById(R.id.layout_open_chat_chatbox);
         BackGround = view.findViewById(R.id.background);
-        BackGround = view.findViewById(R.id.rl_Live);
+        BackGround2 = view.findViewById(R.id.rl_Live);
 
         view.findViewById(R.id.buy_button).setOnClickListener(this);
         view.findViewById(R.id.declare).setOnClickListener(this);
