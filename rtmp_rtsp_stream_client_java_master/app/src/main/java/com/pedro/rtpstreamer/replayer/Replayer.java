@@ -366,6 +366,12 @@ public class Replayer extends AppCompatActivity
         return mm+":"+ss;
     }
 
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        removeUri();
+    }
+
     //////////////////////////////////////////////
     //handler for play uri
     @SuppressLint("HandlerLeak")
