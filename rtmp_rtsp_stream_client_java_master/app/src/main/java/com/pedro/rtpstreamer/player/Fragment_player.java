@@ -392,7 +392,6 @@ public class Fragment_player extends Fragment
     }
 
     public void EEventPlayer(String data) {
-        // "User=    ,  ,    ,\ncn="+e_n+"ci="+e_a+"\nTimeLimit="+e_t_h+":"+e_t_m+":"+e_t_s;
         Log.d("event",""+data);
         int index = 4;
         int i = 0;

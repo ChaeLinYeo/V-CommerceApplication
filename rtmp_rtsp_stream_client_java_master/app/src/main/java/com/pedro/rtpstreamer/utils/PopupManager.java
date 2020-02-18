@@ -453,12 +453,10 @@ public class PopupManager {
         }else {
             for(int i = 0;i < alllist.size(); i++){
                 if (alllist.get(i).toLowerCase().contains(charText) || alllist.get(i).toUpperCase().contains(charText)) {
-                    // 검색된 데이터를 리스트에 추가한다.
                     searchlist.add(alllist.get(i));
                 }
             }
         }
-        // 리스트 데이터가 변경되었으므로 아답터를 갱신하여 검색된 데이터를 화면에 보여준다.
         A.notifyDataSetChanged();
     }
 
@@ -563,7 +561,6 @@ public class PopupManager {
         btn_cancel02.setOnClickListener((View view) -> alertDialog.dismiss());
 
         btn_ok02.setOnClickListener((View view) -> {
-            //txt_dummy_save에 신고 사유 기술 내용을 저장한다.
             txt_dummy_save = txt_input.getText().toString();
             Log.d("declare",txt_dummy_save);
             alertDialog.dismiss();
@@ -669,11 +666,11 @@ public class PopupManager {
     public void CouponPlayer(LayoutInflater inflater, int h, int m, int s, String name, String info) {
         final AlertDialog.Builder alert01 = new AlertDialog.Builder(mContext);
         View mView01 = inflater.inflate(R.layout.popup, null);
-        final TextView coupon_name_txt = (TextView) mView01.findViewById(R.id.blabla011);
-        final TextView coupon_ect_txt = (TextView) mView01.findViewById(R.id.blabla022);
-        coupon_time_txt = (TextView) mView01.findViewById(R.id.blabla033);  //n초뒤 사라짐 이라고 띄우는 부분
-        Button coupon_btn_cancel_01 = (Button) mView01.findViewById(R.id.coupon_btn_cancel_01);
-        Button coupon_btn_ok_01 = (Button) mView01.findViewById(R.id.coupon_btn_ok_01);
+        final TextView coupon_name_txt = mView01.findViewById(R.id.blabla011);
+        final TextView coupon_ect_txt = mView01.findViewById(R.id.blabla022);
+        coupon_time_txt = mView01.findViewById(R.id.blabla033);  //n초뒤 사라짐 이라고 띄우는 부분
+        Button coupon_btn_cancel_01 = mView01.findViewById(R.id.coupon_btn_cancel_01);
+        Button coupon_btn_ok_01 = mView01.findViewById(R.id.coupon_btn_ok_01);
 
         coupon_name_txt.setText(name);
         coupon_ect_txt.setText(info);
@@ -834,11 +831,8 @@ public class PopupManager {
         SendbirdConnection sendbirdConnection = SendbirdConnection.getInstance();
         View mView_c = inflater.inflate(R.layout.popup_category, null);
 
-        // ArrayAdapter 생성. 아이템 View를 선택(multiple choice)가능하도록 만듦.
-
         ArrayAdapter<String> adapter1 = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_multiple_choice, category_items) ;
 
-        // listview 생성 및 adapter 지정.
         ListView listView = mView_c.findViewById(R.id.listView) ;
         listView.setAdapter(adapter1);
         listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
