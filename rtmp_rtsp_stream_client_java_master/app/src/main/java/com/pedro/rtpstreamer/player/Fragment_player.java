@@ -393,8 +393,8 @@ public class Fragment_player extends Fragment
     public void msgfilter(String customType, String data){
         switch(customType) {
             case "notice":
-                notify.setText(data);
-//                setReadMore(notify, data, 2);
+//                notify.setText(data);
+                setReadMore(notify, data, 2);
                 break;
             case "alarm":
                 AlarmPlayer(data,3);
@@ -563,8 +563,8 @@ public class Fragment_player extends Fragment
             if(type.equals("chat")){
                 mExampleChatController.add(data);
             }else if(type.equals(("notice"))){
-                notify.setText(data);
-//                setReadMore(notify, data, 2);
+//                notify.setText(data);
+                setReadMore(notify, data, 2);
             }
         }
 
@@ -599,7 +599,7 @@ public class Fragment_player extends Fragment
 
     public static void setReadMore(final TextView view, final String text, final int maxLine) {
         final Context context = view.getContext();
-        final String expanedText = " ... 더보기";
+        final String expanedText = "더보기";
 
         if (view.getTag() != null && view.getTag().equals(text)) { //Tag로 전값 의 text를 비교하여똑같으면 실행하지 않음.
             return;

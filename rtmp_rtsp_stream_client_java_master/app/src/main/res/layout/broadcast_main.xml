@@ -162,7 +162,6 @@
 
             android:textColor="#fff"
             android:textSize="15sp"
-            android:singleLine="true"
             android:focusableInTouchMode="true"
 
             android:text="0123456789\n0123456789"/>
