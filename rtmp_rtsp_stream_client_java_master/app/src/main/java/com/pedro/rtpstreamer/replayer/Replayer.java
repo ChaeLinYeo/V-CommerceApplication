@@ -129,7 +129,7 @@ public class Replayer extends AppCompatActivity
         loadingPanel = findViewById(R.id.ReplayLoadingPanel);
         currTimeline = findViewById(R.id.curr_category);
         FollowButton = findViewById(R.id.refollowButton);
-        
+
         DeclareButton = findViewById(R.id.redeclare);
         heartimg = findViewById(R.id.imageView);
         eyeimg = findViewById(R.id.eyeImage);
