@@ -1,41 +1,22 @@
 package com.pedro.rtpstreamer.player;
 
-import android.app.AlertDialog;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ListView;
 
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
-import com.kakao.kakaolink.v2.KakaoLinkResponse;
-import com.kakao.kakaolink.v2.KakaoLinkService;
-import com.kakao.message.template.ButtonObject;
-import com.kakao.message.template.ContentObject;
-import com.kakao.message.template.FeedTemplate;
-import com.kakao.message.template.LinkObject;
-import com.kakao.message.template.SocialObject;
-import com.kakao.network.ErrorResult;
-import com.kakao.network.callback.ResponseCallback;
-import com.kakao.util.helper.log.Logger;
 import com.pedro.rtpstreamer.R;
 import com.pedro.rtpstreamer.utils.CustomViewPager;
 import com.pedro.rtpstreamer.utils.SectionPageAdapter;
-import com.pedro.rtpstreamer.utils.fragmentListener;
+import com.pedro.rtpstreamer.utils.FragmentListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
-public class FullVideoFragment extends Fragment
-    implements fragmentListener {
+public class FullVideoFragment extends Fragment {
 
     private String TAG = "Full";
 
@@ -44,21 +25,14 @@ public class FullVideoFragment extends Fragment
 
     private ArrayList<String> mPlayList;
     private ArrayList<String> mPlaypreviewList;
-//    private ArrayList<Integer> mPlayChannel;
-//    private ArrayList<String> mChatUrl;
 
     private int curFragment = -1;
+    private FragmentListener fragmentListener;
 
-//    FullVideoFragment(ArrayList<String> mPlayList, ArrayList<String> mPlaypreviewList, ArrayList<Integer> mPlayChannel, ArrayList<String> mChatUrl){ //package-private
-//        this.mPlayList = mPlayList;
-//        this.mPlaypreviewList = mPlaypreviewList;
-//        this.mPlayChannel = mPlayChannel;
-//        this.mChatUrl = mChatUrl;
-//    }
-
-    FullVideoFragment(ArrayList<String> mPlayList, ArrayList<String> mPlaypreviewList){ //package-private
+    FullVideoFragment(ArrayList<String> mPlayList, ArrayList<String> mPlaypreviewList, FragmentListener fragmentListener1){ //package-private
         this.mPlayList = mPlayList;
         this.mPlaypreviewList = mPlaypreviewList;
+        this.fragmentListener = fragmentListener1;
     }
 
     @Override
@@ -111,6 +85,7 @@ public class FullVideoFragment extends Fragment
             @Override
             public void run() {
                 {
+                    fragmentListener.loadComplete();
                     Log.d("startFull","run viewPager");
                     viewPager.setCurrentItem(curFragment);
                     playStart(curFragment, mPlayList.get(curFragment), mPlaypreviewList.get(curFragment));
@@ -131,21 +106,6 @@ public class FullVideoFragment extends Fragment
     void closeFull(){ //package-private
         Fragment_player fp = (Fragment_player)(adapter.getFragmentList().get(this.curFragment));
         fp.closeBroadcast();
-    }
-
-    @Override
-    public void createComplete(int numFrag){
-//        Log.d("create",""+numFrag+"/"+curFragment);
-//        if(numFrag == curFragment) {
-//            createAllFrag = true;
-//            Log.d("complete","complete");
-//            playStart(curFragment, mPlayList.get(curFragment), mPlaypreviewList.get(curFragment));
-//        }
-    }
-
-    @Override
-    public void popUp(View view){
-
     }
 
 }

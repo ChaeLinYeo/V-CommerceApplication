@@ -12,6 +12,7 @@ import com.pedro.rtpstreamer.R;
 import com.pedro.rtpstreamer.server.SendbirdConnection;
 import com.pedro.rtpstreamer.server.SendbirdListner;
 import com.pedro.rtpstreamer.utils.StaticVariable;
+import com.pedro.rtpstreamer.utils.FragmentListener;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -117,8 +118,8 @@ public class PlayerMain extends AppCompatActivity
                 return;
         }
 
+        findViewById(R.id.PlayerLoadingPanel).setVisibility(View.VISIBLE);
         SendbirdConnection.getCtrl();
-
     }
 
     public void setBroadcast(){
@@ -187,7 +188,7 @@ public class PlayerMain extends AppCompatActivity
     public void setFull(){
         Log.d("setFull", ""+resourceUri.size());
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        FullVideoFragment frag = new FullVideoFragment(resourceUri, previewUri);
+        FullVideoFragment frag = new FullVideoFragment(resourceUri, previewUri, fragmentListener);
         fragmentTransaction.add(R.id.fullVideo, frag, "fullFragment");
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
@@ -206,6 +207,14 @@ public class PlayerMain extends AppCompatActivity
             Log.d("PKR","getchannel complete");
             if (SendbirdConnection.isLive(selectedChannelNum)) setBroadcast();
             else Toast.makeText(getApplicationContext(), "This channel is not onAir", Toast.LENGTH_LONG).show();
+        }
+    };
+
+    private FragmentListener fragmentListener = new FragmentListener() {
+        @Override
+        public void loadComplete() {
+            super.loadComplete();
+            findViewById(R.id.PlayerLoadingPanel).setVisibility(View.GONE);
         }
     };
 }

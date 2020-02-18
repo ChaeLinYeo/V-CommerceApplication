@@ -3,7 +3,6 @@ package com.pedro.rtpstreamer.player;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,8 +13,6 @@ import androidx.fragment.app.FragmentActivity;
 
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -36,7 +33,6 @@ import com.pedro.rtpstreamer.server.SendbirdConnection;
 import com.pedro.rtpstreamer.server.SendbirdListner;
 import com.pedro.rtpstreamer.utils.ExampleChatController;
 import com.pedro.rtpstreamer.utils.PopupManager;
-import com.pedro.rtpstreamer.utils.fragmentListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
@@ -85,18 +81,9 @@ public class Fragment_player extends Fragment
     private int fragPosition;
     private int channelNum;
 
-    private fragmentListener cL;
     private PopupManager pm;
 
     private int onoff = 1; //1은 on, 0은 off
-
-//    Fragment_player(int fragPosition, int channelNum, String mChannelUrl){
-//        this.fragPosition = fragPosition;
-//        this.channelNum = channelNum;
-//        this.mChannelUrl = mChannelUrl;
-//
-//        Log.d("fragment",""+fragPosition+"/"+channelNum+"/"+mChannelUrl);
-//    }
 
     Fragment_player(int fragPosition){
         this.fragPosition = fragPosition;
@@ -109,12 +96,6 @@ public class Fragment_player extends Fragment
         super.onAttach(context);
         mContext = context;
         Log.d(TAG1, "onAttach");
-
-        try {
-            cL = (fragmentListener) getParentFragment();
-        } catch (ClassCastException castException) {
-            Log.d("onAttach","classCastException");
-        }
     }
 
     @Override
@@ -149,9 +130,6 @@ public class Fragment_player extends Fragment
         notify = view.findViewById(R.id.broadcast_notice);
         cover = view.findViewById(R.id.imageButton3);
         streamer_nickname = view.findViewById(R.id.nickname);
-
-        ///////////////////////////////////////
-        cL.createComplete(fragPosition);
 
         return view;
     }
@@ -240,6 +218,7 @@ public class Fragment_player extends Fragment
 
     void playStart(String resourceUri,String id, final String previewUri){ //package private
         init();
+        Log.d("PKR","fragment start");
         Picasso.with(getActivity()).load(previewUri).into(img_preview);
         img_preview.setVisibility(View.VISIBLE);
         if (mBroadcastPlayer != null) mBroadcastPlayer.close();
