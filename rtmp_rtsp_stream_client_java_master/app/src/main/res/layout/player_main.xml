@@ -97,7 +97,6 @@
             android:layout_weight="1"
             android:layout_marginHorizontal="10dp"
             android:layout_marginBottom="10dp"/>
-
     </LinearLayout>
 
     <LinearLayout
@@ -106,5 +105,34 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:visibility="visible"/>
+
+    <RelativeLayout
+        android:id="@+id/PlayerLoadingPanel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:gravity="center"
+        android:visibility="gone"
+        android:layout_gravity="center">
+
+        <ProgressBar
+            android:id="@+id/PlayerLoadingProgress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:layout_margin="10dp"
+            android:layout_alignLeft="@id/PlayerLoadingText"
+            android:layout_alignRight="@id/PlayerLoadingText"/>
+
+        <TextView
+            android:id="@+id/PlayerLoadingText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/PlayerLoadingProgress"
+            android:gravity="center_horizontal"
+            android:text="방송 플레이어를 준비중입니다\n 잠시만 기다려주세요"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
 
 </FrameLayout>

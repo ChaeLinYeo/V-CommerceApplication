@@ -3,7 +3,6 @@ package com.pedro.rtpstreamer.player;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -20,8 +19,6 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -46,7 +43,6 @@ import com.pedro.rtpstreamer.server.SendbirdConnection;
 import com.pedro.rtpstreamer.server.SendbirdListner;
 import com.pedro.rtpstreamer.utils.ExampleChatController;
 import com.pedro.rtpstreamer.utils.PopupManager;
-import com.pedro.rtpstreamer.utils.fragmentListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
@@ -101,19 +97,10 @@ public class Fragment_player extends Fragment
     private int fragPosition;
     private int channelNum;
 
-    private fragmentListener cL;
     private PopupManager pm;
 
     private int onoff = 1; //1은 on, 0은 off
     private int back_onoff = 1; //1은 on, 0은 off
-
-//    Fragment_player(int fragPosition, int channelNum, String mChannelUrl){
-//        this.fragPosition = fragPosition;
-//        this.channelNum = channelNum;
-//        this.mChannelUrl = mChannelUrl;
-//
-//        Log.d("fragment",""+fragPosition+"/"+channelNum+"/"+mChannelUrl);
-//    }
 
     Fragment_player(int fragPosition){
         this.fragPosition = fragPosition;
@@ -126,12 +113,6 @@ public class Fragment_player extends Fragment
         super.onAttach(context);
         mContext = context;
         Log.d(TAG1, "onAttach");
-
-        try {
-            cL = (fragmentListener) getParentFragment();
-        } catch (ClassCastException castException) {
-            Log.d("onAttach","classCastException");
-        }
     }
 
     @Override
@@ -173,9 +154,6 @@ public class Fragment_player extends Fragment
 
         cover = view.findViewById(R.id.imageButton3);
         streamer_nickname = view.findViewById(R.id.nickname);
-
-        ///////////////////////////////////////
-        cL.createComplete(fragPosition);
 
         return view;
     }
@@ -294,6 +272,7 @@ public class Fragment_player extends Fragment
 
     void playStart(String resourceUri,String id, final String previewUri){ //package private
         init();
+        Log.d("PKR","fragment start");
         Picasso.with(getActivity()).load(previewUri).into(img_preview);
         img_preview.setVisibility(View.VISIBLE);
         if (mBroadcastPlayer != null) mBroadcastPlayer.close();
@@ -380,7 +359,6 @@ public class Fragment_player extends Fragment
             case "notice":
                 notify.setText(data);
 //                setReadMore(notify, data, 2);
-                //mExampleChatController.add2(Data);
                 break;
             case "alarm":
                 AlarmPlayer(data,3);
@@ -400,7 +378,6 @@ public class Fragment_player extends Fragment
     }
 
     public void EventPlayer(String data) {
-        // "cn="+e_n+"ci="+e_a+"\nTimeLimit="+e_t_h+":"+e_t_m+":"+e_t_s;
         Log.d("event",""+data);
         int index = 3;
         int i = 0;
@@ -469,7 +446,6 @@ public class Fragment_player extends Fragment
     }
 
     public void LikePlayer(int newheart){
-        //하트를 재생하라는 명령을 받을때마다 하트의 개수를 동기화
         if(toggleSongLikeAnimButton())  {
             heart.setText(Integer.toString(newheart));
         }
@@ -551,8 +527,6 @@ public class Fragment_player extends Fragment
         public void loadInitialMessage(String type, String data){
             if(type.equals("chat")){
                 mExampleChatController.add(data);
-            }else if(type.equals("alarm")){
-                AlarmPlayer(data,2);//alarm.setText(data);
             }else if(type.equals(("notice"))){
                 notify.setText(data);
 //                setReadMore(notify, data, 2);
@@ -573,7 +547,6 @@ public class Fragment_player extends Fragment
         @Override
         public void Imbanned(){
             super.Imbanned();
-            Log.d("ban", "cantchat");
             canChat = false;
             setUseableEditText(mMessageEditText,false);
         }
@@ -581,7 +554,6 @@ public class Fragment_player extends Fragment
         @Override
         public void Imunbanned(){
             super.Imunbanned();
-            Log.d("notban", "canchat");
             canChat = true;
             setUseableEditText(mMessageEditText,true);
             mMessageEditText.setText("");
