@@ -183,24 +183,6 @@ public class SendbirdConnection {
             }
 
             @Override
-            public void onMetaDataCreated(BaseChannel channel, Map<String, String> metaDataMap) {
-                super.onMetaDataCreated(channel, metaDataMap);
-                setCategory(metaDataMap);
-            }
-
-            @Override
-            public void onMetaDataUpdated(BaseChannel channel, Map<String, String> metaDataMap) {
-                super.onMetaDataUpdated(channel, metaDataMap);
-                setCategory(metaDataMap);
-            }
-
-            @Override
-            public void onMetaDataDeleted(BaseChannel channel, List<String> keys) {
-                super.onMetaDataDeleted(channel, keys);
-                PopupManager.setCategory(keys);
-            }
-
-            @Override
             public void onChannelChanged(BaseChannel channel) {
                 super.onChannelChanged(channel);
                 sendbirdListner.onTitleChanged(channel.getName());
@@ -302,14 +284,15 @@ public class SendbirdConnection {
             public void onUserEntered(OpenChannel channel, User user) {
                 super.onUserEntered(channel, user);
                 viewNum++;
-                getUserList(true);
+                //getUserList(true);
                 sendbirdListner.userenter(user.getNickname());
             }
 
             @Override
             public void onUserExited(OpenChannel channel, User user) {
                 super.onUserExited(channel, user);
-                getUserList(true);
+                //getUserList(true);
+                sendbirdListner.userenter(user.getNickname());
             }
 
             @Override
