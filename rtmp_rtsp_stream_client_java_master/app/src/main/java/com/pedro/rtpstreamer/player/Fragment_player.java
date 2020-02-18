@@ -64,6 +64,7 @@ public class Fragment_player extends Fragment
     private ImageButton ShareButton;
     private ImageView heartimg, eyeimg;
     private LinearLayout BottomBar;
+    private RelativeLayout titleEtc;
 
     private ExampleChatController mExampleChatController;
 
@@ -89,6 +90,7 @@ public class Fragment_player extends Fragment
     private TextView liveTextView;
     private ImageView img_preview;
     private SurfaceViewWithAutoAR mVideoSurfaceView;
+    private RelativeLayout background;
 
     private int fragPosition;
     private int channelNum;
@@ -132,6 +134,8 @@ public class Fragment_player extends Fragment
         heartimg = view.findViewById(R.id.imageView);
         eyeimg = view.findViewById(R.id.heartImage);
         BottomBar = view.findViewById(R.id.layout_open_chat_chatbox);
+        titleEtc = view.findViewById(R.id.titleEtc);
+        background = view.findViewById(R.id.rl_Live);
 
         view.findViewById(R.id.buy_button).setOnClickListener(this);
         view.findViewById(R.id.declare).setOnClickListener(this);
@@ -195,33 +199,35 @@ public class Fragment_player extends Fragment
 
         title.setOnClickListener((View view) -> {
             if(onoff == 1){
-                mExampleChatController.hide();
-                system_notice.setVisibility(View.GONE);
-                FollowButton.setVisibility(View.GONE);
-                DeclareButton.setVisibility(View.GONE);
-                ShareButton.setVisibility(View.GONE);
-                notify.setVisibility(View.GONE);
-                heartimg.setVisibility(View.GONE);
-                eyeimg.setVisibility(View.GONE);
-                BottomBar.setVisibility(View.GONE);
-                heart.setVisibility(View.GONE);
-                people.setVisibility(View.GONE);
-                songLikeAnimButton.setVisibility(View.GONE);
+//                mExampleChatController.hide();
+//                system_notice.setVisibility(View.GONE);
+//                FollowButton.setVisibility(View.GONE);
+//                DeclareButton.setVisibility(View.GONE);
+//                ShareButton.setVisibility(View.GONE);
+//                notify.setVisibility(View.GONE);
+//                heartimg.setVisibility(View.GONE);
+//                eyeimg.setVisibility(View.GONE);
+//                BottomBar.setVisibility(View.GONE);
+//                heart.setVisibility(View.GONE);
+//                people.setVisibility(View.GONE);
+//                songLikeAnimButton.setVisibility(View.GONE);
+                background.setVisibility(View.GONE);
                 onoff = 0;
             }
             else if(onoff == 0){
-                mExampleChatController.show();
-                system_notice.setVisibility(View.VISIBLE);
-                FollowButton.setVisibility(View.VISIBLE);
-                DeclareButton.setVisibility(View.VISIBLE);
-                ShareButton.setVisibility(View.VISIBLE);
-                notify.setVisibility(View.VISIBLE);
-                heartimg.setVisibility(View.VISIBLE);
-                eyeimg.setVisibility(View.VISIBLE);
-                BottomBar.setVisibility(View.VISIBLE);
-                heart.setVisibility(View.VISIBLE);
-                people.setVisibility(View.VISIBLE);
-                songLikeAnimButton.setVisibility(View.VISIBLE);
+//                mExampleChatController.show();
+//                system_notice.setVisibility(View.VISIBLE);
+//                FollowButton.setVisibility(View.VISIBLE);
+//                DeclareButton.setVisibility(View.VISIBLE);
+//                ShareButton.setVisibility(View.VISIBLE);
+//                notify.setVisibility(View.VISIBLE);
+//                heartimg.setVisibility(View.VISIBLE);
+//                eyeimg.setVisibility(View.VISIBLE);
+//                BottomBar.setVisibility(View.VISIBLE);
+//                heart.setVisibility(View.VISIBLE);
+//                people.setVisibility(View.VISIBLE);
+//                songLikeAnimButton.setVisibility(View.VISIBLE);
+                background.setVisibility(View.VISIBLE);
                 onoff = 1;
             }
         });
@@ -229,39 +235,43 @@ public class Fragment_player extends Fragment
 
         mVideoSurfaceView.setOnClickListener((View view) -> {
             if(back_onoff == 1){
-                mExampleChatController.hide();
-                system_notice.setVisibility(View.GONE);
-                FollowButton.setVisibility(View.GONE);
-                DeclareButton.setVisibility(View.GONE);
-                ShareButton.setVisibility(View.GONE);
-                notify.setVisibility(View.GONE);
-                heartimg.setVisibility(View.GONE);
-                eyeimg.setVisibility(View.GONE);
-                BottomBar.setVisibility(View.GONE);
-                heart.setVisibility(View.GONE);
-                people.setVisibility(View.GONE);
-                songLikeAnimButton.setVisibility(View.GONE);
-                title.setVisibility(View.GONE);
-                streamer_nickname.setVisibility(View.GONE);
-                cover.setVisibility(View.GONE);
+//                mExampleChatController.hide();
+//                system_notice.setVisibility(View.GONE);
+//                FollowButton.setVisibility(View.GONE);
+//                DeclareButton.setVisibility(View.GONE);
+//                ShareButton.setVisibility(View.GONE);
+//                notify.setVisibility(View.GONE);
+//                heartimg.setVisibility(View.GONE);
+//                eyeimg.setVisibility(View.GONE);
+//                BottomBar.setVisibility(View.GONE);
+//                heart.setVisibility(View.GONE);
+//                people.setVisibility(View.GONE);
+//                songLikeAnimButton.setVisibility(View.GONE);
+//                title.setVisibility(View.GONE);
+//                streamer_nickname.setVisibility(View.GONE);
+//                cover.setVisibility(View.GONE);
+                titleEtc.setVisibility(View.GONE);
+                background.setVisibility(View.GONE);
                 back_onoff = 0;
             }
             else if(back_onoff == 0){
-                mExampleChatController.hide();
-                system_notice.setVisibility(View.VISIBLE);
-                FollowButton.setVisibility(View.VISIBLE);
-                DeclareButton.setVisibility(View.VISIBLE);
-                ShareButton.setVisibility(View.VISIBLE);
-                notify.setVisibility(View.VISIBLE);
-                heartimg.setVisibility(View.VISIBLE);
-                eyeimg.setVisibility(View.VISIBLE);
-                BottomBar.setVisibility(View.VISIBLE);
-                heart.setVisibility(View.VISIBLE);
-                people.setVisibility(View.VISIBLE);
-                songLikeAnimButton.setVisibility(View.VISIBLE);
-                title.setVisibility(View.VISIBLE);
-                streamer_nickname.setVisibility(View.VISIBLE);
-                cover.setVisibility(View.VISIBLE);
+//                mExampleChatController.hide();
+//                system_notice.setVisibility(View.VISIBLE);
+//                FollowButton.setVisibility(View.VISIBLE);
+//                DeclareButton.setVisibility(View.VISIBLE);
+//                ShareButton.setVisibility(View.VISIBLE);
+//                notify.setVisibility(View.VISIBLE);
+//                heartimg.setVisibility(View.VISIBLE);
+//                eyeimg.setVisibility(View.VISIBLE);
+//                BottomBar.setVisibility(View.VISIBLE);
+//                heart.setVisibility(View.VISIBLE);
+//                people.setVisibility(View.VISIBLE);
+//                songLikeAnimButton.setVisibility(View.VISIBLE);
+//                title.setVisibility(View.VISIBLE);
+//                streamer_nickname.setVisibility(View.VISIBLE);
+//                cover.setVisibility(View.VISIBLE);
+                titleEtc.setVisibility(View.VISIBLE);
+                background.setVisibility(View.VISIBLE);
                 back_onoff = 1;
             }
         });
@@ -550,6 +560,7 @@ public class Fragment_player extends Fragment
                 mExampleChatController.add(data);
             }else if(type.equals(("notice"))){
                 notify.setText(data);
+//                setReadMore(notify, data, 2);
             }
         }
 
@@ -581,7 +592,7 @@ public class Fragment_player extends Fragment
 
     };
 
-    ////////////////일단 냅둠
+
     public static void setReadMore(final TextView view, final String text, final int maxLine) {
         final Context context = view.getContext();
         final String expanedText = " ... 더보기";
@@ -632,4 +643,5 @@ public class Fragment_player extends Fragment
             }
         });
     }
+
 }
