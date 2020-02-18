@@ -325,8 +325,8 @@ public class BroadcastMain extends AppCompatActivity
         LM.savefinal(systemtime,SendbirdConnection.getUserId(),"user_id");
         LM.LMEnd();
         LM_time.LMEnd();
-        AWSConnection.uploadFile(broadcastManager.getBroadcastName()+".txt", LM.getFileName(), this);
-        AWSConnection.uploadFile(broadcastManager.getBroadcastName()+"_timeLine.txt", LM_time.getFileName(), this);
+        AWSConnection.uploadFile(broadcastManager.getBroadcastName()+".txt", LM.getFileName());
+        AWSConnection.uploadFile(broadcastManager.getBroadcastName()+"_timeLine.txt", LM_time.getFileName());
         PM.clearCategoryI();
         PM.clearSCategory();
     }

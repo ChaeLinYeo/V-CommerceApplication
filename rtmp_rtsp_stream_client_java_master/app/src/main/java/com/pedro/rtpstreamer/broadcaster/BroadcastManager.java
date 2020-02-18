@@ -211,7 +211,7 @@ public class BroadcastManager
         if(rtmpCamera1.isRecording()) {
             rtmpCamera1.stopRecord();
             currentDateAndTime = "";
-            AWSConnection.uploadFile(broadcastName+".mp4", broadcastPath, pContext);
+            AWSConnection.uploadFile(broadcastName+".mp4", broadcastPath);
         }
     }
 
