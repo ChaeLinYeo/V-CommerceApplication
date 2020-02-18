@@ -167,6 +167,13 @@ public class SendbirdConnection {
             public void onUserEntered(OpenChannel channel, User user) {
                 super.onUserEntered(channel, user);
                 sendbirdListner.userenter(user.getNickname());
+                sendbirdListner.updateUser(1);
+            }
+
+            @Override
+            public void onUserExited(OpenChannel channel, User user) {
+                super.onUserExited(channel, user);
+                sendbirdListner.updateUser(-1);
             }
 
             @Override
@@ -349,9 +356,10 @@ public class SendbirdConnection {
         UserListQuery userListQuery = mOpenChannel.createParticipantListQuery();
         userListQuery.next((List<User> list, SendBirdException e) -> {
             if (e != null) return;
-            if(isOperator) {UserList = setUserList(list);
-                sendbirdListner.getUserListComplete(Integer.toString(UserList.size()));}
-            else {
+            if(isOperator) {
+                UserList = setUserList(list);
+                sendbirdListner.getUserListComplete(Integer.toString(UserList.size()));
+            }else {
                 UserList = list;
                 sendbirdListner.getUserListComplete(Integer.toString(UserList.size()-1));
             }
@@ -390,9 +398,7 @@ public class SendbirdConnection {
         updateMetaData(mOpenChannel, item, item);
     }
 
-    public static void removeCategory(String item){
-        mOpenChannel.deleteMetaData(item, (SendBirdException e) -> {});
-    }
+    public static void removeCategory(String item){ mOpenChannel.deleteMetaData(item, (SendBirdException e) -> {}); }
 
     public static void selectCategory(String item){
         updateMetaData(mOpenChannel, item, "select");

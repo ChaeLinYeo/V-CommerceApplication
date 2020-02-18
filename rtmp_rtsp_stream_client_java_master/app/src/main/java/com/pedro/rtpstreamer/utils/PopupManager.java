@@ -452,7 +452,7 @@ public class PopupManager {
             searchlist.addAll(alllist);
         }else {
             for(int i = 0;i < alllist.size(); i++){
-                if (alllist.get(i).toLowerCase().contains(charText)) {
+                if (alllist.get(i).toLowerCase().contains(charText) || alllist.get(i).toUpperCase().contains(charText)) {
                     // 검색된 데이터를 리스트에 추가한다.
                     searchlist.add(alllist.get(i));
                 }

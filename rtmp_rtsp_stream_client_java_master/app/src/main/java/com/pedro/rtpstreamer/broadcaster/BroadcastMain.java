@@ -390,7 +390,11 @@ public class BroadcastMain extends AppCompatActivity
             super.getCtrlComplete();
             SendbirdConnection.getBroadcastChannel();
         }
-
+        @Override
+        public void updateUser(int inout){
+            int current = Integer.parseInt(people.getText().toString());
+            people.setText(Integer.toString(current+inout));
+        }
         @Override
         public void userenter(String enterduser) {
             super.userenter(enterduser);

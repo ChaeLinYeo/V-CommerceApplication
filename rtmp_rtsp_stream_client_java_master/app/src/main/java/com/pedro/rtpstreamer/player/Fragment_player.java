@@ -29,6 +29,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.bambuser.broadcaster.BroadcastPlayer;
@@ -329,8 +330,12 @@ public class Fragment_player extends Fragment
                 break;
 
             case R.id.HeartIcon:
-                SendbirdConnection.sendUserMessage("", "like");
-                SendbirdConnection.increaseMetaCounters();
+                if(canChat) {
+                    SendbirdConnection.sendUserMessage("", "like");
+                    SendbirdConnection.increaseMetaCounters();
+                }else{
+                    Toast.makeText(mContext.getApplicationContext(), "X", Toast.LENGTH_LONG).show();
+                }
                 break;
         }
     }
