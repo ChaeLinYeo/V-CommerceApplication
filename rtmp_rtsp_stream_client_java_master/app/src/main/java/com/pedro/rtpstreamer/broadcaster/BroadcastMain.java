@@ -454,18 +454,24 @@ public class BroadcastMain extends AppCompatActivity
         }
     };
 
+    int uploaded = 0;
+
     private AWSListner awsListner = new AWSListner() {
         @Override
         public void startUpload(){
             findViewById(R.id.BroadcastLoadingPanel).setVisibility(View.VISIBLE);
+            uploaded = 0;
         }
 
         @Override
         public void uploadComplete(boolean success) {
             super.uploadComplete(success);
             if(success) {
-                findViewById(R.id.BroadcastLoadingPanel).setVisibility(View.GONE);
-                Toast.makeText(BroadcastMain.this, "정상적으로 저장되었습니다.", Toast.LENGTH_SHORT).show();
+                uploaded++;
+                if(uploaded==3) {
+                    findViewById(R.id.BroadcastLoadingPanel).setVisibility(View.GONE);
+                    Toast.makeText(BroadcastMain.this, "정상적으로 저장되었습니다.", Toast.LENGTH_SHORT).show();
+                }
             } else {
                 findViewById(R.id.BroadcastLoadingPanel).setVisibility(View.GONE);
                 Toast.makeText(BroadcastMain.this, "저장에 실패하였습니다. \n관리자에게 문의해주세요", Toast.LENGTH_SHORT).show();
