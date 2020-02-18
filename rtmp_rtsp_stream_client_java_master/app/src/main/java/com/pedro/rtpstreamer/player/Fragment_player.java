@@ -103,14 +103,6 @@ public class Fragment_player extends Fragment
 
     private int onoff = 1; //1은 on, 0은 off
 
-//    Fragment_player(int fragPosition, int channelNum, String mChannelUrl){
-//        this.fragPosition = fragPosition;
-//        this.channelNum = channelNum;
-//        this.mChannelUrl = mChannelUrl;
-//
-//        Log.d("fragment",""+fragPosition+"/"+channelNum+"/"+mChannelUrl);
-//    }
-
     Fragment_player(int fragPosition){
         this.fragPosition = fragPosition;
         this.channelNum = SendbirdConnection.getLiveChannelNum(this.fragPosition);
@@ -362,7 +354,6 @@ public class Fragment_player extends Fragment
             case "notice":
                 notify.setText(data);
 //                setReadMore(notify, data, 2);
-                //mExampleChatController.add2(Data);
                 break;
             case "alarm":
                 AlarmPlayer(data,3);
@@ -382,7 +373,6 @@ public class Fragment_player extends Fragment
     }
 
     public void EventPlayer(String data) {
-        // "cn="+e_n+"ci="+e_a+"\nTimeLimit="+e_t_h+":"+e_t_m+":"+e_t_s;
         Log.d("event",""+data);
         int index = 3;
         int i = 0;
@@ -451,7 +441,6 @@ public class Fragment_player extends Fragment
     }
 
     public void LikePlayer(int newheart){
-        //하트를 재생하라는 명령을 받을때마다 하트의 개수를 동기화
         if(toggleSongLikeAnimButton())  {
             heart.setText(Integer.toString(newheart));
         }
@@ -533,8 +522,6 @@ public class Fragment_player extends Fragment
         public void loadInitialMessage(String type, String data){
             if(type.equals("chat")){
                 mExampleChatController.add(data);
-            }else if(type.equals("alarm")){
-                AlarmPlayer(data,2);//alarm.setText(data);
             }else if(type.equals(("notice"))){
                 notify.setText(data);
 //                setReadMore(notify, data, 2);
@@ -555,7 +542,6 @@ public class Fragment_player extends Fragment
         @Override
         public void Imbanned(){
             super.Imbanned();
-            Log.d("ban", "cantchat");
             canChat = false;
             setUseableEditText(mMessageEditText,false);
         }
@@ -563,7 +549,6 @@ public class Fragment_player extends Fragment
         @Override
         public void Imunbanned(){
             super.Imunbanned();
-            Log.d("notban", "canchat");
             canChat = true;
             setUseableEditText(mMessageEditText,true);
             mMessageEditText.setText("");
