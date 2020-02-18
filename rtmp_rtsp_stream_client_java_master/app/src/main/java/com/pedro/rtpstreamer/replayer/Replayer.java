@@ -90,6 +90,9 @@ public class Replayer extends AppCompatActivity
     private boolean is_follow = false;
     private Button FollowButton;	//팔로우버튼
 
+    private TextView currentPlayTime;
+    private TextView maxPlayTime;
+
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -117,6 +120,8 @@ public class Replayer extends AppCompatActivity
         currTimeline = findViewById(R.id.curr_category);
         OnOffButton = findViewById(R.id.btn_onoff2);
         FollowButton = findViewById(R.id.refollowButton);
+        currentPlayTime = findViewById(R.id.currentPlayTime);
+        maxPlayTime = findViewById(R.id.maxPlayTime);
 
         ECC = new ExampleChatController(context, listView, R.layout.chatline, R.id.chat_line_textview, R.id.chat_line_timeview);
         ECC.show();
@@ -286,6 +291,17 @@ public class Replayer extends AppCompatActivity
         return p;
     }
 
+    public String getStringForTime(long time){
+        int s = (int) time/1000;
+        int m = s>60 ? s/60 : 0;
+        if(m>0) s = s%60;
+
+        String mm = m<10 ? "0"+m : ""+m;
+        String ss = s<10 ? "0"+s : ""+s;
+
+        return mm+":"+ss;
+    }
+
     //////////////////////////////////////////////
     //handler for play uri
     @SuppressLint("HandlerLeak")
@@ -316,10 +332,15 @@ public class Replayer extends AppCompatActivity
                                     Log.d("mediaP","playing");
                                     playBtn.setText("stop");
                                     mediaState=1;
+                                    long dd = mMediaPlayer.getLength();
+                                    Log.d("PKRD",""+dd);
+                                    maxPlayTime.setText(getStringForTime(dd));
                                     break;
 
                                 case MediaPlayer.Event.TimeChanged:
                                     long d = mMediaPlayer.getTime(); //ms
+                                    currentPlayTime.setText(getStringForTime(d));
+
                                     Log.d("PKRE","time : "+d);
                                     if(nextIndex < CL.size()-2) {
                                         Pair cp = CL.get(nextIndex);
@@ -356,11 +377,6 @@ public class Replayer extends AppCompatActivity
                                     break;
 
                                 case MediaPlayer.Event.Stopped:
-//                                    Log.d("mHandler","stop");
-//                                    playBtn.setText("start");
-//                                    seekBar.setProgress(1000);
-//                                    mediaState=0;
-//                                    byTimeLine = false;
                                     break;
                             }
                         });

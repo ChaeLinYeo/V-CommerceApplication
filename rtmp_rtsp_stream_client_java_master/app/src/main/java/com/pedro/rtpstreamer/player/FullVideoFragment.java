@@ -81,16 +81,11 @@ public class FullVideoFragment extends Fragment {
     void startFull(int position){ //package private
         Log.d(TAG,"startFull : "+position);
         this.curFragment = position;
-        viewPager.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                {
-                    fragmentListener.loadComplete();
-                    Log.d("startFull","run viewPager");
-                    viewPager.setCurrentItem(curFragment);
-                    playStart(curFragment, mPlayList.get(curFragment), mPlaypreviewList.get(curFragment));
-                }
-            }
+        viewPager.postDelayed(() -> {
+            fragmentListener.loadComplete();
+            Log.d("startFull","run viewPager");
+            viewPager.setCurrentItem(curFragment);
+            playStart(curFragment, mPlayList.get(curFragment), mPlaypreviewList.get(curFragment));
         }, 100);
     }
 

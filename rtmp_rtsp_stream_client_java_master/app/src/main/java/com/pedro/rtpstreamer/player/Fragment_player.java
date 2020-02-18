@@ -64,7 +64,6 @@ public class Fragment_player extends Fragment
     private ImageView heartimg, eyeimg;
     private LinearLayout BottomBar;
 
-
     private ExampleChatController mExampleChatController;
 
     private Context mContext;
