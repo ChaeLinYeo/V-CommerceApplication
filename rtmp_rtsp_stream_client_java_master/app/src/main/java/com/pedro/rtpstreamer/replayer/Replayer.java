@@ -17,6 +17,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
@@ -84,11 +87,18 @@ public class Replayer extends AppCompatActivity
     private boolean byTimeLine = false;
 
     private TextView currTimeline;
-    private Button OnOffButton;
     private int onoff = 1;
+    private int back_onoff = 1;
 
     private boolean is_follow = false;
     private Button FollowButton;	//팔로우버튼
+    private Button DeclareButton;
+    private ImageView heartimg, eyeimg;
+    private TextView people;
+    private ImageView cover;
+    private LinearLayout playbar, etc;
+    private FrameLayout heartlayout;
+    private SurfaceView surfaceView;
 
     private TextView currentPlayTime;
     private TextView maxPlayTime;
@@ -118,8 +128,16 @@ public class Replayer extends AppCompatActivity
         seekBar.setOnSeekBarChangeListener(seekBarChangeListener);
         loadingPanel = findViewById(R.id.ReplayLoadingPanel);
         currTimeline = findViewById(R.id.curr_category);
-        OnOffButton = findViewById(R.id.btn_onoff2);
         FollowButton = findViewById(R.id.refollowButton);
+        
+        DeclareButton = findViewById(R.id.redeclare);
+        heartimg = findViewById(R.id.imageView);
+        eyeimg = findViewById(R.id.eyeImage);
+        cover = findViewById(R.id.imageButton3);
+        playbar = findViewById(R.id.playbar);
+        etc = findViewById(R.id.etc);
+        heartlayout = findViewById(R.id.heartBox);
+        surfaceView = findViewById(R.id.video_layout);
         currentPlayTime = findViewById(R.id.currentPlayTime);
         maxPlayTime = findViewById(R.id.maxPlayTime);
 
@@ -127,17 +145,68 @@ public class Replayer extends AppCompatActivity
         ECC.show();
         ECC.add2("재방송 채팅입니다.");
 
-        //채팅과 각종알림 온오프
-        OnOffButton.setOnClickListener((View view) -> {
+
+        title.setOnClickListener((View view) -> {
             if(onoff == 1){
                 ECC.hide();
-                OnOffButton.setText("ON");
+                FollowButton.setVisibility(View.GONE);
+                DeclareButton.setVisibility(View.GONE);
+                heartimg.setVisibility(View.GONE);
+                heart.setVisibility(View.GONE);
+                eyeimg.setVisibility(View.GONE);
+                people.setVisibility(View.GONE);
+                playbar.setVisibility(View.GONE);
+                etc.setVisibility(View.GONE);
+                heartlayout.setVisibility(View.GONE);
                 onoff = 0;
             }
             else if(onoff == 0){
                 ECC.show();
-                OnOffButton.setText("OFF");
+                FollowButton.setVisibility(View.VISIBLE);
+                DeclareButton.setVisibility(View.VISIBLE);
+                heartimg.setVisibility(View.VISIBLE);
+                heart.setVisibility(View.VISIBLE);
+                eyeimg.setVisibility(View.VISIBLE);
+                people.setVisibility(View.VISIBLE);
+                playbar.setVisibility(View.VISIBLE);
+                etc.setVisibility(View.VISIBLE);
+                heartlayout.setVisibility(View.VISIBLE);
                 onoff = 1;
+            }
+        });
+
+        surfaceView.setOnClickListener((View view) -> {
+            if(back_onoff == 1){
+                ECC.hide();
+                cover.setVisibility(View.GONE);
+                title.setVisibility(View.GONE);
+                streamer_nickname.setVisibility(View.GONE);
+                FollowButton.setVisibility(View.GONE);
+                DeclareButton.setVisibility(View.GONE);
+                heartimg.setVisibility(View.GONE);
+                heart.setVisibility(View.GONE);
+                eyeimg.setVisibility(View.GONE);
+                people.setVisibility(View.GONE);
+                playbar.setVisibility(View.GONE);
+                etc.setVisibility(View.GONE);
+                heartlayout.setVisibility(View.GONE);
+                back_onoff = 0;
+            }
+            else if(back_onoff == 0){
+                ECC.show();
+                cover.setVisibility(View.VISIBLE);
+                title.setVisibility(View.VISIBLE);
+                streamer_nickname.setVisibility(View.VISIBLE);
+                FollowButton.setVisibility(View.VISIBLE);
+                DeclareButton.setVisibility(View.VISIBLE);
+                heartimg.setVisibility(View.VISIBLE);
+                heart.setVisibility(View.VISIBLE);
+                eyeimg.setVisibility(View.VISIBLE);
+                people.setVisibility(View.VISIBLE);
+                playbar.setVisibility(View.VISIBLE);
+                etc.setVisibility(View.VISIBLE);
+                heartlayout.setVisibility(View.VISIBLE);
+                back_onoff = 1;
             }
         });
 
@@ -263,8 +332,8 @@ public class Replayer extends AppCompatActivity
         USERID = CL.get(CL.size()-1).getMsg();
         streamer_nickname.setText(USERID);
         heart.setText(finalHeartNum);
-        TextView p = findViewById(R.id.peoplenum);
-        p.setText(finalViewNum);
+        people = findViewById(R.id.peoplenum);
+        people.setText(finalViewNum);
 
         for(int i=1; i<TL.size(); i++){
             timeLine.add(TL.get(i).getType());
@@ -317,7 +386,6 @@ public class Replayer extends AppCompatActivity
 
                         mMediaPlayer = new MediaPlayer(mLibVLC);
                         final Media media = new Media(mLibVLC, mUri);
-                        SurfaceView surfaceView = findViewById(R.id.video_layout);
                         mMediaPlayer.getVLCVout().setVideoView(surfaceView);
                         mMediaPlayer.getVLCVout().setWindowSize(surfaceView.getWidth(),surfaceView.getHeight());
                         mMediaPlayer.getVLCVout().attachViews(null);
