@@ -191,6 +191,7 @@
         </LinearLayout>
 
         <FrameLayout
+            android:id="@+id/heartlayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -263,16 +264,16 @@
                 android:layout_marginRight="10dp"
                 app:srcCompat="@drawable/buyicon" />
 
-            <Button
-                android:id="@+id/btn_onoff2"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="#fff"
-                android:clickable="true"
-                android:focusable="true"
-                android:text="OFF"
-                android:layout_marginRight="10dp"
-                android:textColor="#000000" />
+<!--            <Button-->
+<!--                android:id="@+id/btn_onoff2"-->
+<!--                android:layout_width="48dp"-->
+<!--                android:layout_height="48dp"-->
+<!--                android:background="#fff"-->
+<!--                android:clickable="true"-->
+<!--                android:focusable="true"-->
+<!--                android:text="OFF"-->
+<!--                android:layout_marginRight="10dp"-->
+<!--                android:textColor="#000000" />-->
 
             <Button
                 android:id="@+id/timelineButton"
