@@ -1,7 +1,6 @@
 package com.pedro.rtpstreamer.player;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -33,8 +32,6 @@ public class PlayerMain extends AppCompatActivity
 
     private ArrayList<String> resourceUri = new ArrayList<>();
     private ArrayList<String> previewUri = new ArrayList<>();
-//    private ArrayList<String> sendUrl = new ArrayList<>();
-//    private ArrayList<Integer> channelNumList = new ArrayList<>();
 
     private int curBroad = 0;
     private int fragPosition = -1;
@@ -59,7 +56,6 @@ public class PlayerMain extends AppCompatActivity
             full_ing = false;
             FullVideoFragment fvf = (FullVideoFragment) getSupportFragmentManager().findFragmentByTag("fullFragment");
             if(fvf != null) fvf.closeFull();
-            else Log.d("back pressed", "fvf is null");
         }
 
         super.onBackPressed();
@@ -143,7 +139,6 @@ public class PlayerMain extends AppCompatActivity
         setFull();
         FullVideoFragment fvf = (FullVideoFragment) getSupportFragmentManager().findFragmentByTag("fullFragment");
         if(fvf == null) {
-            Log.d("showBroadcast", "fvf is null");
             return;
         }
         fvf.startFull(fragPosition);
@@ -169,14 +164,12 @@ public class PlayerMain extends AppCompatActivity
                 String body = null;
                 try {
                     if(response.body() != null) body = response.body().string();
-                    else Log.d("request","null response");
                     JSONObject json = new JSONObject(body);
                     JSONArray results = json.getJSONArray("results");
                     JSONObject latestBroadcast = results.optJSONObject(0);
                     resource = latestBroadcast.optString("resourceUri");
                     resourceUri.set(position, resource);
                     previewUri.set(position, latestBroadcast.optString("preview"));
-                    Log.d("request","add complete");
                 } catch (Exception ignored) {}
                 curBroad--;
                 if(curBroad==0) runOnUiThread( () -> startBroadcastPlay());
@@ -185,7 +178,6 @@ public class PlayerMain extends AppCompatActivity
     }
 
     public void setFull(){
-        Log.d("setFull", ""+resourceUri.size());
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         FullVideoFragment frag = new FullVideoFragment(resourceUri, previewUri, fragmentListener);
         fragmentTransaction.add(R.id.fullVideo, frag, "fullFragment");
@@ -197,13 +189,11 @@ public class PlayerMain extends AppCompatActivity
     private SendbirdListner sendbirdListner = new SendbirdListner() {
         @Override
         public void getCtrlComplete() {
-            Log.d("PKR","getctrl complete");
             SendbirdConnection.getLiveChannelUrlList();
         }
 
         @Override
         public void getChannelComplete(boolean success) {
-            Log.d("PKR","getchannel complete");
             if (SendbirdConnection.isLive(selectedChannelNum)) {
                 findViewById(R.id.PlayerLoadingPanel).setVisibility(View.VISIBLE);
                 setBroadcast();
