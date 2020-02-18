@@ -235,11 +235,40 @@ public class Fragment_player extends Fragment
 
         BackGround.setOnClickListener((View view) -> {
             if(back_onoff == 1){
-                BackGroundResource.setVisibility(View.INVISIBLE);
+                mExampleChatController.hide();
+                system_notice.setVisibility(View.GONE);
+                FollowButton.setVisibility(View.GONE);
+                DeclareButton.setVisibility(View.GONE);
+                ShareButton.setVisibility(View.GONE);
+                notify.setVisibility(View.GONE);
+                heartimg.setVisibility(View.GONE);
+                eyeimg.setVisibility(View.GONE);
+                BottomBar.setVisibility(View.GONE);
+                heart.setVisibility(View.GONE);
+                people.setVisibility(View.GONE);
+                songLikeAnimButton.setVisibility(View.GONE);
+                title.setVisibility(View.GONE);
+                streamer_nickname.setVisibility(View.GONE);
+                cover.setVisibility(View.GONE);
                 back_onoff = 0;
             }
             else if(back_onoff == 0){
-                BackGroundResource.setVisibility(View.VISIBLE);
+//                BackGroundResource.setVisibility(View.VISIBLE);
+                mExampleChatController.hide();
+                system_notice.setVisibility(View.VISIBLE);
+                FollowButton.setVisibility(View.VISIBLE);
+                DeclareButton.setVisibility(View.VISIBLE);
+                ShareButton.setVisibility(View.VISIBLE);
+                notify.setVisibility(View.VISIBLE);
+                heartimg.setVisibility(View.VISIBLE);
+                eyeimg.setVisibility(View.VISIBLE);
+                BottomBar.setVisibility(View.VISIBLE);
+                heart.setVisibility(View.VISIBLE);
+                people.setVisibility(View.VISIBLE);
+                songLikeAnimButton.setVisibility(View.VISIBLE);
+                title.setVisibility(View.VISIBLE);
+                streamer_nickname.setVisibility(View.VISIBLE);
+                cover.setVisibility(View.VISIBLE);
                 back_onoff = 1;
             }
         });
