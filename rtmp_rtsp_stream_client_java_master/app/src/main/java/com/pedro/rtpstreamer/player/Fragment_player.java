@@ -38,7 +38,6 @@ import com.bambuser.broadcaster.PlayerState;
 import com.bambuser.broadcaster.SurfaceViewWithAutoAR;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
-import com.facebook.share.Share;
 import com.pedro.rtpstreamer.R;
 import com.pedro.rtpstreamer.server.SendbirdConnection;
 import com.pedro.rtpstreamer.server.SendbirdListner;
@@ -65,8 +64,7 @@ public class Fragment_player extends Fragment
     private ImageButton ShareButton;
     private ImageView heartimg, eyeimg;
     private LinearLayout BottomBar;
-    private SurfaceViewWithAutoAR BackGround;
-    private RelativeLayout BackGroundResource;
+    private RelativeLayout titleEtc;
 
     private ExampleChatController mExampleChatController;
 
@@ -79,7 +77,6 @@ public class Fragment_player extends Fragment
     private boolean is_follow = false;
     private boolean canChat = true;
     private ListView listView;
-    private String mChannelUrl;
 
     private TextView heart;
     private TextView people;
@@ -93,6 +90,7 @@ public class Fragment_player extends Fragment
     private TextView liveTextView;
     private ImageView img_preview;
     private SurfaceViewWithAutoAR mVideoSurfaceView;
+    private RelativeLayout background;
 
     private int fragPosition;
     private int channelNum;
@@ -105,19 +103,16 @@ public class Fragment_player extends Fragment
     Fragment_player(int fragPosition){
         this.fragPosition = fragPosition;
         this.channelNum = SendbirdConnection.getLiveChannelNum(this.fragPosition);
-        this.mChannelUrl = SendbirdConnection.getPlayChannelUrl(this.channelNum);
     }
 
     @Override
     public void onAttach(@NonNull Context context){
         super.onAttach(context);
         mContext = context;
-        Log.d(TAG1, "onAttach");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-        Log.d(TAG1, "onCreateView");
         View view = inflater.inflate(R.layout.fragment_player, container, false);
         liveTextView = view.findViewById(R.id.BroadcastLiveTextView);
         mVideoSurfaceView = view.findViewById(R.id.VideoSurfaceView);
@@ -139,8 +134,8 @@ public class Fragment_player extends Fragment
         heartimg = view.findViewById(R.id.imageView);
         eyeimg = view.findViewById(R.id.heartImage);
         BottomBar = view.findViewById(R.id.layout_open_chat_chatbox);
-        BackGround = view.findViewById(R.id.VideoSurfaceView);
-        BackGroundResource = view.findViewById(R.id.rl_Live);
+        titleEtc = view.findViewById(R.id.titleEtc);
+        background = view.findViewById(R.id.rl_Live);
 
         view.findViewById(R.id.buy_button).setOnClickListener(this);
         view.findViewById(R.id.declare).setOnClickListener(this);
@@ -204,74 +199,79 @@ public class Fragment_player extends Fragment
 
         title.setOnClickListener((View view) -> {
             if(onoff == 1){
-                mExampleChatController.hide();
-                system_notice.setVisibility(View.GONE);
-                FollowButton.setVisibility(View.GONE);
-                DeclareButton.setVisibility(View.GONE);
-                ShareButton.setVisibility(View.GONE);
-                notify.setVisibility(View.GONE);
-                heartimg.setVisibility(View.GONE);
-                eyeimg.setVisibility(View.GONE);
-                BottomBar.setVisibility(View.GONE);
-                heart.setVisibility(View.GONE);
-                people.setVisibility(View.GONE);
-                songLikeAnimButton.setVisibility(View.GONE);
+//                mExampleChatController.hide();
+//                system_notice.setVisibility(View.GONE);
+//                FollowButton.setVisibility(View.GONE);
+//                DeclareButton.setVisibility(View.GONE);
+//                ShareButton.setVisibility(View.GONE);
+//                notify.setVisibility(View.GONE);
+//                heartimg.setVisibility(View.GONE);
+//                eyeimg.setVisibility(View.GONE);
+//                BottomBar.setVisibility(View.GONE);
+//                heart.setVisibility(View.GONE);
+//                people.setVisibility(View.GONE);
+//                songLikeAnimButton.setVisibility(View.GONE);
+                background.setVisibility(View.GONE);
                 onoff = 0;
             }
             else if(onoff == 0){
-                mExampleChatController.show();
-                system_notice.setVisibility(View.VISIBLE);
-                FollowButton.setVisibility(View.VISIBLE);
-                DeclareButton.setVisibility(View.VISIBLE);
-                ShareButton.setVisibility(View.VISIBLE);
-                notify.setVisibility(View.VISIBLE);
-                heartimg.setVisibility(View.VISIBLE);
-                eyeimg.setVisibility(View.VISIBLE);
-                BottomBar.setVisibility(View.VISIBLE);
-                heart.setVisibility(View.VISIBLE);
-                people.setVisibility(View.VISIBLE);
-                songLikeAnimButton.setVisibility(View.VISIBLE);
+//                mExampleChatController.show();
+//                system_notice.setVisibility(View.VISIBLE);
+//                FollowButton.setVisibility(View.VISIBLE);
+//                DeclareButton.setVisibility(View.VISIBLE);
+//                ShareButton.setVisibility(View.VISIBLE);
+//                notify.setVisibility(View.VISIBLE);
+//                heartimg.setVisibility(View.VISIBLE);
+//                eyeimg.setVisibility(View.VISIBLE);
+//                BottomBar.setVisibility(View.VISIBLE);
+//                heart.setVisibility(View.VISIBLE);
+//                people.setVisibility(View.VISIBLE);
+//                songLikeAnimButton.setVisibility(View.VISIBLE);
+                background.setVisibility(View.VISIBLE);
                 onoff = 1;
             }
         });
 
 
-        BackGround.setOnClickListener((View view) -> {
+        mVideoSurfaceView.setOnClickListener((View view) -> {
             if(back_onoff == 1){
-                mExampleChatController.hide();
-                system_notice.setVisibility(View.GONE);
-                FollowButton.setVisibility(View.GONE);
-                DeclareButton.setVisibility(View.GONE);
-                ShareButton.setVisibility(View.GONE);
-                notify.setVisibility(View.GONE);
-                heartimg.setVisibility(View.GONE);
-                eyeimg.setVisibility(View.GONE);
-                BottomBar.setVisibility(View.GONE);
-                heart.setVisibility(View.GONE);
-                people.setVisibility(View.GONE);
-                songLikeAnimButton.setVisibility(View.GONE);
-                title.setVisibility(View.GONE);
-                streamer_nickname.setVisibility(View.GONE);
-                cover.setVisibility(View.GONE);
+//                mExampleChatController.hide();
+//                system_notice.setVisibility(View.GONE);
+//                FollowButton.setVisibility(View.GONE);
+//                DeclareButton.setVisibility(View.GONE);
+//                ShareButton.setVisibility(View.GONE);
+//                notify.setVisibility(View.GONE);
+//                heartimg.setVisibility(View.GONE);
+//                eyeimg.setVisibility(View.GONE);
+//                BottomBar.setVisibility(View.GONE);
+//                heart.setVisibility(View.GONE);
+//                people.setVisibility(View.GONE);
+//                songLikeAnimButton.setVisibility(View.GONE);
+//                title.setVisibility(View.GONE);
+//                streamer_nickname.setVisibility(View.GONE);
+//                cover.setVisibility(View.GONE);
+                titleEtc.setVisibility(View.GONE);
+                background.setVisibility(View.GONE);
                 back_onoff = 0;
             }
             else if(back_onoff == 0){
-//                BackGroundResource.setVisibility(View.VISIBLE);
-                mExampleChatController.hide();
-                system_notice.setVisibility(View.VISIBLE);
-                FollowButton.setVisibility(View.VISIBLE);
-                DeclareButton.setVisibility(View.VISIBLE);
-                ShareButton.setVisibility(View.VISIBLE);
-                notify.setVisibility(View.VISIBLE);
-                heartimg.setVisibility(View.VISIBLE);
-                eyeimg.setVisibility(View.VISIBLE);
-                BottomBar.setVisibility(View.VISIBLE);
-                heart.setVisibility(View.VISIBLE);
-                people.setVisibility(View.VISIBLE);
-                songLikeAnimButton.setVisibility(View.VISIBLE);
-                title.setVisibility(View.VISIBLE);
-                streamer_nickname.setVisibility(View.VISIBLE);
-                cover.setVisibility(View.VISIBLE);
+//                mExampleChatController.hide();
+//                system_notice.setVisibility(View.VISIBLE);
+//                FollowButton.setVisibility(View.VISIBLE);
+//                DeclareButton.setVisibility(View.VISIBLE);
+//                ShareButton.setVisibility(View.VISIBLE);
+//                notify.setVisibility(View.VISIBLE);
+//                heartimg.setVisibility(View.VISIBLE);
+//                eyeimg.setVisibility(View.VISIBLE);
+//                BottomBar.setVisibility(View.VISIBLE);
+//                heart.setVisibility(View.VISIBLE);
+//                people.setVisibility(View.VISIBLE);
+//                songLikeAnimButton.setVisibility(View.VISIBLE);
+//                title.setVisibility(View.VISIBLE);
+//                streamer_nickname.setVisibility(View.VISIBLE);
+//                cover.setVisibility(View.VISIBLE);
+                titleEtc.setVisibility(View.VISIBLE);
+                background.setVisibility(View.VISIBLE);
                 back_onoff = 1;
             }
         });
@@ -284,9 +284,9 @@ public class Fragment_player extends Fragment
         songLikeAnimButton.setVisibility(View.VISIBLE);
         ValueAnimator animator = ValueAnimator.ofFloat(0f, 0.5f).setDuration(500);
 
-        animator.addUpdateListener((ValueAnimator animation) -> {
-            songLikeAnimButton.setProgress((Float) animation.getAnimatedValue());
-        });
+        animator.addUpdateListener((ValueAnimator animation) ->
+            songLikeAnimButton.setProgress((Float) animation.getAnimatedValue())
+        );
         animator.start();
 
         return true;
@@ -304,7 +304,6 @@ public class Fragment_player extends Fragment
 
     void playStart(String resourceUri,String id, final String previewUri){ //package private
         init();
-        Log.d("PKR","fragment start");
         Picasso.with(getActivity()).load(previewUri).into(img_preview);
         img_preview.setVisibility(View.VISIBLE);
         if (mBroadcastPlayer != null) mBroadcastPlayer.close();
@@ -340,7 +339,6 @@ public class Fragment_player extends Fragment
     private final BroadcastPlayer.Observer mPlayerObserver = new BroadcastPlayer.Observer() {
         @Override
         public void onStateChange(PlayerState state) {
-            Log.d(TAG,"state : " + state );
             boolean isPlayingLive = mBroadcastPlayer != null && mBroadcastPlayer.isTypeLive() && mBroadcastPlayer.isPlaying();
             TextView tvlive = getLiveTextView();
             if (tvlive != null && getMain_activity() != null) {
@@ -363,7 +361,6 @@ public class Fragment_player extends Fragment
 
     @Override
     public void onClick(View view){
-        Log.d("btn onclick","click");
         switch(view.getId()){
             case R.id.buy_button:
                 SendbirdConnection.getAllMetaData();
@@ -393,8 +390,12 @@ public class Fragment_player extends Fragment
     public void msgfilter(String customType, String data){
         switch(customType) {
             case "notice":
+<<<<<<< HEAD
 //                notify.setText(data);
                 setReadMore(notify, data, 2);
+=======
+                notify.setText(data);
+>>>>>>> 8fdef2f4447fb74b22d17b702dc9f141c254cdef
                 break;
             case "alarm":
                 AlarmPlayer(data,3);
@@ -418,7 +419,7 @@ public class Fragment_player extends Fragment
         int index = 3;
         int i = 0;
         String[] str = new String[index];
-        HashMap<String, String> map = new HashMap<String, String>();
+        HashMap<String, String> map = new HashMap<>();
         StringTokenizer st = new StringTokenizer(data,"\n");
         while(st.hasMoreTokens()) {
             str[i] = st.nextToken();
@@ -446,7 +447,7 @@ public class Fragment_player extends Fragment
         int i = 0;
         boolean IsPlay = false;
         String[] str = new String[index];
-        HashMap<String, String> map = new HashMap<String, String>();
+        HashMap<String, String> map = new HashMap<>();
         StringTokenizer st = new StringTokenizer(data,"\n");
         while(st.hasMoreTokens()) {
             str[i] = st.nextToken();

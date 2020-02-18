@@ -112,8 +112,8 @@ public class Replayer extends AppCompatActivity
         AWSConnection.setAwsListner(awsListner);
 
         String path = Environment.getExternalStorageDirectory().getAbsolutePath();
-        AWSConnection.downloadFile("myUploadedFileName", path+"/chatDown/chat.txt", context);
-        AWSConnection.downloadFile("myUploadedFileName_timeLine", path+"/chatDown/timeline.txt", context);
+        AWSConnection.downloadFile("myUploadedFileName", path+"/chatDown/chat.txt");
+        AWSConnection.downloadFile("myUploadedFileName_timeLine", path+"/chatDown/timeline.txt");
 
         findViewById(R.id.timelineButton).setOnClickListener(this);
 
@@ -366,6 +366,12 @@ public class Replayer extends AppCompatActivity
         return mm+":"+ss;
     }
 
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        removeUri();
+    }
+
     //////////////////////////////////////////////
     //handler for play uri
     @SuppressLint("HandlerLeak")
@@ -491,7 +497,6 @@ public class Replayer extends AppCompatActivity
                 CL = new ArrayList<>();
                 TL = new ArrayList<>();
                 setLog();
-
                 setUri();
             }
         }
