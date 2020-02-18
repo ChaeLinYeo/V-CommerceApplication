@@ -1,7 +1,6 @@
 package com.pedro.rtpstreamer.server;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.pedro.rtpstreamer.R;
 import com.pedro.rtpstreamer.utils.PopupManager;
@@ -65,7 +64,6 @@ public class SendbirdConnection {
         SendBird.connect(USER_ID,
             (User user, SendBirdException e) -> {
                 if (e != null) {    // Error.
-                    Log.d("connect error","connect : 1" );
                     return;
                 }
                 if(isOperator) operator.add(user);
@@ -83,7 +81,7 @@ public class SendbirdConnection {
     private static void updateCurrentUserInfo(String user_id){
         SendBird.updateCurrentUserInfo(user_id, null,
                 (SendBirdException ex) -> {
-                    if (ex != null) Log.e("nickname",ex.getMessage()+" : "+ex.getCode());
+                    if (ex != null) { ex.printStackTrace(); }
                 }
         );
     }
@@ -107,7 +105,6 @@ public class SendbirdConnection {
         OpenChannel.getChannel(StaticVariable.sendbirdCtrlChannel,
             (OpenChannel openChannel, SendBirdException e) -> {
                 if (e != null) {    // Error.
-                    Log.d("getCtrl", ""+e.getMessage());
                     return;
                 }
                 ctrl_channel = openChannel;
@@ -135,14 +132,12 @@ public class SendbirdConnection {
             @Override
             public void onResult(final OpenChannel openChannel, SendBirdException e) {
                 if (e != null) {    // Error.
-                    Log.d("getchannel",""+e.getMessage());
                     return;
                 }
                 openChannel.enter(new OpenChannel.OpenChannelEnterHandler() {
                     @Override
                     public void onResult(SendBirdException e) {
                         if (e != null) {    // Error.
-                            Log.d("getc","enter error");
                             e.printStackTrace();
                             return;
                         }
@@ -192,7 +187,6 @@ public class SendbirdConnection {
             public void onUserMuted(BaseChannel channel, User user) {
                 super.onUserMuted(channel, user);
                 if(user.getUserId().equals(USER_ID)){
-                    Log.d("banned",USER_ID);
                     sendbirdListner.Imbanned();
                 }
             }
@@ -201,7 +195,6 @@ public class SendbirdConnection {
             public void onUserUnmuted(BaseChannel channel, User user) {
                 super.onUserUnbanned(channel, user);
                 if(user.getUserId().equals(USER_ID)){
-                    Log.d("unbanned",USER_ID);
                     sendbirdListner.Imunbanned();
                 }
             }
@@ -252,7 +245,6 @@ public class SendbirdConnection {
         OpenChannel.createChannel(title, null, null, null, operator,
                 (OpenChannel openChannel, SendBirdException e) -> {
                     if (e != null) {
-                        Log.e("createChannel",""+e.getMessage());
                         return;
                     }
                     CHANNEL_URL = openChannel.getUrl();
@@ -265,7 +257,7 @@ public class SendbirdConnection {
                     map.put("heart", 0);
                     mOpenChannel.createMetaCounters(map,
                         (Map<String, Integer> hMap, SendBirdException ex) -> {
-                            if(ex != null) Log.e("createChannel", ""+ex.getMessage());
+                            if(ex != null) ex.printStackTrace();
                         }
                     );
                     getChannel(CHANNEL_URL);
@@ -307,11 +299,10 @@ public class SendbirdConnection {
         OpenChannel.getChannel(channelUrl,
             (OpenChannel openChannel, SendBirdException e) -> {
                 if (e != null) {    // Error.
-                    Log.e("getChannel", ""+e.getMessage());
                     return;
                 }
                 openChannel.enter((SendBirdException ex) -> {
-                    if (ex != null) Log.e("getChannel",""+ex.getMessage());
+                    if (ex != null) return;
                 });
             }
         );
@@ -325,12 +316,11 @@ public class SendbirdConnection {
 
     public static void sendUserMessage(String text, String type) {
         if(mOpenChannel == null) {
-            Log.e("sendUserMessage", "channel is null");
             return;
         }
         mOpenChannel.sendUserMessage(text, text, type,
             (UserMessage userMessage, SendBirdException e) -> {
-                if (e != null) Log.e("sendUserMessage",""+e.getMessage());
+                if (e != null) return;
             }
         );
     }
@@ -367,13 +357,13 @@ public class SendbirdConnection {
 
     public static void banUser(int position){
         mOpenChannel.muteUserWithUserId(UserList.get(position).getUserId(), (SendBirdException e) -> {
-                    if(e!=null) Log.e("banUser", ""+e.getMessage()+e.getCode());
+                    if(e!=null) return;
                 }
         );
     }
     public static void unbanUser(int position){
         mOpenChannel.unmuteUserWithUserId(UserList.get(position).getUserId(), (SendBirdException e) -> {
-            if(e!=null) Log.e("unbanUser", ""+e.getMessage()+e.getCode());
+            if(e!=null) return;
         });
     }
     ///////////////CATEGORY///////////////
@@ -429,7 +419,7 @@ public class SendbirdConnection {
         HashMap<String, String> map = new HashMap<>();
         map.put(key, value);
         openChannel.updateMetaData(map, (Map<String, String> pMap, SendBirdException e) -> {
-            if(e!= null) Log.e("updateMetaData", e.getMessage() + e.getCode());
+            if(e!= null) return;
         });
     }
 
@@ -450,8 +440,6 @@ public class SendbirdConnection {
         SendBird.unregisterPushTokenAllForCurrentUser(
             (SendBirdException e) -> {
                 if (e != null) {
-                    // Error!
-                    Log.d(" ","onunregister");
                     e.printStackTrace();
                     // Don't return because we still need to disconnect.
                 }
