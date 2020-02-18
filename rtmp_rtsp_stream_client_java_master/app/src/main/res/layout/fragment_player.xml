@@ -116,6 +116,16 @@
                             android:focusable="true"
                             app:srcCompat="@drawable/buyicon" />
 
+<!--                        <Button-->
+<!--                            android:id="@+id/btn_onoff"-->
+<!--                            android:layout_width="48dp"-->
+<!--                            android:layout_height="48dp"-->
+<!--                            android:background="#fff"-->
+<!--                            android:clickable="true"-->
+<!--                            android:focusable="true"-->
+<!--                            android:text="OFF"-->
+<!--                            android:textColor="#000000" />-->
+
                         <ImageButton
                             android:id="@+id/button_open_channel_chat_upload"
                             android:layout_width="2dp"
@@ -328,6 +338,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/broadcaster" />
+
 
         </RelativeLayout>
 

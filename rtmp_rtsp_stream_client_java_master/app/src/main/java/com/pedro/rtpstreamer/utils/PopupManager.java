@@ -7,7 +7,12 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Handler;
 import android.text.Editable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
 import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -22,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
+import androidx.core.content.ContextCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.kakao.kakaolink.v2.KakaoLinkResponse;
@@ -452,13 +458,11 @@ public class PopupManager {
             searchlist.addAll(alllist);
         }else {
             for(int i = 0;i < alllist.size(); i++){
-                if (alllist.get(i).toLowerCase().contains(charText)) {
-                    // 검색된 데이터를 리스트에 추가한다.
+                if (alllist.get(i).toLowerCase().contains(charText) || alllist.get(i).toUpperCase().contains(charText)) {
                     searchlist.add(alllist.get(i));
                 }
             }
         }
-        // 리스트 데이터가 변경되었으므로 아답터를 갱신하여 검색된 데이터를 화면에 보여준다.
         A.notifyDataSetChanged();
     }
 
@@ -563,7 +567,6 @@ public class PopupManager {
         btn_cancel02.setOnClickListener((View view) -> alertDialog.dismiss());
 
         btn_ok02.setOnClickListener((View view) -> {
-            //txt_dummy_save에 신고 사유 기술 내용을 저장한다.
             txt_dummy_save = txt_input.getText().toString();
             Log.d("declare",txt_dummy_save);
             alertDialog.dismiss();
@@ -669,11 +672,11 @@ public class PopupManager {
     public void CouponPlayer(LayoutInflater inflater, int h, int m, int s, String name, String info) {
         final AlertDialog.Builder alert01 = new AlertDialog.Builder(mContext);
         View mView01 = inflater.inflate(R.layout.popup, null);
-        final TextView coupon_name_txt = (TextView) mView01.findViewById(R.id.blabla011);
-        final TextView coupon_ect_txt = (TextView) mView01.findViewById(R.id.blabla022);
-        coupon_time_txt = (TextView) mView01.findViewById(R.id.blabla033);  //n초뒤 사라짐 이라고 띄우는 부분
-        Button coupon_btn_cancel_01 = (Button) mView01.findViewById(R.id.coupon_btn_cancel_01);
-        Button coupon_btn_ok_01 = (Button) mView01.findViewById(R.id.coupon_btn_ok_01);
+        final TextView coupon_name_txt = mView01.findViewById(R.id.blabla011);
+        final TextView coupon_ect_txt = mView01.findViewById(R.id.blabla022);
+        coupon_time_txt = mView01.findViewById(R.id.blabla033);  //n초뒤 사라짐 이라고 띄우는 부분
+        Button coupon_btn_cancel_01 = mView01.findViewById(R.id.coupon_btn_cancel_01);
+        Button coupon_btn_ok_01 = mView01.findViewById(R.id.coupon_btn_ok_01);
 
         coupon_name_txt.setText(name);
         coupon_ect_txt.setText(info);
@@ -771,7 +774,8 @@ public class PopupManager {
         btn_cancel2.setOnClickListener((View view) -> alertDialog.dismiss());
 
         btn_ok2.setOnClickListener((View view) -> {
-                    broadcast_notice.setText(txt_inputText2.getText().toString());
+                    //broadcast_notice.setText(txt_inputText2.getText().toString());
+                    setReadMore(broadcast_notice, txt_inputText2.getText().toString(), 1);
                     sendbirdConnection.sendUserMessage(txt_inputText2.getText().toString(), "notice");
                     alertDialog.dismiss();
                 }
@@ -779,6 +783,60 @@ public class PopupManager {
 
         alertDialog.show();
     }
+    public static void setReadMore(final TextView view, final String text, final int maxLine) {
+        final Context context = view.getContext();
+        final String expanedText = " ... 더보기";
+
+        if (view.getTag() != null && view.getTag().equals(text)) { //Tag로 전값 의 text를 비교하여똑같으면 실행하지 않음.
+            return;
+        }
+        view.setTag(text); //Tag에 text 저장
+        view.setText(text); // setText를 미리 하셔야  getLineCount()를 호출가능
+        view.post(new Runnable() { //getLineCount()는 UI 백그라운드에서만 가져올수 있음
+            @Override
+            public void run() {
+                if (view.getLineCount() >= maxLine) { //Line Count가 설정한 MaxLine의 값보다 크다면 처리시작
+
+                    int lineEndIndex = view.getLayout().getLineVisibleEnd(maxLine - 1); //Max Line 까지의 text length
+
+                    String[] split = text.split("\n"); //text를 자름
+                    int splitLength = 0;
+
+                    String lessText = "";
+                    for (String item : split) {
+                        splitLength += item.length() + 1;
+                        if (splitLength >= lineEndIndex) { //마지막 줄일때!
+                            if (item.length() >= expanedText.length()) {
+                                lessText += item.substring(0, item.length() - (expanedText.length())) + expanedText;
+                            } else {
+                                lessText += item + expanedText;
+                            }
+                            break; //종료
+                        }
+                        lessText += item + "\n";
+                    }
+                    SpannableString spannableString = new SpannableString(lessText);
+                    spannableString.setSpan(new ClickableSpan() {//클릭이벤트
+                        @Override
+                        public void onClick(View v) {
+                            view.setText(text);
+                        }
+
+                        @Override
+                        public void updateDrawState(TextPaint ds) { //컬러 처리
+                            ds.setColor(ContextCompat.getColor(context, R.color.blue));
+                        }
+                    }, spannableString.length() - expanedText.length(), spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    view.setText(spannableString);
+                    view.setMovementMethod(LinkMovementMethod.getInstance());
+                }
+            }
+        });
+    }
+
+
+
+
     int color;
 
     @RequiresApi(api = Build.VERSION_CODES.P)
@@ -834,11 +892,8 @@ public class PopupManager {
         SendbirdConnection sendbirdConnection = SendbirdConnection.getInstance();
         View mView_c = inflater.inflate(R.layout.popup_category, null);
 
-        // ArrayAdapter 생성. 아이템 View를 선택(multiple choice)가능하도록 만듦.
-
         ArrayAdapter<String> adapter1 = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_multiple_choice, category_items) ;
 
-        // listview 생성 및 adapter 지정.
         ListView listView = mView_c.findViewById(R.id.listView) ;
         listView.setAdapter(adapter1);
         listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);

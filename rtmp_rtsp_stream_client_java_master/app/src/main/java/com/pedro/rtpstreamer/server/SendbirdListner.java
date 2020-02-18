@@ -30,7 +30,9 @@ public abstract class SendbirdListner {
     public void onMessageReceived(String customType, String data){}
     public void loadInitialMessage(String type, String data){}
     public void onTitleChanged(String titleString){}
+    public void updateUser(int inout){}
     public void userenter(String enterduser){}
     public void Imbanned(){}
     public void Imunbanned(){}
+
     }

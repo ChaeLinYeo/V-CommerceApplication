@@ -108,7 +108,7 @@ public class BroadcastMain extends AppCompatActivity
         system_notice = findViewById(R.id.system_notice);
 
         //공지 수정 팝업 후 적용됨
-        broadcast_notice =findViewById(R.id.broadcast_notice);
+        broadcast_notice = findViewById(R.id.broadcast_notice);
         broadcast_notice.setOnClickListener(broadcastClickListner);
 
         //좋아요 개수
@@ -390,7 +390,11 @@ public class BroadcastMain extends AppCompatActivity
             super.getCtrlComplete();
             SendbirdConnection.getBroadcastChannel();
         }
-
+        @Override
+        public void updateUser(int inout){
+            int current = Integer.parseInt(people.getText().toString());
+            people.setText(Integer.toString(current+inout));
+        }
         @Override
         public void userenter(String enterduser) {
             super.userenter(enterduser);

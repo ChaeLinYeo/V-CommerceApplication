@@ -28,7 +28,9 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.bambuser.broadcaster.BroadcastPlayer;
@@ -63,6 +65,8 @@ public class Fragment_player extends Fragment
     private ImageButton ShareButton;
     private ImageView heartimg, eyeimg;
     private LinearLayout BottomBar;
+    private SurfaceViewWithAutoAR BackGround;
+    private RelativeLayout BackGroundResource;
 
     private ExampleChatController mExampleChatController;
 
@@ -96,6 +100,7 @@ public class Fragment_player extends Fragment
     private PopupManager pm;
 
     private int onoff = 1; //1은 on, 0은 off
+    private int back_onoff = 1; //1은 on, 0은 off
 
     Fragment_player(int fragPosition){
         this.fragPosition = fragPosition;
@@ -134,6 +139,8 @@ public class Fragment_player extends Fragment
         heartimg = view.findViewById(R.id.imageView);
         eyeimg = view.findViewById(R.id.heartImage);
         BottomBar = view.findViewById(R.id.layout_open_chat_chatbox);
+        BackGround = view.findViewById(R.id.VideoSurfaceView);
+        BackGroundResource = view.findViewById(R.id.rl_Live);
 
         view.findViewById(R.id.buy_button).setOnClickListener(this);
         view.findViewById(R.id.declare).setOnClickListener(this);
@@ -223,13 +230,53 @@ public class Fragment_player extends Fragment
                 onoff = 1;
             }
         });
+
+
+        BackGround.setOnClickListener((View view) -> {
+            if(back_onoff == 1){
+                mExampleChatController.hide();
+                system_notice.setVisibility(View.GONE);
+                FollowButton.setVisibility(View.GONE);
+                DeclareButton.setVisibility(View.GONE);
+                ShareButton.setVisibility(View.GONE);
+                notify.setVisibility(View.GONE);
+                heartimg.setVisibility(View.GONE);
+                eyeimg.setVisibility(View.GONE);
+                BottomBar.setVisibility(View.GONE);
+                heart.setVisibility(View.GONE);
+                people.setVisibility(View.GONE);
+                songLikeAnimButton.setVisibility(View.GONE);
+                title.setVisibility(View.GONE);
+                streamer_nickname.setVisibility(View.GONE);
+                cover.setVisibility(View.GONE);
+                back_onoff = 0;
+            }
+            else if(back_onoff == 0){
+//                BackGroundResource.setVisibility(View.VISIBLE);
+                mExampleChatController.hide();
+                system_notice.setVisibility(View.VISIBLE);
+                FollowButton.setVisibility(View.VISIBLE);
+                DeclareButton.setVisibility(View.VISIBLE);
+                ShareButton.setVisibility(View.VISIBLE);
+                notify.setVisibility(View.VISIBLE);
+                heartimg.setVisibility(View.VISIBLE);
+                eyeimg.setVisibility(View.VISIBLE);
+                BottomBar.setVisibility(View.VISIBLE);
+                heart.setVisibility(View.VISIBLE);
+                people.setVisibility(View.VISIBLE);
+                songLikeAnimButton.setVisibility(View.VISIBLE);
+                title.setVisibility(View.VISIBLE);
+                streamer_nickname.setVisibility(View.VISIBLE);
+                cover.setVisibility(View.VISIBLE);
+                back_onoff = 1;
+            }
+        });
     }
 
 
 
     // 좋아요 로띠 애니메이션을 실행 시키는 메소드
     private boolean toggleSongLikeAnimButton(){
-
         songLikeAnimButton.setVisibility(View.VISIBLE);
         ValueAnimator animator = ValueAnimator.ofFloat(0f, 0.5f).setDuration(500);
 
@@ -328,8 +375,12 @@ public class Fragment_player extends Fragment
                 break;
 
             case R.id.HeartIcon:
-                SendbirdConnection.sendUserMessage("", "like");
-                SendbirdConnection.increaseMetaCounters();
+                if(canChat) {
+                    SendbirdConnection.sendUserMessage("", "like");
+                    SendbirdConnection.increaseMetaCounters();
+                }else{
+                    Toast.makeText(mContext.getApplicationContext(), "X", Toast.LENGTH_LONG).show();
+                }
                 break;
         }
     }
@@ -340,7 +391,6 @@ public class Fragment_player extends Fragment
             case "notice":
                 notify.setText(data);
 //                setReadMore(notify, data, 2);
-                //mExampleChatController.add2(Data);
                 break;
             case "alarm":
                 AlarmPlayer(data,3);
@@ -360,7 +410,6 @@ public class Fragment_player extends Fragment
     }
 
     public void EventPlayer(String data) {
-        // "cn="+e_n+"ci="+e_a+"\nTimeLimit="+e_t_h+":"+e_t_m+":"+e_t_s;
         Log.d("event",""+data);
         int index = 3;
         int i = 0;
@@ -388,7 +437,6 @@ public class Fragment_player extends Fragment
     }
 
     public void EEventPlayer(String data) {
-        // "User=    ,  ,    ,\ncn="+e_n+"ci="+e_a+"\nTimeLimit="+e_t_h+":"+e_t_m+":"+e_t_s;
         Log.d("event",""+data);
         int index = 4;
         int i = 0;
@@ -429,7 +477,6 @@ public class Fragment_player extends Fragment
     }
 
     public void LikePlayer(int newheart){
-        //하트를 재생하라는 명령을 받을때마다 하트의 개수를 동기화
         if(toggleSongLikeAnimButton())  {
             heart.setText(Integer.toString(newheart));
         }
@@ -511,8 +558,6 @@ public class Fragment_player extends Fragment
         public void loadInitialMessage(String type, String data){
             if(type.equals("chat")){
                 mExampleChatController.add(data);
-            }else if(type.equals("alarm")){
-                AlarmPlayer(data,2);//alarm.setText(data);
             }else if(type.equals(("notice"))){
                 notify.setText(data);
 //                setReadMore(notify, data, 2);
@@ -533,7 +578,6 @@ public class Fragment_player extends Fragment
         @Override
         public void Imbanned(){
             super.Imbanned();
-            Log.d("ban", "cantchat");
             canChat = false;
             setUseableEditText(mMessageEditText,false);
         }
@@ -541,7 +585,6 @@ public class Fragment_player extends Fragment
         @Override
         public void Imunbanned(){
             super.Imunbanned();
-            Log.d("notban", "canchat");
             canChat = true;
             setUseableEditText(mMessageEditText,true);
             mMessageEditText.setText("");
