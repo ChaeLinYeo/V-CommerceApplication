@@ -33,6 +33,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.aqoong.lib.expandabletextview.ExpandableTextView;
 import com.bambuser.broadcaster.BroadcastPlayer;
 import com.bambuser.broadcaster.PlayerState;
 import com.bambuser.broadcaster.SurfaceViewWithAutoAR;
@@ -49,6 +50,8 @@ import java.util.HashMap;
 import java.util.StringTokenizer;
 
 import com.bumptech.glide.request.RequestOptions;
+
+import static com.aqoong.lib.expandabletextview.ExpandableTextView.STATE.EXPAND;
 
 public class Fragment_player extends Fragment
     implements View.OnClickListener {
@@ -199,34 +202,10 @@ public class Fragment_player extends Fragment
 
         title.setOnClickListener((View view) -> {
             if(onoff == 1){
-//                mExampleChatController.hide();
-//                system_notice.setVisibility(View.GONE);
-//                FollowButton.setVisibility(View.GONE);
-//                DeclareButton.setVisibility(View.GONE);
-//                ShareButton.setVisibility(View.GONE);
-//                notify.setVisibility(View.GONE);
-//                heartimg.setVisibility(View.GONE);
-//                eyeimg.setVisibility(View.GONE);
-//                BottomBar.setVisibility(View.GONE);
-//                heart.setVisibility(View.GONE);
-//                people.setVisibility(View.GONE);
-//                songLikeAnimButton.setVisibility(View.GONE);
                 background.setVisibility(View.GONE);
                 onoff = 0;
             }
             else if(onoff == 0){
-//                mExampleChatController.show();
-//                system_notice.setVisibility(View.VISIBLE);
-//                FollowButton.setVisibility(View.VISIBLE);
-//                DeclareButton.setVisibility(View.VISIBLE);
-//                ShareButton.setVisibility(View.VISIBLE);
-//                notify.setVisibility(View.VISIBLE);
-//                heartimg.setVisibility(View.VISIBLE);
-//                eyeimg.setVisibility(View.VISIBLE);
-//                BottomBar.setVisibility(View.VISIBLE);
-//                heart.setVisibility(View.VISIBLE);
-//                people.setVisibility(View.VISIBLE);
-//                songLikeAnimButton.setVisibility(View.VISIBLE);
                 background.setVisibility(View.VISIBLE);
                 onoff = 1;
             }
@@ -235,41 +214,11 @@ public class Fragment_player extends Fragment
 
         mVideoSurfaceView.setOnClickListener((View view) -> {
             if(back_onoff == 1){
-//                mExampleChatController.hide();
-//                system_notice.setVisibility(View.GONE);
-//                FollowButton.setVisibility(View.GONE);
-//                DeclareButton.setVisibility(View.GONE);
-//                ShareButton.setVisibility(View.GONE);
-//                notify.setVisibility(View.GONE);
-//                heartimg.setVisibility(View.GONE);
-//                eyeimg.setVisibility(View.GONE);
-//                BottomBar.setVisibility(View.GONE);
-//                heart.setVisibility(View.GONE);
-//                people.setVisibility(View.GONE);
-//                songLikeAnimButton.setVisibility(View.GONE);
-//                title.setVisibility(View.GONE);
-//                streamer_nickname.setVisibility(View.GONE);
-//                cover.setVisibility(View.GONE);
                 titleEtc.setVisibility(View.GONE);
                 background.setVisibility(View.GONE);
                 back_onoff = 0;
             }
             else if(back_onoff == 0){
-//                mExampleChatController.hide();
-//                system_notice.setVisibility(View.VISIBLE);
-//                FollowButton.setVisibility(View.VISIBLE);
-//                DeclareButton.setVisibility(View.VISIBLE);
-//                ShareButton.setVisibility(View.VISIBLE);
-//                notify.setVisibility(View.VISIBLE);
-//                heartimg.setVisibility(View.VISIBLE);
-//                eyeimg.setVisibility(View.VISIBLE);
-//                BottomBar.setVisibility(View.VISIBLE);
-//                heart.setVisibility(View.VISIBLE);
-//                people.setVisibility(View.VISIBLE);
-//                songLikeAnimButton.setVisibility(View.VISIBLE);
-//                title.setVisibility(View.VISIBLE);
-//                streamer_nickname.setVisibility(View.VISIBLE);
-//                cover.setVisibility(View.VISIBLE);
                 titleEtc.setVisibility(View.VISIBLE);
                 background.setVisibility(View.VISIBLE);
                 back_onoff = 1;
@@ -386,16 +335,13 @@ public class Fragment_player extends Fragment
         }
     }
 
-
     public void msgfilter(String customType, String data){
         switch(customType) {
             case "notice":
-<<<<<<< HEAD
-//                notify.setText(data);
-                setReadMore(notify, data, 2);
-=======
-                notify.setText(data);
->>>>>>> 8fdef2f4447fb74b22d17b702dc9f141c254cdef
+//                notify.setText("any text", "show more option text");
+//                notify.setState(ExpandableTextView.STATE.COLLAPSE);
+                setReadMore(notify, data, 1);
+                //notify.setText(data);
                 break;
             case "alarm":
                 AlarmPlayer(data,3);
@@ -565,7 +511,8 @@ public class Fragment_player extends Fragment
                 mExampleChatController.add(data);
             }else if(type.equals(("notice"))){
 //                notify.setText(data);
-                setReadMore(notify, data, 2);
+                setReadMore(notify, data, 1);
+//                notify.setState(ExpandableTextView.STATE.COLLAPSE);
             }
         }
 
@@ -600,7 +547,7 @@ public class Fragment_player extends Fragment
 
     public static void setReadMore(final TextView view, final String text, final int maxLine) {
         final Context context = view.getContext();
-        final String expanedText = "더보기";
+        final String expanedText = "..더보기";
 
         if (view.getTag() != null && view.getTag().equals(text)) { //Tag로 전값 의 text를 비교하여똑같으면 실행하지 않음.
             return;
