@@ -427,6 +427,7 @@ public class BroadcastMain extends AppCompatActivity
         public void channelCreateComplete() {
             super.channelCreateComplete();
             PM.PopupEnd();
+            people.setText("0");
             canStart = false;
             broadcastManager.setBroadcastChannel(SendbirdConnection.getBroadcastChannelNum());
             broadcastManager.manageBroadcast(0);

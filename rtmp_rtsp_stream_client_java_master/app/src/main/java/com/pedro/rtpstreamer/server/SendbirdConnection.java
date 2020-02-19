@@ -261,7 +261,6 @@ public class SendbirdConnection {
                         }
                     );
                     getChannel(CHANNEL_URL);
-                    getUserList(true);
                     sendbirdListner.channelCreateComplete();
                 }
         );
@@ -276,14 +275,12 @@ public class SendbirdConnection {
             public void onUserEntered(OpenChannel channel, User user) {
                 super.onUserEntered(channel, user);
                 viewNum++;
-                //getUserList(true);
                 sendbirdListner.userenter(user.getNickname());
             }
 
             @Override
             public void onUserExited(OpenChannel channel, User user) {
                 super.onUserExited(channel, user);
-                //getUserList(true);
                 sendbirdListner.userenter(user.getNickname());
             }
 

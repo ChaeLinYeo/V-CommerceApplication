@@ -1,8 +1,11 @@
 package com.pedro.rtpstreamer.player;
 
 import android.animation.ValueAnimator;
+import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.AudioManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -51,6 +54,7 @@ import java.util.StringTokenizer;
 
 import com.bumptech.glide.request.RequestOptions;
 
+import static android.content.Context.AUDIO_SERVICE;
 import static com.aqoong.lib.expandabletextview.ExpandableTextView.STATE.EXPAND;
 
 public class Fragment_player extends Fragment
@@ -63,10 +67,6 @@ public class Fragment_player extends Fragment
     private Button FollowButton;	//팔로우버튼
     private TextView system_notice; //각종알림
     private InputMethodManager mIMM;
-    private Button DeclareButton;
-    private ImageButton ShareButton;
-    private ImageView heartimg, eyeimg;
-    private LinearLayout BottomBar;
     private RelativeLayout titleEtc;
 
     private ExampleChatController mExampleChatController;
@@ -102,6 +102,8 @@ public class Fragment_player extends Fragment
 
     private int onoff = 1; //1은 on, 0은 off
     private int back_onoff = 1; //1은 on, 0은 off
+    private int soundonoff = 1;
+    private AudioManager audioManager;
 
     Fragment_player(int fragPosition){
         this.fragPosition = fragPosition;
@@ -132,13 +134,10 @@ public class Fragment_player extends Fragment
         FollowButton = view.findViewById(R.id.followButton);
         system_notice = view.findViewById(R.id.system_notice);
         listView = view.findViewById(R.id.ChatListView);
-        DeclareButton = view.findViewById(R.id.declare);
-        ShareButton = view.findViewById(R.id.menu_share);
-        heartimg = view.findViewById(R.id.imageView);
-        eyeimg = view.findViewById(R.id.heartImage);
-        BottomBar = view.findViewById(R.id.layout_open_chat_chatbox);
         titleEtc = view.findViewById(R.id.titleEtc);
         background = view.findViewById(R.id.rl_Live);
+
+        audioManager = (AudioManager) mContext.getSystemService(AUDIO_SERVICE);
 
         view.findViewById(R.id.buy_button).setOnClickListener(this);
         view.findViewById(R.id.declare).setOnClickListener(this);
@@ -330,6 +329,50 @@ public class Fragment_player extends Fragment
                     SendbirdConnection.increaseMetaCounters();
                 }else{
                     Toast.makeText(mContext.getApplicationContext(), "X", Toast.LENGTH_LONG).show();
+                }
+                break;
+            case R.id.btn_sound:
+                if(soundonoff==1){
+                    if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+                        // 벨소리 모드일 경우
+                        audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);    // 무음 모드로 변경
+                    }
+                    else if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE) {
+                        // 진동 모드일 경우
+                        audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);    // 무음 모드로 변경
+                    }
+                    else if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT) {
+                        // 무음 모드일 경우
+                        audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);    // 무음 모드로 변경
+                    }
+
+                    NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+                    if (!notificationManager.isNotificationPolicyAccessGranted()) {
+                        mContext.startActivity(new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS));
+                    }
+
+                    soundonoff=0;
+                }
+                else if(soundonoff==0){
+                    if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+                        // 벨소리 모드일 경우
+                        audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);    // 벨소리 모드로 변경
+                    }
+                    else if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE) {
+                        // 진동 모드일 경우
+                        audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);    // 벨소리 모드로 변경
+                    }
+                    else if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT) {
+                        // 무음 모드일 경우
+                        audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);    // 벨소리 모드로 변경
+                    }
+
+                    NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+                    if (!notificationManager.isNotificationPolicyAccessGranted()) {
+                        mContext.startActivity(new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS));
+                    }
+
+                    soundonoff=1;
                 }
                 break;
         }
@@ -557,7 +600,7 @@ public class Fragment_player extends Fragment
         view.post(new Runnable() { //getLineCount()는 UI 백그라운드에서만 가져올수 있음
             @Override
             public void run() {
-                if (view.getLineCount() >= maxLine) { //Line Count가 설정한 MaxLine의 값보다 크다면 처리시작
+                if (view.getLineCount() > maxLine) { //Line Count가 설정한 MaxLine의 값보다 크다면 처리시작
 
                     int lineEndIndex = view.getLayout().getLineVisibleEnd(maxLine - 1); //Max Line 까지의 text length
 
@@ -567,8 +610,8 @@ public class Fragment_player extends Fragment
                     String lessText = "";
                     for (String item : split) {
                         splitLength += item.length() + 1;
-                        if (splitLength >= lineEndIndex) { //마지막 줄일때!
-                            if (item.length() >= expanedText.length()) {
+                        if (splitLength > lineEndIndex) { //마지막 줄일때!
+                            if (item.length() > expanedText.length()) {
                                 lessText += item.substring(0, item.length() - (expanedText.length())) + expanedText;
                             } else {
                                 lessText += item + expanedText;
