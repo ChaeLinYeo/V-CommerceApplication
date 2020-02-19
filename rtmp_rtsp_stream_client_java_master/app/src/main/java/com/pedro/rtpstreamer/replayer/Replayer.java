@@ -3,7 +3,10 @@ package com.pedro.rtpstreamer.replayer;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,6 +28,7 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -92,16 +96,16 @@ public class Replayer extends AppCompatActivity
 
     private boolean is_follow = false;
     private Button FollowButton;	//팔로우버튼
-    private Button DeclareButton;
-    private ImageView heartimg, eyeimg;
     private TextView people;
-    private ImageView cover;
-    private LinearLayout playbar, etc;
-    private FrameLayout heartlayout;
     private SurfaceView surfaceView;
 
     private TextView currentPlayTime;
     private TextView maxPlayTime;
+
+    private int soundonoff = 1;
+    private AudioManager audioManager;
+    private Context mContext;
+    private RelativeLayout background, titleEtc;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -129,83 +133,41 @@ public class Replayer extends AppCompatActivity
         loadingPanel = findViewById(R.id.ReplayLoadingPanel);
         currTimeline = findViewById(R.id.curr_category);
         FollowButton = findViewById(R.id.refollowButton);
-        
-        DeclareButton = findViewById(R.id.redeclare);
-        heartimg = findViewById(R.id.imageView);
-        eyeimg = findViewById(R.id.eyeImage);
-        cover = findViewById(R.id.imageButton3);
-        playbar = findViewById(R.id.playbar);
-        etc = findViewById(R.id.etc);
-        heartlayout = findViewById(R.id.heartBox);
+
         surfaceView = findViewById(R.id.video_layout);
         currentPlayTime = findViewById(R.id.currentPlayTime);
         maxPlayTime = findViewById(R.id.maxPlayTime);
+        background = findViewById(R.id.re_rl_Live);
+        titleEtc = findViewById(R.id.replaytop);
 
         ECC = new ExampleChatController(context, listView, R.layout.chatline, R.id.chat_line_textview, R.id.chat_line_timeview);
         ECC.show();
         ECC.add2("재방송 채팅입니다.");
 
+        audioManager = (AudioManager) mContext.getSystemService(AUDIO_SERVICE);
+
 
         title.setOnClickListener((View view) -> {
             if(onoff == 1){
-                ECC.hide();
-                FollowButton.setVisibility(View.GONE);
-                DeclareButton.setVisibility(View.GONE);
-                heartimg.setVisibility(View.GONE);
-                heart.setVisibility(View.GONE);
-                eyeimg.setVisibility(View.GONE);
-                people.setVisibility(View.GONE);
-                playbar.setVisibility(View.GONE);
-                etc.setVisibility(View.GONE);
-                heartlayout.setVisibility(View.GONE);
+                background.setVisibility(View.GONE);
                 onoff = 0;
             }
             else if(onoff == 0){
-                ECC.show();
-                FollowButton.setVisibility(View.VISIBLE);
-                DeclareButton.setVisibility(View.VISIBLE);
-                heartimg.setVisibility(View.VISIBLE);
-                heart.setVisibility(View.VISIBLE);
-                eyeimg.setVisibility(View.VISIBLE);
-                people.setVisibility(View.VISIBLE);
-                playbar.setVisibility(View.VISIBLE);
-                etc.setVisibility(View.VISIBLE);
-                heartlayout.setVisibility(View.VISIBLE);
+                background.setVisibility(View.VISIBLE);
                 onoff = 1;
             }
         });
 
+
         surfaceView.setOnClickListener((View view) -> {
             if(back_onoff == 1){
-                ECC.hide();
-                cover.setVisibility(View.GONE);
-                title.setVisibility(View.GONE);
-                streamer_nickname.setVisibility(View.GONE);
-                FollowButton.setVisibility(View.GONE);
-                DeclareButton.setVisibility(View.GONE);
-                heartimg.setVisibility(View.GONE);
-                heart.setVisibility(View.GONE);
-                eyeimg.setVisibility(View.GONE);
-                people.setVisibility(View.GONE);
-                playbar.setVisibility(View.GONE);
-                etc.setVisibility(View.GONE);
-                heartlayout.setVisibility(View.GONE);
+                titleEtc.setVisibility(View.GONE);
+                background.setVisibility(View.GONE);
                 back_onoff = 0;
             }
             else if(back_onoff == 0){
-                ECC.show();
-                cover.setVisibility(View.VISIBLE);
-                title.setVisibility(View.VISIBLE);
-                streamer_nickname.setVisibility(View.VISIBLE);
-                FollowButton.setVisibility(View.VISIBLE);
-                DeclareButton.setVisibility(View.VISIBLE);
-                heartimg.setVisibility(View.VISIBLE);
-                heart.setVisibility(View.VISIBLE);
-                eyeimg.setVisibility(View.VISIBLE);
-                people.setVisibility(View.VISIBLE);
-                playbar.setVisibility(View.VISIBLE);
-                etc.setVisibility(View.VISIBLE);
-                heartlayout.setVisibility(View.VISIBLE);
+                titleEtc.setVisibility(View.VISIBLE);
+                background.setVisibility(View.VISIBLE);
                 back_onoff = 1;
             }
         });
@@ -235,6 +197,10 @@ public class Replayer extends AppCompatActivity
 
             case R.id.redeclare:
                 select_Declare(getLayoutInflater());
+                break;
+
+            case R.id.rebtn_sound:
+                SoundOnOff();
                 break;
         }
     }
@@ -456,6 +422,51 @@ public class Replayer extends AppCompatActivity
             }
         }
     };
+
+    private void SoundOnOff(){
+        if(soundonoff==1){
+            if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+                // 벨소리 모드일 경우
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);    // 무음 모드로 변경
+            }
+            else if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE) {
+                // 진동 모드일 경우
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);    // 무음 모드로 변경
+            }
+            else if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT) {
+                // 무음 모드일 경우
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);    // 무음 모드로 변경
+            }
+
+            NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+            if (!notificationManager.isNotificationPolicyAccessGranted()) {
+                mContext.startActivity(new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS));
+            }
+
+            soundonoff=0;
+        }
+        else if(soundonoff==0){
+            if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+                // 벨소리 모드일 경우
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);    // 벨소리 모드로 변경
+            }
+            else if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE) {
+                // 진동 모드일 경우
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);    // 벨소리 모드로 변경
+            }
+            else if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT) {
+                // 무음 모드일 경우
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);    // 벨소리 모드로 변경
+            }
+
+            NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+            if (!notificationManager.isNotificationPolicyAccessGranted()) {
+                mContext.startActivity(new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS));
+            }
+
+            soundonoff=1;
+        }
+    }
 
     private void playChat(Pair cp){
         switch (cp.getType()) {

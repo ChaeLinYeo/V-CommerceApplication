@@ -105,7 +105,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginEnd="0dp"
             android:layout_toEndOf="@id/heart_num"
-            app:srcCompat="@drawable/icon" />
+            app:srcCompat="@drawable/soundoff_icon" />
 
         <!-- view left time -->
 
@@ -162,7 +162,6 @@
 
             android:textColor="#fff"
             android:textSize="15sp"
-            android:singleLine="true"
             android:focusableInTouchMode="true"
 
             android:text="0123456789\n0123456789"/>

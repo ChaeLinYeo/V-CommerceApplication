@@ -1,8 +1,11 @@
 package com.pedro.rtpstreamer.player;
 
 import android.animation.ValueAnimator;
+import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.AudioManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -33,6 +36,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.aqoong.lib.expandabletextview.ExpandableTextView;
 import com.bambuser.broadcaster.BroadcastPlayer;
 import com.bambuser.broadcaster.PlayerState;
 import com.bambuser.broadcaster.SurfaceViewWithAutoAR;
@@ -50,6 +54,9 @@ import java.util.StringTokenizer;
 
 import com.bumptech.glide.request.RequestOptions;
 
+import static android.content.Context.AUDIO_SERVICE;
+import static com.aqoong.lib.expandabletextview.ExpandableTextView.STATE.EXPAND;
+
 public class Fragment_player extends Fragment
     implements View.OnClickListener {
     private static String TAG = "Fragment_player";
@@ -60,10 +67,6 @@ public class Fragment_player extends Fragment
     private Button FollowButton;	//팔로우버튼
     private TextView system_notice; //각종알림
     private InputMethodManager mIMM;
-    private Button DeclareButton;
-    private ImageButton ShareButton;
-    private ImageView heartimg, eyeimg;
-    private LinearLayout BottomBar;
     private RelativeLayout titleEtc;
 
     private ExampleChatController mExampleChatController;
@@ -99,6 +102,8 @@ public class Fragment_player extends Fragment
 
     private int onoff = 1; //1은 on, 0은 off
     private int back_onoff = 1; //1은 on, 0은 off
+    private int soundonoff = 1;
+    private AudioManager audioManager;
 
     Fragment_player(int fragPosition){
         this.fragPosition = fragPosition;
@@ -129,13 +134,10 @@ public class Fragment_player extends Fragment
         FollowButton = view.findViewById(R.id.followButton);
         system_notice = view.findViewById(R.id.system_notice);
         listView = view.findViewById(R.id.ChatListView);
-        DeclareButton = view.findViewById(R.id.declare);
-        ShareButton = view.findViewById(R.id.menu_share);
-        heartimg = view.findViewById(R.id.imageView);
-        eyeimg = view.findViewById(R.id.heartImage);
-        BottomBar = view.findViewById(R.id.layout_open_chat_chatbox);
         titleEtc = view.findViewById(R.id.titleEtc);
         background = view.findViewById(R.id.rl_Live);
+
+        audioManager = (AudioManager) mContext.getSystemService(AUDIO_SERVICE);
 
         view.findViewById(R.id.buy_button).setOnClickListener(this);
         view.findViewById(R.id.declare).setOnClickListener(this);
@@ -199,34 +201,10 @@ public class Fragment_player extends Fragment
 
         title.setOnClickListener((View view) -> {
             if(onoff == 1){
-//                mExampleChatController.hide();
-//                system_notice.setVisibility(View.GONE);
-//                FollowButton.setVisibility(View.GONE);
-//                DeclareButton.setVisibility(View.GONE);
-//                ShareButton.setVisibility(View.GONE);
-//                notify.setVisibility(View.GONE);
-//                heartimg.setVisibility(View.GONE);
-//                eyeimg.setVisibility(View.GONE);
-//                BottomBar.setVisibility(View.GONE);
-//                heart.setVisibility(View.GONE);
-//                people.setVisibility(View.GONE);
-//                songLikeAnimButton.setVisibility(View.GONE);
                 background.setVisibility(View.GONE);
                 onoff = 0;
             }
             else if(onoff == 0){
-//                mExampleChatController.show();
-//                system_notice.setVisibility(View.VISIBLE);
-//                FollowButton.setVisibility(View.VISIBLE);
-//                DeclareButton.setVisibility(View.VISIBLE);
-//                ShareButton.setVisibility(View.VISIBLE);
-//                notify.setVisibility(View.VISIBLE);
-//                heartimg.setVisibility(View.VISIBLE);
-//                eyeimg.setVisibility(View.VISIBLE);
-//                BottomBar.setVisibility(View.VISIBLE);
-//                heart.setVisibility(View.VISIBLE);
-//                people.setVisibility(View.VISIBLE);
-//                songLikeAnimButton.setVisibility(View.VISIBLE);
                 background.setVisibility(View.VISIBLE);
                 onoff = 1;
             }
@@ -235,41 +213,11 @@ public class Fragment_player extends Fragment
 
         mVideoSurfaceView.setOnClickListener((View view) -> {
             if(back_onoff == 1){
-//                mExampleChatController.hide();
-//                system_notice.setVisibility(View.GONE);
-//                FollowButton.setVisibility(View.GONE);
-//                DeclareButton.setVisibility(View.GONE);
-//                ShareButton.setVisibility(View.GONE);
-//                notify.setVisibility(View.GONE);
-//                heartimg.setVisibility(View.GONE);
-//                eyeimg.setVisibility(View.GONE);
-//                BottomBar.setVisibility(View.GONE);
-//                heart.setVisibility(View.GONE);
-//                people.setVisibility(View.GONE);
-//                songLikeAnimButton.setVisibility(View.GONE);
-//                title.setVisibility(View.GONE);
-//                streamer_nickname.setVisibility(View.GONE);
-//                cover.setVisibility(View.GONE);
                 titleEtc.setVisibility(View.GONE);
                 background.setVisibility(View.GONE);
                 back_onoff = 0;
             }
             else if(back_onoff == 0){
-//                mExampleChatController.hide();
-//                system_notice.setVisibility(View.VISIBLE);
-//                FollowButton.setVisibility(View.VISIBLE);
-//                DeclareButton.setVisibility(View.VISIBLE);
-//                ShareButton.setVisibility(View.VISIBLE);
-//                notify.setVisibility(View.VISIBLE);
-//                heartimg.setVisibility(View.VISIBLE);
-//                eyeimg.setVisibility(View.VISIBLE);
-//                BottomBar.setVisibility(View.VISIBLE);
-//                heart.setVisibility(View.VISIBLE);
-//                people.setVisibility(View.VISIBLE);
-//                songLikeAnimButton.setVisibility(View.VISIBLE);
-//                title.setVisibility(View.VISIBLE);
-//                streamer_nickname.setVisibility(View.VISIBLE);
-//                cover.setVisibility(View.VISIBLE);
                 titleEtc.setVisibility(View.VISIBLE);
                 background.setVisibility(View.VISIBLE);
                 back_onoff = 1;
@@ -383,14 +331,19 @@ public class Fragment_player extends Fragment
                     Toast.makeText(mContext.getApplicationContext(), "X", Toast.LENGTH_LONG).show();
                 }
                 break;
+            case R.id.btn_sound:
+                SoundOnOff();
+                break;
         }
     }
-
 
     public void msgfilter(String customType, String data){
         switch(customType) {
             case "notice":
-                notify.setText(data);
+//                notify.setText("any text", "show more option text");
+//                notify.setState(ExpandableTextView.STATE.COLLAPSE);
+                setReadMore(notify, data, 1);
+                //notify.setText(data);
                 break;
             case "alarm":
                 AlarmPlayer(data,3);
@@ -523,6 +476,51 @@ public class Fragment_player extends Fragment
                 });
     }
 
+    private void SoundOnOff(){
+        if(soundonoff==1){
+            if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+                // 벨소리 모드일 경우
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);    // 무음 모드로 변경
+            }
+            else if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE) {
+                // 진동 모드일 경우
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);    // 무음 모드로 변경
+            }
+            else if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT) {
+                // 무음 모드일 경우
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);    // 무음 모드로 변경
+            }
+
+            NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+            if (!notificationManager.isNotificationPolicyAccessGranted()) {
+                mContext.startActivity(new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS));
+            }
+
+            soundonoff=0;
+        }
+        else if(soundonoff==0){
+            if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+                // 벨소리 모드일 경우
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);    // 벨소리 모드로 변경
+            }
+            else if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE) {
+                // 진동 모드일 경우
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);    // 벨소리 모드로 변경
+            }
+            else if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT) {
+                // 무음 모드일 경우
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);    // 벨소리 모드로 변경
+            }
+
+            NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+            if (!notificationManager.isNotificationPolicyAccessGranted()) {
+                mContext.startActivity(new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS));
+            }
+
+            soundonoff=1;
+        }
+    }
+
     private void setUseableEditText(EditText et, boolean useable) {
         et.setClickable(useable);
         et.setEnabled(useable);
@@ -559,8 +557,9 @@ public class Fragment_player extends Fragment
             if(type.equals("chat")){
                 mExampleChatController.add(data);
             }else if(type.equals(("notice"))){
-                notify.setText(data);
-//                setReadMore(notify, data, 2);
+//                notify.setText(data);
+                setReadMore(notify, data, 1);
+//                notify.setState(ExpandableTextView.STATE.COLLAPSE);
             }
         }
 
@@ -595,7 +594,7 @@ public class Fragment_player extends Fragment
 
     public static void setReadMore(final TextView view, final String text, final int maxLine) {
         final Context context = view.getContext();
-        final String expanedText = " ... 더보기";
+        final String expanedText = "..더보기";
 
         if (view.getTag() != null && view.getTag().equals(text)) { //Tag로 전값 의 text를 비교하여똑같으면 실행하지 않음.
             return;
@@ -605,7 +604,7 @@ public class Fragment_player extends Fragment
         view.post(new Runnable() { //getLineCount()는 UI 백그라운드에서만 가져올수 있음
             @Override
             public void run() {
-                if (view.getLineCount() >= maxLine) { //Line Count가 설정한 MaxLine의 값보다 크다면 처리시작
+                if (view.getLineCount() > maxLine) { //Line Count가 설정한 MaxLine의 값보다 크다면 처리시작
 
                     int lineEndIndex = view.getLayout().getLineVisibleEnd(maxLine - 1); //Max Line 까지의 text length
 
@@ -615,8 +614,8 @@ public class Fragment_player extends Fragment
                     String lessText = "";
                     for (String item : split) {
                         splitLength += item.length() + 1;
-                        if (splitLength >= lineEndIndex) { //마지막 줄일때!
-                            if (item.length() >= expanedText.length()) {
+                        if (splitLength > lineEndIndex) { //마지막 줄일때!
+                            if (item.length() > expanedText.length()) {
                                 lessText += item.substring(0, item.length() - (expanedText.length())) + expanedText;
                             } else {
                                 lessText += item + expanedText;
