@@ -58,9 +58,8 @@ import static android.content.Context.AUDIO_SERVICE;
 import static com.aqoong.lib.expandabletextview.ExpandableTextView.STATE.EXPAND;
 
 public class Fragment_player extends Fragment
-    implements View.OnClickListener {
+        implements View.OnClickListener {
     private static String TAG = "Fragment_player";
-    private static String TAG1 = "Frag1";
 
     private EditText mMessageEditText;
     private Button mMessageSendButton;
@@ -225,15 +224,12 @@ public class Fragment_player extends Fragment
         });
     }
 
-
-
-    // 좋아요 로띠 애니메이션을 실행 시키는 메소드
     private boolean toggleSongLikeAnimButton(){
         songLikeAnimButton.setVisibility(View.VISIBLE);
         ValueAnimator animator = ValueAnimator.ofFloat(0f, 0.5f).setDuration(500);
 
         animator.addUpdateListener((ValueAnimator animation) ->
-            songLikeAnimButton.setProgress((Float) animation.getAnimatedValue())
+                songLikeAnimButton.setProgress((Float) animation.getAnimatedValue())
         );
         animator.start();
 
@@ -332,48 +328,7 @@ public class Fragment_player extends Fragment
                 }
                 break;
             case R.id.btn_sound:
-                if(soundonoff==1){
-                    if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
-                        // 벨소리 모드일 경우
-                        audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);    // 무음 모드로 변경
-                    }
-                    else if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE) {
-                        // 진동 모드일 경우
-                        audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);    // 무음 모드로 변경
-                    }
-                    else if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT) {
-                        // 무음 모드일 경우
-                        audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);    // 무음 모드로 변경
-                    }
-
-                    NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-                    if (!notificationManager.isNotificationPolicyAccessGranted()) {
-                        mContext.startActivity(new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS));
-                    }
-
-                    soundonoff=0;
-                }
-                else if(soundonoff==0){
-                    if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
-                        // 벨소리 모드일 경우
-                        audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);    // 벨소리 모드로 변경
-                    }
-                    else if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE) {
-                        // 진동 모드일 경우
-                        audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);    // 벨소리 모드로 변경
-                    }
-                    else if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT) {
-                        // 무음 모드일 경우
-                        audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);    // 벨소리 모드로 변경
-                    }
-
-                    NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-                    if (!notificationManager.isNotificationPolicyAccessGranted()) {
-                        mContext.startActivity(new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS));
-                    }
-
-                    soundonoff=1;
-                }
+                SoundOnOff();
                 break;
         }
     }
@@ -381,10 +336,7 @@ public class Fragment_player extends Fragment
     public void msgfilter(String customType, String data){
         switch(customType) {
             case "notice":
-//                notify.setText("any text", "show more option text");
-//                notify.setState(ExpandableTextView.STATE.COLLAPSE);
                 setReadMore(notify, data, 1);
-                //notify.setText(data);
                 break;
             case "alarm":
                 AlarmPlayer(data,3);
@@ -515,6 +467,51 @@ public class Fragment_player extends Fragment
                         imageView.setImageDrawable(circularBitmapDrawable);
                     }
                 });
+    }
+
+    private void SoundOnOff(){
+        if(soundonoff==1){
+            if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+                // 벨소리 모드일 경우
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);    // 무음 모드로 변경
+            }
+            else if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE) {
+                // 진동 모드일 경우
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);    // 무음 모드로 변경
+            }
+            else if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT) {
+                // 무음 모드일 경우
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);    // 무음 모드로 변경
+            }
+
+            NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+            if (!notificationManager.isNotificationPolicyAccessGranted()) {
+                mContext.startActivity(new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS));
+            }
+
+            soundonoff=0;
+        }
+        else if(soundonoff==0){
+            if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+                // 벨소리 모드일 경우
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);    // 벨소리 모드로 변경
+            }
+            else if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE) {
+                // 진동 모드일 경우
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);    // 벨소리 모드로 변경
+            }
+            else if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT) {
+                // 무음 모드일 경우
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);    // 벨소리 모드로 변경
+            }
+
+            NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+            if (!notificationManager.isNotificationPolicyAccessGranted()) {
+                mContext.startActivity(new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS));
+            }
+
+            soundonoff=1;
+        }
     }
 
     private void setUseableEditText(EditText et, boolean useable) {

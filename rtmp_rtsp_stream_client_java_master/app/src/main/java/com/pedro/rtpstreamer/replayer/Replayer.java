@@ -96,12 +96,7 @@ public class Replayer extends AppCompatActivity
 
     private boolean is_follow = false;
     private Button FollowButton;	//팔로우버튼
-    private Button DeclareButton;
-    private ImageView heartimg, eyeimg;
     private TextView people;
-    private ImageView cover;
-    private LinearLayout playbar, etc;
-    private FrameLayout heartlayout;
     private SurfaceView surfaceView;
 
     private TextView currentPlayTime;
@@ -112,6 +107,7 @@ public class Replayer extends AppCompatActivity
     private Context mContext;
     private RelativeLayout background, titleEtc;
 
+<<<<<<< HEAD
 //    @Override
 //    public void onAttach(@NonNull Context context){
 //        super.onAttach(context);
@@ -119,6 +115,8 @@ public class Replayer extends AppCompatActivity
 //    }
 
 
+=======
+>>>>>>> c7bbf144216f8e6d2773904c2121cd92199fa50d
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -146,13 +144,6 @@ public class Replayer extends AppCompatActivity
         currTimeline = findViewById(R.id.curr_category);
         FollowButton = findViewById(R.id.refollowButton);
 
-        DeclareButton = findViewById(R.id.redeclare);
-        heartimg = findViewById(R.id.imageView);
-        eyeimg = findViewById(R.id.eyeImage);
-        cover = findViewById(R.id.imageButton3);
-        playbar = findViewById(R.id.playbar);
-        etc = findViewById(R.id.etc);
-        heartlayout = findViewById(R.id.heartBox);
         surfaceView = findViewById(R.id.video_layout);
         currentPlayTime = findViewById(R.id.currentPlayTime);
         maxPlayTime = findViewById(R.id.maxPlayTime);
@@ -217,6 +208,7 @@ public class Replayer extends AppCompatActivity
             case R.id.redeclare:
                 select_Declare(getLayoutInflater());
                 break;
+<<<<<<< HEAD
             case R.id.rebtn_sound:
                 if(soundonoff==1){
                     if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
@@ -260,6 +252,11 @@ public class Replayer extends AppCompatActivity
 
                     soundonoff=1;
                 }
+=======
+
+            case R.id.rebtn_sound:
+                SoundOnOff();
+>>>>>>> c7bbf144216f8e6d2773904c2121cd92199fa50d
                 break;
         }
     }
@@ -481,6 +478,51 @@ public class Replayer extends AppCompatActivity
             }
         }
     };
+
+    private void SoundOnOff(){
+        if(soundonoff==1){
+            if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+                // 벨소리 모드일 경우
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);    // 무음 모드로 변경
+            }
+            else if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE) {
+                // 진동 모드일 경우
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);    // 무음 모드로 변경
+            }
+            else if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT) {
+                // 무음 모드일 경우
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);    // 무음 모드로 변경
+            }
+
+            NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+            if (!notificationManager.isNotificationPolicyAccessGranted()) {
+                mContext.startActivity(new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS));
+            }
+
+            soundonoff=0;
+        }
+        else if(soundonoff==0){
+            if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+                // 벨소리 모드일 경우
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);    // 벨소리 모드로 변경
+            }
+            else if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE) {
+                // 진동 모드일 경우
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);    // 벨소리 모드로 변경
+            }
+            else if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT) {
+                // 무음 모드일 경우
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);    // 벨소리 모드로 변경
+            }
+
+            NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+            if (!notificationManager.isNotificationPolicyAccessGranted()) {
+                mContext.startActivity(new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS));
+            }
+
+            soundonoff=1;
+        }
+    }
 
     private void playChat(Pair cp){
         switch (cp.getType()) {
