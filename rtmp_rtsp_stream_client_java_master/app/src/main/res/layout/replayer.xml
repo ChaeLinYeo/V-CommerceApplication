@@ -67,6 +67,20 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <ImageButton
+            android:id="@+id/rebtn_sound"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="0dp"
+            android:background="#00FFFFFF"
+            app:srcCompat="@drawable/soundon_icon" />
+    </RelativeLayout>
+
+    <RelativeLayout
         android:id="@+id/re_rl_Live"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -103,15 +117,15 @@
             android:textColor="#fff"
             android:textSize="15sp" />
 
-        <ImageButton
-            android:id="@+id/rebtn_sound"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="0dp"
-            android:background="#00FFFFFF"
-            app:srcCompat="@drawable/soundon_icon" />
+<!--        <ImageButton-->
+<!--            android:id="@+id/rebtn_sound"-->
+<!--            android:layout_width="50dp"-->
+<!--            android:layout_height="50dp"-->
+<!--            android:layout_alignParentEnd="true"-->
+<!--            android:layout_marginTop="5dp"-->
+<!--            android:layout_marginEnd="0dp"-->
+<!--            android:background="#00FFFFFF"-->
+<!--            app:srcCompat="@drawable/soundon_icon" />-->
 
         <TextView
             android:id="@+id/reheartnum"
