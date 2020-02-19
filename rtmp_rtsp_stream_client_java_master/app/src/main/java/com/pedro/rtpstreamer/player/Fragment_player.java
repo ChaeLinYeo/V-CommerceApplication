@@ -332,48 +332,7 @@ public class Fragment_player extends Fragment
                 }
                 break;
             case R.id.btn_sound:
-                if(soundonoff==1){
-                    if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
-                        // 벨소리 모드일 경우
-                        audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);    // 무음 모드로 변경
-                    }
-                    else if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE) {
-                        // 진동 모드일 경우
-                        audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);    // 무음 모드로 변경
-                    }
-                    else if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT) {
-                        // 무음 모드일 경우
-                        audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);    // 무음 모드로 변경
-                    }
-
-                    NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-                    if (!notificationManager.isNotificationPolicyAccessGranted()) {
-                        mContext.startActivity(new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS));
-                    }
-
-                    soundonoff=0;
-                }
-                else if(soundonoff==0){
-                    if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
-                        // 벨소리 모드일 경우
-                        audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);    // 벨소리 모드로 변경
-                    }
-                    else if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE) {
-                        // 진동 모드일 경우
-                        audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);    // 벨소리 모드로 변경
-                    }
-                    else if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT) {
-                        // 무음 모드일 경우
-                        audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);    // 벨소리 모드로 변경
-                    }
-
-                    NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-                    if (!notificationManager.isNotificationPolicyAccessGranted()) {
-                        mContext.startActivity(new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS));
-                    }
-
-                    soundonoff=1;
-                }
+                SoundOnOff();
                 break;
         }
     }
@@ -515,6 +474,51 @@ public class Fragment_player extends Fragment
                         imageView.setImageDrawable(circularBitmapDrawable);
                     }
                 });
+    }
+
+    private void SoundOnOff(){
+        if(soundonoff==1){
+            if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+                // 벨소리 모드일 경우
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);    // 무음 모드로 변경
+            }
+            else if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE) {
+                // 진동 모드일 경우
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);    // 무음 모드로 변경
+            }
+            else if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT) {
+                // 무음 모드일 경우
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);    // 무음 모드로 변경
+            }
+
+            NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+            if (!notificationManager.isNotificationPolicyAccessGranted()) {
+                mContext.startActivity(new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS));
+            }
+
+            soundonoff=0;
+        }
+        else if(soundonoff==0){
+            if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+                // 벨소리 모드일 경우
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);    // 벨소리 모드로 변경
+            }
+            else if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE) {
+                // 진동 모드일 경우
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);    // 벨소리 모드로 변경
+            }
+            else if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT) {
+                // 무음 모드일 경우
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);    // 벨소리 모드로 변경
+            }
+
+            NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+            if (!notificationManager.isNotificationPolicyAccessGranted()) {
+                mContext.startActivity(new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS));
+            }
+
+            soundonoff=1;
+        }
     }
 
     private void setUseableEditText(EditText et, boolean useable) {
