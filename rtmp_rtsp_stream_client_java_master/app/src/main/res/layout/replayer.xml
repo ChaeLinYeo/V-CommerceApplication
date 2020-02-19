@@ -219,7 +219,7 @@
                 android:id="@+id/HeartIcon"
                 android:layout_width="65dp"
                 android:layout_height="48dp"
-                android:layout_gravity="bottom|center"
+                android:layout_gravity="bottom|right"
                 android:layout_marginBottom="0dp"
                 app:srcCompat="@drawable/heart2" />
 
@@ -316,7 +316,7 @@
 
             <TextView
                 android:id="@+id/curr_category"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:background="#34000000"
                 android:clickable="true"
