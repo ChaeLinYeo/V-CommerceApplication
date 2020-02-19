@@ -132,8 +132,8 @@
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="20dp"
-            android:layout_height="17dp"
+            android:layout_width="28dp"
+            android:layout_height="24dp"
             android:layout_below="@id/refollowButton"
             android:layout_alignParentStart="true"
             android:layout_marginStart="40dp"
@@ -154,8 +154,8 @@
 
         <ImageView
             android:id="@+id/eyeImage"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
+            android:layout_width="28dp"
+            android:layout_height="24dp"
             android:layout_below="@id/redeclare"
             android:layout_marginStart="20dp"
             android:layout_marginTop="10dp"

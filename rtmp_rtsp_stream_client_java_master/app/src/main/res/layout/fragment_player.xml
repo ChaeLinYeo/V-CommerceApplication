@@ -312,8 +312,8 @@
 
                         <ImageView
                             android:id="@+id/imageView"
-                            android:layout_width="20dp"
-                            android:layout_height="17dp"
+                            android:layout_width="28dp"
+                            android:layout_height="24dp"
                             android:layout_below="@+id/followButton"
                             android:layout_alignParentStart="true"
                             android:layout_marginStart="40dp"
@@ -335,8 +335,8 @@
 
                         <ImageView
                             android:id="@+id/heartImage"
-                            android:layout_width="21dp"
-                            android:layout_height="15dp"
+                            android:layout_width="28dp"
+                            android:layout_height="24dp"
                             android:layout_below="@+id/followButton"
                             android:layout_marginStart="20dp"
                             android:layout_marginTop="10dp"
