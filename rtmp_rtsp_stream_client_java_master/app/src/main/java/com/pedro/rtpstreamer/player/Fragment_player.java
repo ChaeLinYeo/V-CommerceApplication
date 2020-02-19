@@ -67,10 +67,6 @@ public class Fragment_player extends Fragment
     private Button FollowButton;	//팔로우버튼
     private TextView system_notice; //각종알림
     private InputMethodManager mIMM;
-    private Button DeclareButton;
-    private ImageButton ShareButton;
-    private ImageView heartimg, eyeimg;
-    private LinearLayout BottomBar;
     private RelativeLayout titleEtc;
 
     private ExampleChatController mExampleChatController;
@@ -138,11 +134,6 @@ public class Fragment_player extends Fragment
         FollowButton = view.findViewById(R.id.followButton);
         system_notice = view.findViewById(R.id.system_notice);
         listView = view.findViewById(R.id.ChatListView);
-        DeclareButton = view.findViewById(R.id.declare);
-        ShareButton = view.findViewById(R.id.menu_share);
-        heartimg = view.findViewById(R.id.imageView);
-        eyeimg = view.findViewById(R.id.heartImage);
-        BottomBar = view.findViewById(R.id.layout_open_chat_chatbox);
         titleEtc = view.findViewById(R.id.titleEtc);
         background = view.findViewById(R.id.rl_Live);
 
