@@ -180,16 +180,6 @@
                                     android:focusable="true"
                                     app:srcCompat="@drawable/buyicon" />
 
-                                <!--                        <Button-->
-                                <!--                            android:id="@+id/btn_onoff"-->
-                                <!--                            android:layout_width="48dp"-->
-                                <!--                            android:layout_height="48dp"-->
-                                <!--                            android:background="#fff"-->
-                                <!--                            android:clickable="true"-->
-                                <!--                            android:focusable="true"-->
-                                <!--                            android:text="OFF"-->
-                                <!--                            android:textColor="#000000" />-->
-
                                 <ImageButton
                                     android:id="@+id/button_open_channel_chat_upload"
                                     android:layout_width="2dp"
@@ -237,24 +227,10 @@
 
                         </LinearLayout>
 
-
-                        <!--                <View-->
-                        <!--                    android:layout_width="344dp"-->
-                        <!--                    android:layout_height="2dp"-->
-                        <!--                    android:layout_above="@id/layout_open_chat_chatbox"-->
-                        <!--                    android:layout_alignParentStart="true"-->
-                        <!--                    android:layout_alignParentEnd="true"-->
-                        <!--                    android:layout_marginStart="0dp"-->
-                        <!--                    android:layout_marginTop="0dp"-->
-                        <!--                    android:layout_marginEnd="0dp"-->
-                        <!--                    android:layout_marginBottom="0dp"-->
-                        <!--                    android:background="#DfDfDf" />-->
-
                         <Button
                             android:id="@+id/followButton"
                             android:layout_width="wrap_content"
                             android:layout_height="40dp"
-                            android:layout_below="@id/nickname"
                             android:layout_alignParentStart="true"
                             android:layout_marginStart="30dp"
                             android:layout_marginLeft="30dp"
@@ -270,7 +246,6 @@
                             android:id="@+id/declare"
                             android:layout_width="wrap_content"
                             android:layout_height="40dp"
-                            android:layout_below="@+id/nickname"
                             android:layout_marginStart="12dp"
                             android:layout_marginLeft="30dp"
                             android:layout_marginTop="10dp"
