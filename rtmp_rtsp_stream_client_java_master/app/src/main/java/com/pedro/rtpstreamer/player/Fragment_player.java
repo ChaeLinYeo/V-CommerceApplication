@@ -136,6 +136,11 @@ public class Fragment_player extends Fragment
         titleEtc = view.findViewById(R.id.titleEtc);
         background = view.findViewById(R.id.rl_Live);
 
+        NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (!notificationManager.isNotificationPolicyAccessGranted()) {
+
+            mContext.startActivity(new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS));
+        }
         audioManager = (AudioManager) mContext.getSystemService(AUDIO_SERVICE);
 
         view.findViewById(R.id.buy_button).setOnClickListener(this);
@@ -488,11 +493,6 @@ public class Fragment_player extends Fragment
                 audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);    // 무음 모드로 변경
             }
 
-            NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-            if (!notificationManager.isNotificationPolicyAccessGranted()) {
-                mContext.startActivity(new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS));
-            }
-
             soundonoff=0;
         }
         else if(soundonoff==0){
@@ -507,11 +507,6 @@ public class Fragment_player extends Fragment
             else if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT) {
                 // 무음 모드일 경우
                 audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);    // 벨소리 모드로 변경
-            }
-
-            NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-            if (!notificationManager.isNotificationPolicyAccessGranted()) {
-                mContext.startActivity(new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS));
             }
 
             soundonoff=1;

@@ -150,7 +150,12 @@ public class Replayer extends AppCompatActivity
         ECC.show();
         ECC.add2("재방송 채팅입니다.");
 
-        audioManager = (AudioManager) mContext.getSystemService(AUDIO_SERVICE);
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (!notificationManager.isNotificationPolicyAccessGranted()) {
+
+            context.startActivity(new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS));
+        }
+        audioManager = (AudioManager) context.getSystemService(AUDIO_SERVICE);
 
 
         title.setOnClickListener((View view) -> {
@@ -448,11 +453,6 @@ public class Replayer extends AppCompatActivity
                 audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);    // 무음 모드로 변경
             }
 
-            NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-            if (!notificationManager.isNotificationPolicyAccessGranted()) {
-                mContext.startActivity(new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS));
-            }
-
             soundonoff=0;
         }
         else if(soundonoff==0){
@@ -467,11 +467,6 @@ public class Replayer extends AppCompatActivity
             else if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT) {
                 // 무음 모드일 경우
                 audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);    // 벨소리 모드로 변경
-            }
-
-            NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-            if (!notificationManager.isNotificationPolicyAccessGranted()) {
-                mContext.startActivity(new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS));
             }
 
             soundonoff=1;
