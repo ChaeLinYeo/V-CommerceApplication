@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -155,10 +156,14 @@ public class Replayer extends AppCompatActivity
         title.setOnClickListener((View view) -> {
             if(onoff == 1){
                 background.setVisibility(View.GONE);
+                ViewGroup.LayoutParams params = title.getLayoutParams();
+                params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                title.setLayoutParams(params);
                 onoff = 0;
             }
             else if(onoff == 0){
                 background.setVisibility(View.VISIBLE);
+                title.setHeight(30);
                 onoff = 1;
             }
         });

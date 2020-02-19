@@ -201,10 +201,14 @@ public class Fragment_player extends Fragment
         title.setOnClickListener((View view) -> {
             if(onoff == 1){
                 background.setVisibility(View.GONE);
+                ViewGroup.LayoutParams params = title.getLayoutParams();
+                params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                title.setLayoutParams(params);
                 onoff = 0;
             }
             else if(onoff == 0){
                 background.setVisibility(View.VISIBLE);
+                title.setHeight(30);
                 onoff = 1;
             }
         });
