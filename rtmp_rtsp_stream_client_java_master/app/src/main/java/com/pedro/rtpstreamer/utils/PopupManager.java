@@ -18,6 +18,7 @@ import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -933,5 +934,4 @@ public class PopupManager {
         );
         alertDialog.show();
     }
-
 }

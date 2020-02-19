@@ -40,6 +40,7 @@ import com.pedro.rtpstreamer.server.AWSfileManager;
 import com.pedro.rtpstreamer.server.Pair;
 import com.pedro.rtpstreamer.utils.ExampleChatController;
 import com.pedro.rtpstreamer.utils.StaticVariable;
+import com.pedro.rtpstreamer.utils.PopupManager;
 
 import org.videolan.libvlc.LibVLC;
 import org.videolan.libvlc.Media;
@@ -107,16 +108,8 @@ public class Replayer extends AppCompatActivity
     private Context mContext;
     private RelativeLayout background, titleEtc;
 
-<<<<<<< HEAD
-//    @Override
-//    public void onAttach(@NonNull Context context){
-//        super.onAttach(context);
-//        mContext = context;
-//    }
+    PopupManager PM;
 
-
-=======
->>>>>>> c7bbf144216f8e6d2773904c2121cd92199fa50d
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -149,6 +142,8 @@ public class Replayer extends AppCompatActivity
         maxPlayTime = findViewById(R.id.maxPlayTime);
         background = findViewById(R.id.re_rl_Live);
         titleEtc = findViewById(R.id.replaytop);
+
+        PM = new PopupManager(context);
 
         ECC = new ExampleChatController(context, listView, R.layout.chatline, R.id.chat_line_textview, R.id.chat_line_timeview);
         ECC.show();
@@ -206,57 +201,11 @@ public class Replayer extends AppCompatActivity
                 break;
 
             case R.id.redeclare:
-                select_Declare(getLayoutInflater());
+                PM.select_Declare(getLayoutInflater());
                 break;
-<<<<<<< HEAD
-            case R.id.rebtn_sound:
-                if(soundonoff==1){
-                    if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
-                        // 벨소리 모드일 경우
-                        audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);    // 무음 모드로 변경
-                    }
-                    else if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE) {
-                        // 진동 모드일 경우
-                        audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);    // 무음 모드로 변경
-                    }
-                    else if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT) {
-                        // 무음 모드일 경우
-                        audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);    // 무음 모드로 변경
-                    }
-
-                    NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-                    if (!notificationManager.isNotificationPolicyAccessGranted()) {
-                        mContext.startActivity(new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS));
-                    }
-
-                    soundonoff=0;
-                }
-                else if(soundonoff==0){
-                    if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
-                        // 벨소리 모드일 경우
-                        audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);    // 벨소리 모드로 변경
-                    }
-                    else if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE) {
-                        // 진동 모드일 경우
-                        audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);    // 벨소리 모드로 변경
-                    }
-                    else if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT) {
-                        // 무음 모드일 경우
-                        audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);    // 벨소리 모드로 변경
-                    }
-
-                    NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-                    if (!notificationManager.isNotificationPolicyAccessGranted()) {
-                        mContext.startActivity(new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS));
-                    }
-
-                    soundonoff=1;
-                }
-=======
-
             case R.id.rebtn_sound:
                 SoundOnOff();
->>>>>>> c7bbf144216f8e6d2773904c2121cd92199fa50d
+
                 break;
         }
     }
@@ -541,9 +490,6 @@ public class Replayer extends AppCompatActivity
     }
 
     private void heartAni(){
-        // 애니메이션을 한번 실행시킨다.
-        // Custom animation speed or duration.
-        // ofFloat(시작 시간, 종료 시간).setDuration(지속시간)
         songLikeAnimButton.setVisibility(VISIBLE);
         ValueAnimator animator = ValueAnimator.ofFloat(0f, 0.6f).setDuration(500);
 
@@ -615,34 +561,4 @@ public class Replayer extends AppCompatActivity
         is_follow = !is_follow;//상태 바꿈
     }
 
-    public void select_Declare(LayoutInflater inflater) {
-        final AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        View mView = inflater.inflate(R.layout.declare_popup01, null);
-
-        //신고항목
-        final Button txt_input1 = mView.findViewById(R.id.txt_input1);
-        final Button txt_input2 = mView.findViewById(R.id.txt_input2);
-        final Button txt_input3 = mView.findViewById(R.id.txt_input3);
-        final Button txt_input4 = mView.findViewById(R.id.txt_input4);
-        final Button txt_input5 = mView.findViewById(R.id.txt_input5);
-        final Button txt_input6 = mView.findViewById(R.id.txt_input6);
-
-        //취소, 다음
-        Button btn_cancel01 = mView.findViewById(R.id.btn_cancel1);
-        Button btn_ok01 = mView.findViewById(R.id.btn_ok1);
-
-        alert.setView(mView);
-
-        final AlertDialog alertDialog = alert.create();
-        alertDialog.setCanceledOnTouchOutside(false);
-
-
-        btn_cancel01.setOnClickListener((View view) -> alertDialog.dismiss());
-
-        btn_ok01.setOnClickListener((View view) -> {
-            alertDialog.dismiss();
-        });
-
-        alertDialog.show();
-    }
 }
