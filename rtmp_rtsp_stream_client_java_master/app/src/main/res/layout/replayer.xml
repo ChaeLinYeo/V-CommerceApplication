@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -13,9 +13,9 @@
         android:visibility="visible"/>
 
     <RelativeLayout
-        android:id="@+id/rl_Live"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:id="@+id/replaytop">
 
         <ImageButton
             android:id="@+id/imageButton3"
@@ -64,11 +64,19 @@
             android:textColor="#fff"
             android:textSize="15sp" />
 
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/re_rl_Live"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/replaytop"
+        android:layout_marginTop="0dp">
+
         <Button
             android:id="@+id/refollowButton"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
-            android:layout_below="@+id/replaynickname"
             android:layout_alignParentStart="true"
             android:layout_marginStart="30dp"
             android:layout_marginLeft="30dp"
@@ -84,7 +92,6 @@
             android:id="@+id/redeclare"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
-            android:layout_below="@+id/replaynickname"
             android:layout_marginStart="10dp"
             android:layout_marginLeft="30dp"
             android:layout_marginTop="10dp"
@@ -95,6 +102,16 @@
             android:text="신고"
             android:textColor="#fff"
             android:textSize="15sp" />
+
+        <ImageButton
+            android:id="@+id/rebtn_sound"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="0dp"
+            android:background="#00FFFFFF"
+            app:srcCompat="@drawable/soundon_icon" />
 
         <TextView
             android:id="@+id/reheartnum"
@@ -139,14 +156,14 @@
             android:layout_marginTop="10dp"
             android:layout_marginEnd="0dp"
             android:layout_toEndOf="@id/reheartnum"
-            app:srcCompat="@drawable/soundoff_icon" />
+            app:srcCompat="@drawable/icon" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_above="@+id/playbar"
-            android:layout_marginBottom="5dp"
             android:layout_marginRight="90dp"
+            android:layout_marginBottom="5dp"
             android:orientation="horizontal">
 
             <ListView
@@ -209,34 +226,34 @@
                 android:id="@+id/playBtn"
                 android:layout_width="0dp"
                 android:layout_height="30dp"
-                android:text="start"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:text="start" />
 
             <TextView
                 android:id="@+id/currentPlayTime"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:background="@color/white"
-                android:text="00:00"
                 android:gravity="center"
-                android:layout_weight="1"/>
+                android:text="00:00" />
 
             <SeekBar
                 android:id="@+id/seekBar"
                 android:layout_width="0dp"
                 android:layout_height="30dp"
+                android:layout_weight="3"
                 android:background="@color/white"
-                android:max="1000"
-                android:layout_weight="3"/>
+                android:max="1000" />
 
             <TextView
                 android:id="@+id/maxPlayTime"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:background="@color/white"
-                android:text="00:00"
                 android:gravity="center"
-                android:layout_weight="1"/>
+                android:text="00:00" />
 
         </LinearLayout>
 
@@ -246,41 +263,41 @@
             android:layout_height="48dp"
             android:layout_alignParentBottom="true"
             android:layout_marginStart="10dp"
-            android:layout_marginBottom="0dp"
             android:layout_marginEnd="90dp"
+            android:layout_marginBottom="0dp"
             android:orientation="horizontal">
 
             <ImageButton
                 android:id="@+id/buy_button"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
+                android:layout_marginRight="10dp"
                 android:background="#fff"
                 android:clickable="true"
                 android:focusable="true"
-                android:layout_marginRight="10dp"
                 app:srcCompat="@drawable/buyicon" />
 
-<!--            <Button-->
-<!--                android:id="@+id/btn_onoff2"-->
-<!--                android:layout_width="48dp"-->
-<!--                android:layout_height="48dp"-->
-<!--                android:background="#fff"-->
-<!--                android:clickable="true"-->
-<!--                android:focusable="true"-->
-<!--                android:text="OFF"-->
-<!--                android:layout_marginRight="10dp"-->
-<!--                android:textColor="#000000" />-->
+            <!--            <Button-->
+            <!--                android:id="@+id/btn_onoff2"-->
+            <!--                android:layout_width="48dp"-->
+            <!--                android:layout_height="48dp"-->
+            <!--                android:background="#fff"-->
+            <!--                android:clickable="true"-->
+            <!--                android:focusable="true"-->
+            <!--                android:text="OFF"-->
+            <!--                android:layout_marginRight="10dp"-->
+            <!--                android:textColor="#000000" />-->
 
             <Button
                 android:id="@+id/timelineButton"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_gravity="bottom"
+                android:layout_marginRight="10dp"
                 android:background="#fff"
                 android:clickable="true"
                 android:focusable="true"
                 android:text="타임라인"
-                android:layout_marginRight="10dp"
                 android:textColor="#000000" />
 
             <TextView
@@ -289,15 +306,15 @@
                 android:layout_height="48dp"
                 android:background="#34000000"
                 android:clickable="true"
-                android:focusable="true"
-                android:text="현재 null 판매중"
-                android:textSize="20sp"
-                android:textColor="#fff"
-                android:gravity="center_vertical|left"
-                android:singleLine="true"
-                android:focusableInTouchMode="true"
                 android:ellipsize="marquee"
-                android:marqueeRepeatLimit="marquee_forever"/>
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:gravity="center_vertical|left"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:singleLine="true"
+                android:text="현재 null 판매중"
+                android:textColor="#fff"
+                android:textSize="20sp" />
         </LinearLayout>
     </RelativeLayout>
 
@@ -312,4 +329,4 @@
             android:indeterminate="true" />
     </RelativeLayout>
 
-</FrameLayout>
+</RelativeLayout>

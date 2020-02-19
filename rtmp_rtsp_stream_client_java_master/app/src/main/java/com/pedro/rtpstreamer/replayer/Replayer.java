@@ -110,6 +110,7 @@ public class Replayer extends AppCompatActivity
     private int soundonoff = 1;
     private AudioManager audioManager;
     private Context mContext;
+    private RelativeLayout background, titleEtc;
 
 //    @Override
 //    public void onAttach(@NonNull Context context){
@@ -155,6 +156,8 @@ public class Replayer extends AppCompatActivity
         surfaceView = findViewById(R.id.video_layout);
         currentPlayTime = findViewById(R.id.currentPlayTime);
         maxPlayTime = findViewById(R.id.maxPlayTime);
+        background = findViewById(R.id.re_rl_Live);
+        titleEtc = findViewById(R.id.replaytop);
 
         ECC = new ExampleChatController(context, listView, R.layout.chatline, R.id.chat_line_textview, R.id.chat_line_timeview);
         ECC.show();
@@ -165,64 +168,25 @@ public class Replayer extends AppCompatActivity
 
         title.setOnClickListener((View view) -> {
             if(onoff == 1){
-                ECC.hide();
-                FollowButton.setVisibility(View.GONE);
-                DeclareButton.setVisibility(View.GONE);
-                heartimg.setVisibility(View.GONE);
-                heart.setVisibility(View.GONE);
-                eyeimg.setVisibility(View.GONE);
-                people.setVisibility(View.GONE);
-                playbar.setVisibility(View.GONE);
-                etc.setVisibility(View.GONE);
-                heartlayout.setVisibility(View.GONE);
+                background.setVisibility(View.GONE);
                 onoff = 0;
             }
             else if(onoff == 0){
-                ECC.show();
-                FollowButton.setVisibility(View.VISIBLE);
-                DeclareButton.setVisibility(View.VISIBLE);
-                heartimg.setVisibility(View.VISIBLE);
-                heart.setVisibility(View.VISIBLE);
-                eyeimg.setVisibility(View.VISIBLE);
-                people.setVisibility(View.VISIBLE);
-                playbar.setVisibility(View.VISIBLE);
-                etc.setVisibility(View.VISIBLE);
-                heartlayout.setVisibility(View.VISIBLE);
+                background.setVisibility(View.VISIBLE);
                 onoff = 1;
             }
         });
 
+
         surfaceView.setOnClickListener((View view) -> {
             if(back_onoff == 1){
-                ECC.hide();
-                cover.setVisibility(View.GONE);
-                title.setVisibility(View.GONE);
-                streamer_nickname.setVisibility(View.GONE);
-                FollowButton.setVisibility(View.GONE);
-                DeclareButton.setVisibility(View.GONE);
-                heartimg.setVisibility(View.GONE);
-                heart.setVisibility(View.GONE);
-                eyeimg.setVisibility(View.GONE);
-                people.setVisibility(View.GONE);
-                etc.setVisibility(View.GONE);
-                heartlayout.setVisibility(View.GONE);
-                playbar.setVisibility(View.VISIBLE);
+                titleEtc.setVisibility(View.GONE);
+                background.setVisibility(View.GONE);
                 back_onoff = 0;
             }
             else if(back_onoff == 0){
-                ECC.show();
-                cover.setVisibility(View.VISIBLE);
-                title.setVisibility(View.VISIBLE);
-                streamer_nickname.setVisibility(View.VISIBLE);
-                FollowButton.setVisibility(View.VISIBLE);
-                DeclareButton.setVisibility(View.VISIBLE);
-                heartimg.setVisibility(View.VISIBLE);
-                heart.setVisibility(View.VISIBLE);
-                eyeimg.setVisibility(View.VISIBLE);
-                people.setVisibility(View.VISIBLE);
-//                playbar.setVisibility(View.VISIBLE);
-                etc.setVisibility(View.VISIBLE);
-                heartlayout.setVisibility(View.VISIBLE);
+                titleEtc.setVisibility(View.VISIBLE);
+                background.setVisibility(View.VISIBLE);
                 back_onoff = 1;
             }
         });
@@ -253,7 +217,7 @@ public class Replayer extends AppCompatActivity
             case R.id.redeclare:
                 select_Declare(getLayoutInflater());
                 break;
-            case R.id.btn_sound:
+            case R.id.rebtn_sound:
                 if(soundonoff==1){
                     if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
                         // 벨소리 모드일 경우
