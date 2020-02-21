@@ -14,6 +14,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,6 +49,7 @@ import org.videolan.libvlc.MediaPlayer;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import static android.media.AudioManager.STREAM_MUSIC;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
@@ -144,7 +146,6 @@ public class Replayer extends AppCompatActivity
         heartbtn = findViewById(R.id.reHeartIcon);
         heartbtn.setOnClickListener(this);
 
-
         surfaceView = findViewById(R.id.video_layout);
         currentPlayTime = findViewById(R.id.currentPlayTime);
         maxPlayTime = findViewById(R.id.maxPlayTime);
@@ -215,7 +216,6 @@ public class Replayer extends AppCompatActivity
                 Log.d("replayer", "followclick");
                 btn_follow();
                 break;
-
             case R.id.redeclare:
                 Log.d("replayer", "declareclick");
                 PM.select_Declare(getLayoutInflater());
@@ -223,7 +223,11 @@ public class Replayer extends AppCompatActivity
             case R.id.rebtn_sound:
                 Log.d("replayer", "soundclick");
                 SoundOnOff();
-
+                break;
+            case R.id.reHeartIcon:
+                heartAni();
+                int newheart = Integer.parseInt(heart.getText().toString()) + 1;
+                heart.setText(Integer.toString(newheart));
                 break;
 
             case R.id.reHeartIcon:
@@ -291,6 +295,27 @@ public class Replayer extends AppCompatActivity
 
         }
     };
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        switch(keyCode){
+            case KeyEvent.KEYCODE_VOLUME_UP:
+                if(soundonoff == 0) {
+                    soundonoff = 1;
+                    soundbtn.setImageDrawable(getResources().getDrawable(R.drawable.soundon_icon));
+                }
+                break;
+            case KeyEvent.KEYCODE_VOLUME_DOWN:
+                AudioManager mAlramMAnager = (AudioManager)context.getSystemService(context.AUDIO_SERVICE);
+                int currnet_volume = mAlramMAnager.getStreamVolume(STREAM_MUSIC);
+                if(currnet_volume > 0){
+                    soundonoff = 0;
+                    soundbtn.setImageDrawable(getResources().getDrawable(R.drawable.soundoff_icon));
+                }
+                break;
+        }
+        return super.onKeyUp(keyCode, event);
+    }
 
     public void setUri(){
         mUri = Uri.parse(StaticVariable.stoargeUrl+"test/myUploadedFileName.mp4");
@@ -456,13 +481,13 @@ public class Replayer extends AppCompatActivity
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_NOTIFICATION, AudioManager.ADJUST_MUTE, 0);
             mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_ALARM, AudioManager.ADJUST_MUTE, 0);
-            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_MUTE, 0);
+            mAlramMAnager.adjustStreamVolume(STREAM_MUSIC, AudioManager.ADJUST_MUTE, 0);
             mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_RING, AudioManager.ADJUST_MUTE, 0);
             mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_SYSTEM, AudioManager.ADJUST_MUTE, 0);
         } else {
             mAlramMAnager.setStreamMute(AudioManager.STREAM_NOTIFICATION, true);
             mAlramMAnager.setStreamMute(AudioManager.STREAM_ALARM, true);
-            mAlramMAnager.setStreamMute(AudioManager.STREAM_MUSIC, true);
+            mAlramMAnager.setStreamMute(STREAM_MUSIC, true);
             mAlramMAnager.setStreamMute(AudioManager.STREAM_RING, true);
             mAlramMAnager.setStreamMute(AudioManager.STREAM_SYSTEM, true);
         }
@@ -473,49 +498,24 @@ public class Replayer extends AppCompatActivity
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_NOTIFICATION, AudioManager.ADJUST_UNMUTE, 0);
             mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_ALARM, AudioManager.ADJUST_UNMUTE, 0);
-            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_UNMUTE,0);
+            mAlramMAnager.adjustStreamVolume(STREAM_MUSIC, AudioManager.ADJUST_UNMUTE,0);
             mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_RING, AudioManager.ADJUST_UNMUTE, 0);
             mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_SYSTEM, AudioManager.ADJUST_UNMUTE, 0);
         } else {
             mAlramMAnager.setStreamMute(AudioManager.STREAM_NOTIFICATION, false);
             mAlramMAnager.setStreamMute(AudioManager.STREAM_ALARM, false);
-            mAlramMAnager.setStreamMute(AudioManager.STREAM_MUSIC, false);
+            mAlramMAnager.setStreamMute(STREAM_MUSIC, false);
             mAlramMAnager.setStreamMute(AudioManager.STREAM_RING, false);
             mAlramMAnager.setStreamMute(AudioManager.STREAM_SYSTEM, false);
         }
     }
     private void SoundOnOff(){
         if(soundonoff==1){
-//            if (AudioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
-//                // 벨소리 모드일 경우
-//                AudioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_MUTE, 0);
-//            }
-//            else if (AudioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE) {
-//                // 진동 모드일 경우
-//                AudioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_MUTE, 0);    // 무음 모드로 변경
-//            }
-//            else if (AudioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT) {
-//                // 무음 모드일 경우
-//                AudioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_MUTE, 0);    // 무음 모드로 변경
-//            }
-
             MuteAudio();
             soundonoff=0;
             soundbtn.setImageDrawable(getResources().getDrawable(R.drawable.soundoff_icon));
         }
         else if(soundonoff==0){
-//            if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
-//                // 벨소리 모드일 경우
-//                audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_MUTE, 1);    // 벨소리 모드로 변경
-//            }
-//            else if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE) {
-//                // 진동 모드일 경우
-//                audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_MUTE, 1);    // 벨소리 모드로 변경
-//            }
-//            else if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT) {
-//                // 무음 모드일 경우
-//                audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_MUTE, 1);    // 벨소리 모드로 변경
-//            }
             UnMuteAudio();
              soundonoff=1;
             soundbtn.setImageDrawable(getResources().getDrawable(R.drawable.soundon_icon));
