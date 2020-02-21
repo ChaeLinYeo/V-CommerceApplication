@@ -13,23 +13,19 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -40,8 +36,8 @@ import com.pedro.rtpstreamer.server.AWSListner;
 import com.pedro.rtpstreamer.server.AWSfileManager;
 import com.pedro.rtpstreamer.server.Pair;
 import com.pedro.rtpstreamer.utils.ExampleChatController;
-import com.pedro.rtpstreamer.utils.StaticVariable;
 import com.pedro.rtpstreamer.utils.PopupManager;
+import com.pedro.rtpstreamer.utils.StaticVariable;
 
 import org.videolan.libvlc.LibVLC;
 import org.videolan.libvlc.Media;
@@ -97,7 +93,7 @@ public class Replayer extends AppCompatActivity
     private int back_onoff = 1;
 
     private boolean is_follow = false;
-    private Button FollowButton;	//팔로우버튼
+    private Button FollowButton, redeclare;
     private TextView people;
     private SurfaceView surfaceView;
 
@@ -108,6 +104,9 @@ public class Replayer extends AppCompatActivity
     private AudioManager audioManager;
     private Context mContext;
     private RelativeLayout background, titleEtc;
+    boolean savedStreamMuted = false;
+
+    private ImageView hearticon;
 
     PopupManager PM;
 
@@ -137,12 +136,18 @@ public class Replayer extends AppCompatActivity
         loadingPanel = findViewById(R.id.ReplayLoadingPanel);
         currTimeline = findViewById(R.id.curr_category);
         FollowButton = findViewById(R.id.refollowButton);
+        FollowButton.setOnClickListener(this);
+        redeclare = findViewById(R.id.redeclare);
+        redeclare.setOnClickListener(this);
+        hearticon = findViewById(R.id.reHeartIcon);
+        hearticon.setOnClickListener(this);
+
 
         surfaceView = findViewById(R.id.video_layout);
         currentPlayTime = findViewById(R.id.currentPlayTime);
         maxPlayTime = findViewById(R.id.maxPlayTime);
         background = findViewById(R.id.re_rl_Live);
-        titleEtc = findViewById(R.id.replaytop);
+        titleEtc = findViewById(R.id.titleEtc);
 
         PM = new PopupManager(context);
 
@@ -155,7 +160,7 @@ public class Replayer extends AppCompatActivity
 
             context.startActivity(new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS));
         }
-        audioManager = (AudioManager) context.getSystemService(AUDIO_SERVICE);
+//        audioManager = (AudioManager) context.getSystemService(AUDIO_SERVICE);
 
 
         title.setOnClickListener((View view) -> {
@@ -168,7 +173,7 @@ public class Replayer extends AppCompatActivity
             }
             else if(onoff == 0){
                 background.setVisibility(View.VISIBLE);
-                title.setHeight(30);
+                //title.setHeight(30);
                 onoff = 1;
             }
         });
@@ -439,34 +444,66 @@ public class Replayer extends AppCompatActivity
     };
 
     private void SoundOnOff(){
+        audioManager = (AudioManager) context.getSystemService(AUDIO_SERVICE);
+        if (audioManager.isStreamMute(AudioManager.STREAM_MUSIC)) {
+            Toast.makeText(this, "Music is muted (isStreamMute)", Toast.LENGTH_SHORT).show();
+        }
         if(soundonoff==1){
-            if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
-                // 벨소리 모드일 경우
-                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);    // 무음 모드로 변경
-            }
-            else if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE) {
-                // 진동 모드일 경우
-                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);    // 무음 모드로 변경
-            }
-            else if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT) {
-                // 무음 모드일 경우
-                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);    // 무음 모드로 변경
+//            if (AudioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+//                // 벨소리 모드일 경우
+//                AudioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_MUTE, 0);
+//            }
+//            else if (AudioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE) {
+//                // 진동 모드일 경우
+//                AudioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_MUTE, 0);    // 무음 모드로 변경
+//            }
+//            else if (AudioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT) {
+//                // 무음 모드일 경우
+//                AudioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_MUTE, 0);    // 무음 모드로 변경
+//            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (!audioManager.isStreamMute(AudioManager.STREAM_SYSTEM)) {
+                    savedStreamMuted = true;
+                    audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_MUTE, 0);
+                    audioManager.adjustStreamVolume(AudioManager.STREAM_SYSTEM, AudioManager.ADJUST_MUTE, 0);
+                    audioManager.adjustStreamVolume(AudioManager.STREAM_NOTIFICATION, AudioManager.ADJUST_MUTE, 0);
+                    audioManager.adjustStreamVolume(AudioManager.STREAM_ALARM, AudioManager.ADJUST_MUTE, 0);
+                    audioManager.adjustStreamVolume(AudioManager.STREAM_RING, AudioManager.ADJUST_MUTE, 0);
+                    //audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                }
+            } else {
+                audioManager.setStreamMute(AudioManager.STREAM_SYSTEM, true);
             }
 
             soundonoff=0;
         }
         else if(soundonoff==0){
-            if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
-                // 벨소리 모드일 경우
-                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);    // 벨소리 모드로 변경
-            }
-            else if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE) {
-                // 진동 모드일 경우
-                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);    // 벨소리 모드로 변경
-            }
-            else if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT) {
-                // 무음 모드일 경우
-                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);    // 벨소리 모드로 변경
+//            if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+//                // 벨소리 모드일 경우
+//                audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_MUTE, 1);    // 벨소리 모드로 변경
+//            }
+//            else if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE) {
+//                // 진동 모드일 경우
+//                audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_MUTE, 1);    // 벨소리 모드로 변경
+//            }
+//            else if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT) {
+//                // 무음 모드일 경우
+//                audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_MUTE, 1);    // 벨소리 모드로 변경
+//            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (savedStreamMuted) {
+                    audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_UNMUTE, 0);
+                    audioManager.adjustStreamVolume(AudioManager.STREAM_SYSTEM, AudioManager.ADJUST_UNMUTE, 0);
+                    audioManager.adjustStreamVolume(AudioManager.STREAM_NOTIFICATION, AudioManager.ADJUST_UNMUTE, 0);
+                    audioManager.adjustStreamVolume(AudioManager.STREAM_ALARM, AudioManager.ADJUST_UNMUTE, 0);
+                    audioManager.adjustStreamVolume(AudioManager.STREAM_RING, AudioManager.ADJUST_UNMUTE, 0);
+                    //audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+                    savedStreamMuted = false;
+                }
+            } else {
+                // Note that this must be the same instance of audioManager that mutes
+                // http://stackoverflow.com/questions/7908962/setstreammute-never-unmutes?rq=1
+                audioManager.setStreamMute(AudioManager.STREAM_SYSTEM, false);
             }
 
             soundonoff=1;

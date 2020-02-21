@@ -213,7 +213,7 @@ public class Fragment_player extends Fragment
             }
             else if(onoff == 0){
                 background.setVisibility(View.VISIBLE);
-                title.setHeight(30);
+                //title.setHeight(30);
                 onoff = 1;
             }
         });
