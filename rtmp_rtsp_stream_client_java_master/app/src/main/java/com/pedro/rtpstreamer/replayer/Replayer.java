@@ -27,6 +27,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -92,8 +93,8 @@ public class Replayer extends AppCompatActivity
     private boolean byTimeLine = false;
 
     private TextView currTimeline;
-    private int onoff = 1;
-    private int back_onoff = 1;
+    private boolean onoff = true;
+    private boolean back_onoff = true;
 
     private boolean is_follow = false;
     private Button FollowButton, redeclare;
@@ -105,7 +106,7 @@ public class Replayer extends AppCompatActivity
     private TextView currentPlayTime;
     private TextView maxPlayTime;
 
-    private int soundonoff = 1;
+    private boolean soundon = true;
     private RelativeLayout titleEtc;
     private RelativeLayout background;
 
@@ -157,35 +158,34 @@ public class Replayer extends AppCompatActivity
         ECC.show();
         ECC.add2("재방송 채팅입니다.");
 
+       /* NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (!notificationManager.isNotificationPolicyAccessGranted()) {
+            context.startActivity(new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS));
+        }
+*/
         title.setOnClickListener((View view) -> {
-            if(onoff == 1){
+            if(onoff){
                 background.setVisibility(View.GONE);
                 ViewGroup.LayoutParams params = title.getLayoutParams();
                 params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
                 title.setLayoutParams(params);
-                onoff = 0;
             }
-            else if(onoff == 0){
+            else {
                 background.setVisibility(View.VISIBLE);
-                //title.setHeight(30);
-                onoff = 1;
             }
+            onoff = !onoff;
         });
-
-
         surfaceView.setOnClickListener((View view) -> {
-            if(back_onoff == 1){
+            if(back_onoff){
                 titleEtc.setVisibility(View.GONE);
                 background.setVisibility(View.GONE);
-                back_onoff = 0;
             }
-            else if(back_onoff == 0){
+            else{
                 titleEtc.setVisibility(View.VISIBLE);
                 background.setVisibility(View.VISIBLE);
-                back_onoff = 1;
             }
+            back_onoff = !back_onoff;
         });
-
     }
 
     @Override
@@ -200,21 +200,16 @@ public class Replayer extends AppCompatActivity
                 else if(mediaState==1) mMediaPlayer.pause();
                 else mMediaPlayer.play();
                 break;
-
             case R.id.timelineButton:
                 popTimeLine();
                 break;
-
             case R.id.refollowButton:
-                Log.d("replayer", "followclick");
                 btn_follow();
                 break;
             case R.id.redeclare:
-                Log.d("replayer", "declareclick");
                 PM.select_Declare(getLayoutInflater());
                 break;
             case R.id.rebtn_sound:
-                Log.d("replayer", "soundclick");
                 SoundOnOff();
                 break;
             case R.id.reHeartIcon:
@@ -287,8 +282,8 @@ public class Replayer extends AppCompatActivity
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         switch(keyCode){
             case KeyEvent.KEYCODE_VOLUME_UP:
-                if(soundonoff == 0) {
-                    soundonoff = 1;
+                if(!soundon) {
+                    soundon = true;
                     soundbtn.setImageDrawable(getResources().getDrawable(R.drawable.soundon_icon));
                 }
                 break;
@@ -296,7 +291,7 @@ public class Replayer extends AppCompatActivity
                 AudioManager mAlramMAnager = (AudioManager)context.getSystemService(context.AUDIO_SERVICE);
                 int currnet_volume = mAlramMAnager.getStreamVolume(STREAM_MUSIC);
                 if(currnet_volume > 0){
-                    soundonoff = 0;
+                    soundon = false;
                     soundbtn.setImageDrawable(getResources().getDrawable(R.drawable.soundoff_icon));
                 }
                 break;
@@ -465,55 +460,27 @@ public class Replayer extends AppCompatActivity
     };
     public void MuteAudio(){
         AudioManager mAlramMAnager = (AudioManager)getSystemService(context.AUDIO_SERVICE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_NOTIFICATION, AudioManager.ADJUST_MUTE, 0);
-            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_ALARM, AudioManager.ADJUST_MUTE, 0);
             mAlramMAnager.adjustStreamVolume(STREAM_MUSIC, AudioManager.ADJUST_MUTE, 0);
-            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_RING, AudioManager.ADJUST_MUTE, 0);
-            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_SYSTEM, AudioManager.ADJUST_MUTE, 0);
-        } else {
-            mAlramMAnager.setStreamMute(AudioManager.STREAM_NOTIFICATION, true);
-            mAlramMAnager.setStreamMute(AudioManager.STREAM_ALARM, true);
-            mAlramMAnager.setStreamMute(STREAM_MUSIC, true);
-            mAlramMAnager.setStreamMute(AudioManager.STREAM_RING, true);
-            mAlramMAnager.setStreamMute(AudioManager.STREAM_SYSTEM, true);
-        }
     }
 
     public void UnMuteAudio(){
-        AudioManager mAlramMAnager = (AudioManager) context.getSystemService(context.AUDIO_SERVICE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_NOTIFICATION, AudioManager.ADJUST_UNMUTE, 0);
-            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_ALARM, AudioManager.ADJUST_UNMUTE, 0);
-            mAlramMAnager.adjustStreamVolume(STREAM_MUSIC, AudioManager.ADJUST_UNMUTE,0);
-            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_RING, AudioManager.ADJUST_UNMUTE, 0);
-            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_SYSTEM, AudioManager.ADJUST_UNMUTE, 0);
-        } else {
-            mAlramMAnager.setStreamMute(AudioManager.STREAM_NOTIFICATION, false);
-            mAlramMAnager.setStreamMute(AudioManager.STREAM_ALARM, false);
-            mAlramMAnager.setStreamMute(STREAM_MUSIC, false);
-            mAlramMAnager.setStreamMute(AudioManager.STREAM_RING, false);
-            mAlramMAnager.setStreamMute(AudioManager.STREAM_SYSTEM, false);
+        AudioManager AM = (AudioManager)getSystemService(context.AUDIO_SERVICE);
+        try {
+            AM.adjustStreamVolume(STREAM_MUSIC, AudioManager.ADJUST_UNMUTE, 0);
+        } catch (Exception e) {
+            Toast.makeText(context, "무음모드를 해제하세요", Toast.LENGTH_LONG).show();
         }
     }
     private void SoundOnOff(){
-
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        if (!notificationManager.isNotificationPolicyAccessGranted()) {
-
-            context.startActivity(new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS));
-        }
-
-        if(soundonoff==1){
+        if(soundon){
             MuteAudio();
-            soundonoff=0;
             soundbtn.setImageDrawable(getResources().getDrawable(R.drawable.soundoff_icon));
         }
-        else if(soundonoff==0){
+        else{
             UnMuteAudio();
-             soundonoff=1;
             soundbtn.setImageDrawable(getResources().getDrawable(R.drawable.soundon_icon));
         }
+        soundon = !soundon;
     }
 
 
