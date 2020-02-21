@@ -241,7 +241,7 @@
                 app:lottie_loop="false" />
 
             <ImageView
-                android:id="@+id/HeartIcon"
+                android:id="@+id/reHeartIcon"
                 android:layout_width="65dp"
                 android:layout_height="48dp"
                 android:layout_gravity="bottom|center"
