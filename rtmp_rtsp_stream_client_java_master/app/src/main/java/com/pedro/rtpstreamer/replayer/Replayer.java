@@ -14,23 +14,22 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -41,8 +40,8 @@ import com.pedro.rtpstreamer.server.AWSListner;
 import com.pedro.rtpstreamer.server.AWSfileManager;
 import com.pedro.rtpstreamer.server.Pair;
 import com.pedro.rtpstreamer.utils.ExampleChatController;
-import com.pedro.rtpstreamer.utils.StaticVariable;
 import com.pedro.rtpstreamer.utils.PopupManager;
+import com.pedro.rtpstreamer.utils.StaticVariable;
 
 import org.videolan.libvlc.LibVLC;
 import org.videolan.libvlc.Media;
@@ -57,7 +56,7 @@ import static android.view.View.VISIBLE;
 
 @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
 public class Replayer extends AppCompatActivity
-    implements View.OnClickListener {
+        implements View.OnClickListener {
 
     Context context;
 
@@ -98,7 +97,7 @@ public class Replayer extends AppCompatActivity
     private int back_onoff = 1;
 
     private boolean is_follow = false;
-    private Button FollowButton;	//팔로우버튼
+    private Button FollowButton, redeclare;
     private TextView people;
     private ImageButton soundbtn;
     private ImageView heartbtn;
@@ -110,6 +109,9 @@ public class Replayer extends AppCompatActivity
     private int soundonoff = 1;
     private Context mContext;
     private RelativeLayout background, titleEtc;
+    boolean savedStreamMuted = false;
+
+    private ImageView hearticon;
 
     PopupManager PM;
 
@@ -142,12 +144,18 @@ public class Replayer extends AppCompatActivity
         loadingPanel = findViewById(R.id.ReplayLoadingPanel);
         currTimeline = findViewById(R.id.curr_category);
         FollowButton = findViewById(R.id.refollowButton);
+        FollowButton.setOnClickListener(this);
+        redeclare = findViewById(R.id.redeclare);
+        redeclare.setOnClickListener(this);
+        hearticon = findViewById(R.id.reHeartIcon);
+        hearticon.setOnClickListener(this);
+
 
         surfaceView = findViewById(R.id.video_layout);
         currentPlayTime = findViewById(R.id.currentPlayTime);
         maxPlayTime = findViewById(R.id.maxPlayTime);
         background = findViewById(R.id.re_rl_Live);
-        titleEtc = findViewById(R.id.replaytop);
+        titleEtc = findViewById(R.id.titleEtc);
 
         PM = new PopupManager(context);
 
@@ -160,12 +168,13 @@ public class Replayer extends AppCompatActivity
 
             context.startActivity(new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS));
         }
+
         heartbtn.setOnClickListener((View view) -> {
             heartAni();
             int newheart = Integer.parseInt(heart.getText().toString()) + 1;
             heart.setText(Integer.toString(newheart));
         });
-        
+
         title.setOnClickListener((View view) -> {
             if(onoff == 1){
                 background.setVisibility(View.GONE);
@@ -176,7 +185,7 @@ public class Replayer extends AppCompatActivity
             }
             else if(onoff == 0){
                 background.setVisibility(View.VISIBLE);
-                title.setHeight(30);
+                //title.setHeight(30);
                 onoff = 1;
             }
         });
@@ -482,14 +491,42 @@ public class Replayer extends AppCompatActivity
         }
     }
     private void SoundOnOff(){
+        /*audioManager = (AudioManager) context.getSystemService(AUDIO_SERVICE);
+        if (audioManager.isStreamMute(AudioManager.STREAM_MUSIC)) {
+            Toast.makeText(this, "Music is muted (isStreamMute)", Toast.LENGTH_SHORT).show();
+        }*/
         if(soundonoff==1){
+//            if (AudioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+//                // 벨소리 모드일 경우
+//                AudioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_MUTE, 0);
+//            }
+//            else if (AudioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE) {
+//                // 진동 모드일 경우
+//                AudioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_MUTE, 0);    // 무음 모드로 변경
+//            }
+//            else if (AudioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT) {
+//                // 무음 모드일 경우
+//                AudioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_MUTE, 0);    // 무음 모드로 변경
+//            }
             MuteAudio();
             soundonoff=0;
             soundbtn.setImageDrawable(getResources().getDrawable(R.drawable.soundoff_icon));
         }
         else if(soundonoff==0){
+//            if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+//                // 벨소리 모드일 경우
+//                audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_MUTE, 1);    // 벨소리 모드로 변경
+//            }
+//            else if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE) {
+//                // 진동 모드일 경우
+//                audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_MUTE, 1);    // 벨소리 모드로 변경
+//            }
+//            else if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT) {
+//                // 무음 모드일 경우
+//                audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_MUTE, 1);    // 벨소리 모드로 변경
+//            }
             UnMuteAudio();
-            soundonoff=1;
+             soundonoff=1;
             soundbtn.setImageDrawable(getResources().getDrawable(R.drawable.soundon_icon));
         }
     }
@@ -560,14 +597,14 @@ public class Replayer extends AppCompatActivity
         btn_Exit.setOnClickListener((View view) -> alertDialog.dismiss());
 
         listView.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
-                nextTimeline = position+2;
-                mMediaPlayer.setTime(TL.get(position+1).getTime());
-                byTimeLine = true;
-                int mediaPosition = (int) (mMediaPlayer.getPosition()*1000);
-                seekBar.setProgress(mediaPosition);
-                currTimeline.setText("현재 "+TL.get(position+1).getType()+"을(를) 판매 중입니다");
-                alertDialog.dismiss();
-            }
+                    nextTimeline = position+2;
+                    mMediaPlayer.setTime(TL.get(position+1).getTime());
+                    byTimeLine = true;
+                    int mediaPosition = (int) (mMediaPlayer.getPosition()*1000);
+                    seekBar.setProgress(mediaPosition);
+                    currTimeline.setText("현재 "+TL.get(position+1).getType()+"을(를) 판매 중입니다");
+                    alertDialog.dismiss();
+                }
         );
         alertDialog.show();
     }
