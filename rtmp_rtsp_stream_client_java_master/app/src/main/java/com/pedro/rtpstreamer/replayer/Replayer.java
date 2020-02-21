@@ -108,8 +108,6 @@ public class Replayer extends AppCompatActivity
     private RelativeLayout background, titleEtc;
     boolean savedStreamMuted = false;
 
-    private ImageView hearticon;
-
     PopupManager PM;
 
     @Override
@@ -133,7 +131,6 @@ public class Replayer extends AppCompatActivity
         streamer_nickname = findViewById(R.id.replaynickname);
         listView = findViewById(R.id.ChatListView);
         heart=findViewById(R.id.reheartnum);
-        heartbtn=findViewById(R.id.HeartIcon);
         soundbtn = findViewById(R.id.rebtn_sound);
         soundbtn.setOnClickListener(this);
         playBtn.setOnClickListener(this);
@@ -144,8 +141,8 @@ public class Replayer extends AppCompatActivity
         FollowButton.setOnClickListener(this);
         redeclare = findViewById(R.id.redeclare);
         redeclare.setOnClickListener(this);
-        hearticon = findViewById(R.id.reHeartIcon);
-        hearticon.setOnClickListener(this);
+        heartbtn = findViewById(R.id.reHeartIcon);
+        heartbtn.setOnClickListener(this);
 
 
         surfaceView = findViewById(R.id.video_layout);
@@ -165,12 +162,6 @@ public class Replayer extends AppCompatActivity
 
             context.startActivity(new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS));
         }
-
-        heartbtn.setOnClickListener((View view) -> {
-            heartAni();
-            int newheart = Integer.parseInt(heart.getText().toString()) + 1;
-            heart.setText(Integer.toString(newheart));
-        });
 
         title.setOnClickListener((View view) -> {
             if(onoff == 1){
@@ -233,6 +224,12 @@ public class Replayer extends AppCompatActivity
                 Log.d("replayer", "soundclick");
                 SoundOnOff();
 
+                break;
+
+            case R.id.reHeartIcon:
+                heartAni();
+                int newheart = Integer.parseInt(heart.getText().toString()) + 1;
+                heart.setText(Integer.toString(newheart));
                 break;
         }
     }
