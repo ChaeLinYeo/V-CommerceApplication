@@ -20,14 +20,13 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.FrameLayout;
+
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -166,11 +165,13 @@ public class Replayer extends AppCompatActivity
 
             context.startActivity(new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS));
         }
+
         heartbtn.setOnClickListener((View view) -> {
             heartAni();
             int newheart = Integer.parseInt(heart.getText().toString()) + 1;
             heart.setText(Integer.toString(newheart));
         });
+
         title.setOnClickListener((View view) -> {
             if(onoff == 1){
                 background.setVisibility(View.GONE);
@@ -488,7 +489,6 @@ public class Replayer extends AppCompatActivity
     }
     private void SoundOnOff(){
         if(soundonoff==1){
-
 //            if (AudioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
 //                // 벨소리 모드일 경우
 //                AudioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_MUTE, 0);
@@ -501,6 +501,7 @@ public class Replayer extends AppCompatActivity
 //                // 무음 모드일 경우
 //                AudioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_MUTE, 0);    // 무음 모드로 변경
 //            }
+
             MuteAudio();
             soundonoff=0;
             soundbtn.setImageDrawable(getResources().getDrawable(R.drawable.soundoff_icon));
