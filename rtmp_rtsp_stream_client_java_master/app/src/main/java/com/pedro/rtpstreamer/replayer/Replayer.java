@@ -21,7 +21,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -149,20 +148,14 @@ public class Replayer extends AppCompatActivity
         currentPlayTime = findViewById(R.id.currentPlayTime);
         maxPlayTime = findViewById(R.id.maxPlayTime);
         background = findViewById(R.id.re_rl_Live);
-        titleEtc = findViewById(R.id.replaytop);
-        title = findViewById(R.id.re_titleEtc);
+        titleEtc = findViewById(R.id.re_titleEtc);
+        title = findViewById(R.id.replaytitle);
 
         PM = new PopupManager(context);
 
         ECC = new ExampleChatController(context, listView, R.layout.chatline, R.id.chat_line_textview, R.id.chat_line_timeview);
         ECC.show();
         ECC.add2("재방송 채팅입니다.");
-
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        if (!notificationManager.isNotificationPolicyAccessGranted()) {
-
-            context.startActivity(new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS));
-        }
 
         title.setOnClickListener((View view) -> {
             if(onoff == 1){
@@ -504,6 +497,13 @@ public class Replayer extends AppCompatActivity
         }
     }
     private void SoundOnOff(){
+
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (!notificationManager.isNotificationPolicyAccessGranted()) {
+
+            context.startActivity(new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS));
+        }
+
         if(soundonoff==1){
             MuteAudio();
             soundonoff=0;
