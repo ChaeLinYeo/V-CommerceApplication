@@ -6,11 +6,11 @@
     android:layout_height="match_parent">
 
     <SurfaceView
-        android:id="@+id/video_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
-        android:visibility="visible"/>
+    android:id="@+id/video_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:visibility="visible"/>
 
     <RelativeLayout
         android:id="@+id/replaytop"
