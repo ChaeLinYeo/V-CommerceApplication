@@ -294,7 +294,6 @@ public class Replayer extends AppCompatActivity
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        return super.onKeyUp(keyCode, event);
         switch(keyCode){
             case KeyEvent.KEYCODE_VOLUME_UP:
                 if(soundonoff == 0) {
@@ -303,7 +302,7 @@ public class Replayer extends AppCompatActivity
                 }
                 break;
             case KeyEvent.KEYCODE_VOLUME_DOWN:
-                AudioManager mAlramMAnager = (AudioManager) context.getSystemService(context.AUDIO_SERVICE);
+                AudioManager mAlramMAnager = (AudioManager)context.getSystemService(context.AUDIO_SERVICE);
                 int currnet_volume = mAlramMAnager.getStreamVolume(STREAM_MUSIC);
                 if(currnet_volume > 0){
                     soundonoff = 0;
@@ -311,6 +310,7 @@ public class Replayer extends AppCompatActivity
                 }
                 break;
         }
+        return super.onKeyUp(keyCode, event);
     }
 
     public void setUri(){
@@ -507,36 +507,11 @@ public class Replayer extends AppCompatActivity
     }
     private void SoundOnOff(){
         if(soundonoff==1){
-//            if (AudioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
-//                // 벨소리 모드일 경우
-//                AudioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_MUTE, 0);
-//            }
-//            else if (AudioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE) {
-//                // 진동 모드일 경우
-//                AudioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_MUTE, 0);    // 무음 모드로 변경
-//            }
-//            else if (AudioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT) {
-//                // 무음 모드일 경우
-//                AudioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_MUTE, 0);    // 무음 모드로 변경
-//            }
-
             MuteAudio();
             soundonoff=0;
             soundbtn.setImageDrawable(getResources().getDrawable(R.drawable.soundoff_icon));
         }
         else if(soundonoff==0){
-//            if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
-//                // 벨소리 모드일 경우
-//                audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_MUTE, 1);    // 벨소리 모드로 변경
-//            }
-//            else if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE) {
-//                // 진동 모드일 경우
-//                audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_MUTE, 1);    // 벨소리 모드로 변경
-//            }
-//            else if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT) {
-//                // 무음 모드일 경우
-//                audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_MUTE, 1);    // 벨소리 모드로 변경
-//            }
             UnMuteAudio();
              soundonoff=1;
             soundbtn.setImageDrawable(getResources().getDrawable(R.drawable.soundon_icon));
