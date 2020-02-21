@@ -107,7 +107,7 @@ public class Replayer extends AppCompatActivity
     private TextView maxPlayTime;
 
     private int soundonoff = 1;
-    private TextView titleEtc;
+    private RelativeLayout titleEtc;
     private RelativeLayout background;
 
     PopupManager PM;
