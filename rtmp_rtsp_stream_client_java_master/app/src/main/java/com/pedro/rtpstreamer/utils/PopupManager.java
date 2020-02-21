@@ -310,11 +310,8 @@ public class PopupManager {
     //시청자 목록 보는 팝업창
     public void btn_showPeople(LayoutInflater inflater) {
         View mView = inflater.inflate(R.layout.popup_people, null);
-
-        //User만을 담은 유저리스트 생성
         List<User> userList = SendbirdConnection.getUserList(true);
 
-        //리스트뷰에 보여주기 위한 리스트 생성
         alllist = new ArrayList<>();
         for(User user : userList){
             alllist.add(user.getUserId() + "(" + user.getNickname() + ")");
@@ -322,7 +319,6 @@ public class PopupManager {
         searchlist = new ArrayList<>();
         searchlist.addAll(alllist);
 
-        // listview 생성 및 adapter 지정.
         listview = mView.findViewById(R.id.listview1);
         final ArrayAdapter adapter = new ArrayAdapter(mContext, android.R.layout.simple_list_item_multiple_choice, searchlist) ;
 
@@ -934,4 +930,6 @@ public class PopupManager {
         );
         alertDialog.show();
     }
+
+
 }
