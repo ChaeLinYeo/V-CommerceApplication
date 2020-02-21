@@ -239,7 +239,7 @@
                 app:srcCompat="@drawable/heart2" />
 
             <TextView
-                android:id="@+id/peoplenum"
+                android:id="@+id/re_peoplenum"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/redeclare"
