@@ -229,12 +229,6 @@ public class Replayer extends AppCompatActivity
                 int newheart = Integer.parseInt(heart.getText().toString()) + 1;
                 heart.setText(Integer.toString(newheart));
                 break;
-
-            case R.id.reHeartIcon:
-                heartAni();
-                int newheart = Integer.parseInt(heart.getText().toString()) + 1;
-                heart.setText(Integer.toString(newheart));
-                break;
         }
     }
 
