@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -53,7 +54,7 @@ import static android.view.View.VISIBLE;
 
 @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
 public class Replayer extends AppCompatActivity
-    implements View.OnClickListener {
+        implements View.OnClickListener {
 
     Context context;
 
@@ -104,7 +105,6 @@ public class Replayer extends AppCompatActivity
     private TextView maxPlayTime;
 
     private int soundonoff = 1;
-    private Context mContext;
     private RelativeLayout background, titleEtc;
     boolean savedStreamMuted = false;
 
@@ -486,13 +486,38 @@ public class Replayer extends AppCompatActivity
     }
     private void SoundOnOff(){
         if(soundonoff==1){
+//            if (AudioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+//                // 벨소리 모드일 경우
+//                AudioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_MUTE, 0);
+//            }
+//            else if (AudioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE) {
+//                // 진동 모드일 경우
+//                AudioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_MUTE, 0);    // 무음 모드로 변경
+//            }
+//            else if (AudioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT) {
+//                // 무음 모드일 경우
+//                AudioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_MUTE, 0);    // 무음 모드로 변경
+//            }
+
             MuteAudio();
             soundonoff=0;
             soundbtn.setImageDrawable(getResources().getDrawable(R.drawable.soundoff_icon));
         }
         else if(soundonoff==0){
+//            if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+//                // 벨소리 모드일 경우
+//                audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_MUTE, 1);    // 벨소리 모드로 변경
+//            }
+//            else if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE) {
+//                // 진동 모드일 경우
+//                audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_MUTE, 1);    // 벨소리 모드로 변경
+//            }
+//            else if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT) {
+//                // 무음 모드일 경우
+//                audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_MUTE, 1);    // 벨소리 모드로 변경
+//            }
             UnMuteAudio();
-            soundonoff=1;
+             soundonoff=1;
             soundbtn.setImageDrawable(getResources().getDrawable(R.drawable.soundon_icon));
         }
     }
@@ -563,14 +588,14 @@ public class Replayer extends AppCompatActivity
         btn_Exit.setOnClickListener((View view) -> alertDialog.dismiss());
 
         listView.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
-                nextTimeline = position+2;
-                mMediaPlayer.setTime(TL.get(position+1).getTime());
-                byTimeLine = true;
-                int mediaPosition = (int) (mMediaPlayer.getPosition()*1000);
-                seekBar.setProgress(mediaPosition);
-                currTimeline.setText("현재 "+TL.get(position+1).getType()+"을(를) 판매 중입니다");
-                alertDialog.dismiss();
-            }
+                    nextTimeline = position+2;
+                    mMediaPlayer.setTime(TL.get(position+1).getTime());
+                    byTimeLine = true;
+                    int mediaPosition = (int) (mMediaPlayer.getPosition()*1000);
+                    seekBar.setProgress(mediaPosition);
+                    currTimeline.setText("현재 "+TL.get(position+1).getType()+"을(를) 판매 중입니다");
+                    alertDialog.dismiss();
+                }
         );
         alertDialog.show();
     }
