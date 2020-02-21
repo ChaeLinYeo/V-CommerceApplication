@@ -19,6 +19,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+<<<<<<< HEAD
+=======
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
+>>>>>>> 7cf3b82359f4f38f7ff968f960e71f50fbdaa459
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -95,13 +100,14 @@ public class Replayer extends AppCompatActivity
     private boolean is_follow = false;
     private Button FollowButton, redeclare;
     private TextView people;
+    private ImageButton soundbtn;
+    private ImageView heartbtn;
     private SurfaceView surfaceView;
 
     private TextView currentPlayTime;
     private TextView maxPlayTime;
 
     private int soundonoff = 1;
-    private AudioManager audioManager;
     private Context mContext;
     private RelativeLayout background, titleEtc;
     boolean savedStreamMuted = false;
@@ -131,6 +137,9 @@ public class Replayer extends AppCompatActivity
         streamer_nickname = findViewById(R.id.replaynickname);
         listView = findViewById(R.id.ChatListView);
         heart=findViewById(R.id.reheartnum);
+        heartbtn=findViewById(R.id.HeartIcon);
+        soundbtn = findViewById(R.id.rebtn_sound);
+        soundbtn.setOnClickListener(this);
         playBtn.setOnClickListener(this);
         seekBar.setOnSeekBarChangeListener(seekBarChangeListener);
         loadingPanel = findViewById(R.id.ReplayLoadingPanel);
@@ -160,9 +169,18 @@ public class Replayer extends AppCompatActivity
 
             context.startActivity(new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS));
         }
+<<<<<<< HEAD
 //        audioManager = (AudioManager) context.getSystemService(AUDIO_SERVICE);
 
 
+=======
+        heartbtn.setOnClickListener((View view) -> {
+            heartAni();
+            int newheart = Integer.parseInt(heart.getText().toString()) + 1;
+            heart.setText(Integer.toString(newheart));
+        });
+        
+>>>>>>> 7cf3b82359f4f38f7ff968f960e71f50fbdaa459
         title.setOnClickListener((View view) -> {
             if(onoff == 1){
                 background.setVisibility(View.GONE);
@@ -212,13 +230,16 @@ public class Replayer extends AppCompatActivity
                 break;
 
             case R.id.refollowButton:
+                Log.d("replayer", "followclick");
                 btn_follow();
                 break;
 
             case R.id.redeclare:
+                Log.d("replayer", "declareclick");
                 PM.select_Declare(getLayoutInflater());
                 break;
             case R.id.rebtn_sound:
+                Log.d("replayer", "soundclick");
                 SoundOnOff();
 
                 break;
@@ -442,13 +463,46 @@ public class Replayer extends AppCompatActivity
             }
         }
     };
+    public void MuteAudio(){
+        AudioManager mAlramMAnager = (AudioManager)getSystemService(context.AUDIO_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_NOTIFICATION, AudioManager.ADJUST_MUTE, 0);
+            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_ALARM, AudioManager.ADJUST_MUTE, 0);
+            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_MUTE, 0);
+            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_RING, AudioManager.ADJUST_MUTE, 0);
+            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_SYSTEM, AudioManager.ADJUST_MUTE, 0);
+        } else {
+            mAlramMAnager.setStreamMute(AudioManager.STREAM_NOTIFICATION, true);
+            mAlramMAnager.setStreamMute(AudioManager.STREAM_ALARM, true);
+            mAlramMAnager.setStreamMute(AudioManager.STREAM_MUSIC, true);
+            mAlramMAnager.setStreamMute(AudioManager.STREAM_RING, true);
+            mAlramMAnager.setStreamMute(AudioManager.STREAM_SYSTEM, true);
+        }
+    }
 
+    public void UnMuteAudio(){
+        AudioManager mAlramMAnager = (AudioManager) context.getSystemService(context.AUDIO_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_NOTIFICATION, AudioManager.ADJUST_UNMUTE, 0);
+            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_ALARM, AudioManager.ADJUST_UNMUTE, 0);
+            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_UNMUTE,0);
+            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_RING, AudioManager.ADJUST_UNMUTE, 0);
+            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_SYSTEM, AudioManager.ADJUST_UNMUTE, 0);
+        } else {
+            mAlramMAnager.setStreamMute(AudioManager.STREAM_NOTIFICATION, false);
+            mAlramMAnager.setStreamMute(AudioManager.STREAM_ALARM, false);
+            mAlramMAnager.setStreamMute(AudioManager.STREAM_MUSIC, false);
+            mAlramMAnager.setStreamMute(AudioManager.STREAM_RING, false);
+            mAlramMAnager.setStreamMute(AudioManager.STREAM_SYSTEM, false);
+        }
+    }
     private void SoundOnOff(){
         audioManager = (AudioManager) context.getSystemService(AUDIO_SERVICE);
         if (audioManager.isStreamMute(AudioManager.STREAM_MUSIC)) {
             Toast.makeText(this, "Music is muted (isStreamMute)", Toast.LENGTH_SHORT).show();
         }
         if(soundonoff==1){
+<<<<<<< HEAD
 //            if (AudioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
 //                // 벨소리 모드일 경우
 //                AudioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_MUTE, 0);
@@ -475,9 +529,14 @@ public class Replayer extends AppCompatActivity
                 audioManager.setStreamMute(AudioManager.STREAM_SYSTEM, true);
             }
 
+=======
+            MuteAudio();
+>>>>>>> 7cf3b82359f4f38f7ff968f960e71f50fbdaa459
             soundonoff=0;
+            soundbtn.setImageDrawable(getResources().getDrawable(R.drawable.soundoff_icon));
         }
         else if(soundonoff==0){
+<<<<<<< HEAD
 //            if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
 //                // 벨소리 모드일 경우
 //                audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_MUTE, 1);    // 벨소리 모드로 변경
@@ -506,7 +565,11 @@ public class Replayer extends AppCompatActivity
                 audioManager.setStreamMute(AudioManager.STREAM_SYSTEM, false);
             }
 
+=======
+            UnMuteAudio();
+>>>>>>> 7cf3b82359f4f38f7ff968f960e71f50fbdaa459
             soundonoff=1;
+            soundbtn.setImageDrawable(getResources().getDrawable(R.drawable.soundon_icon));
         }
     }
 
