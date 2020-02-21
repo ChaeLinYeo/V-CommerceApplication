@@ -107,8 +107,8 @@ public class Replayer extends AppCompatActivity
     private TextView maxPlayTime;
 
     private int soundonoff = 1;
-    private RelativeLayout background, titleEtc;
-    boolean savedStreamMuted = false;
+    private TextView titleEtc;
+    private RelativeLayout background;
 
     PopupManager PM;
 
@@ -129,7 +129,6 @@ public class Replayer extends AppCompatActivity
         songLikeAnimButton = findViewById(R.id.heartView);
         playBtn = findViewById(R.id.playBtn);
         seekBar = findViewById(R.id.seekBar);
-        title = findViewById(R.id.replaytitle);
         streamer_nickname = findViewById(R.id.replaynickname);
         listView = findViewById(R.id.ChatListView);
         heart=findViewById(R.id.reheartnum);
@@ -146,11 +145,12 @@ public class Replayer extends AppCompatActivity
         heartbtn = findViewById(R.id.reHeartIcon);
         heartbtn.setOnClickListener(this);
 
-        surfaceView = findViewById(R.id.video_layout);
+        surfaceView = findViewById(R.id.re_video_layout);
         currentPlayTime = findViewById(R.id.currentPlayTime);
         maxPlayTime = findViewById(R.id.maxPlayTime);
         background = findViewById(R.id.re_rl_Live);
-        titleEtc = findViewById(R.id.titleEtc);
+        titleEtc = findViewById(R.id.replaytop);
+        title = findViewById(R.id.re_titleEtc);
 
         PM = new PopupManager(context);
 
@@ -515,6 +515,7 @@ public class Replayer extends AppCompatActivity
             soundbtn.setImageDrawable(getResources().getDrawable(R.drawable.soundon_icon));
         }
     }
+
 
     private void playChat(Pair cp){
         switch (cp.getType()) {

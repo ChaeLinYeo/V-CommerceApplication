@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <SurfaceView
-    android:id="@+id/video_layout"
+    android:id="@+id/re_video_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
@@ -34,7 +34,7 @@
             app:srcCompat="@drawable/broadcaster" />
 
         <TextView
-            android:id="@+id/replaytitle"
+            android:id="@+id/re_titleEtc"
             android:layout_width="234dp"
             android:layout_height="30dp"
             android:layout_marginStart="10dp"
