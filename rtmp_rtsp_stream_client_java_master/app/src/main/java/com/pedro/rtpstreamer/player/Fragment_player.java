@@ -596,7 +596,7 @@ public class Fragment_player extends Fragment
         view.post(new Runnable() { //getLineCount()는 UI 백그라운드에서만 가져올수 있음
             @Override
             public void run() {
-                if (view.getLineCount() > maxLine) { //Line Count가 설정한 MaxLine의 값보다 크다면 처리시작
+                if (view.getLineCount() >= maxLine) { //Line Count가 설정한 MaxLine의 값보다 크다면 처리시작
 
                     int lineEndIndex = view.getLayout().getLineVisibleEnd(maxLine - 1); //Max Line 까지의 text length
 
@@ -606,8 +606,8 @@ public class Fragment_player extends Fragment
                     String lessText = "";
                     for (String item : split) {
                         splitLength += item.length() + 1;
-                        if (splitLength > lineEndIndex) { //마지막 줄일때!
-                            if (item.length() > expanedText.length()) {
+                        if (splitLength >= lineEndIndex) { //마지막 줄일때!
+                            if (item.length() >= expanedText.length()) {
                                 lessText += item.substring(0, item.length() - (expanedText.length())) + expanedText;
                             } else {
                                 lessText += item + expanedText;
