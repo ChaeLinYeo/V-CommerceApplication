@@ -3,9 +3,7 @@ package com.pedro.rtpstreamer.replayer;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.NotificationManager;
 import android.content.Context;
-import android.content.Intent;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
@@ -13,7 +11,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.SurfaceView;
 import android.view.View;
@@ -22,7 +19,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
@@ -66,7 +62,6 @@ public class Replayer extends AppCompatActivity
 
     private Button playBtn;
     private SeekBar seekBar;
-    private ListView listView;
 
     private int mediaState=0;
 
@@ -82,9 +77,6 @@ public class Replayer extends AppCompatActivity
     ArrayList<Pair> TL;
 
     private int completeFile = 0;
-    private String finalHeartNum;
-    private String finalViewNum;
-    private String USERID;
 
     private RelativeLayout loadingPanel;
 
@@ -97,10 +89,8 @@ public class Replayer extends AppCompatActivity
     private boolean back_onoff = true;
 
     private boolean is_follow = false;
-    private Button FollowButton, redeclare;
-    private TextView people;
+    private Button FollowButton;
     private ImageButton soundbtn;
-    private ImageView heartbtn;
     private SurfaceView surfaceView;
 
     private TextView currentPlayTime;
@@ -130,7 +120,7 @@ public class Replayer extends AppCompatActivity
         playBtn = findViewById(R.id.playBtn);
         seekBar = findViewById(R.id.seekBar);
         streamer_nickname = findViewById(R.id.replaynickname);
-        listView = findViewById(R.id.ChatListView);
+
         heart=findViewById(R.id.reheartnum);
         soundbtn = findViewById(R.id.rebtn_sound);
         soundbtn.setOnClickListener(this);
@@ -140,10 +130,8 @@ public class Replayer extends AppCompatActivity
         currTimeline = findViewById(R.id.curr_category);
         FollowButton = findViewById(R.id.refollowButton);
         FollowButton.setOnClickListener(this);
-        redeclare = findViewById(R.id.redeclare);
-        redeclare.setOnClickListener(this);
-        heartbtn = findViewById(R.id.reHeartIcon);
-        heartbtn.setOnClickListener(this);
+        findViewById(R.id.redeclare).setOnClickListener(this);
+        findViewById(R.id.reHeartIcon).setOnClickListener(this);
 
         surfaceView = findViewById(R.id.re_video_layout);
         currentPlayTime = findViewById(R.id.currentPlayTime);
@@ -153,7 +141,7 @@ public class Replayer extends AppCompatActivity
         title = findViewById(R.id.replaytitle);
 
         PM = new PopupManager(context);
-
+        ListView listView = findViewById(R.id.ChatListView);
         ECC = new ExampleChatController(context, listView, R.layout.chatline, R.id.chat_line_textview, R.id.chat_line_timeview);
         ECC.show();
         ECC.add2("재방송 채팅입니다.");
@@ -214,8 +202,8 @@ public class Replayer extends AppCompatActivity
                 break;
             case R.id.reHeartIcon:
                 heartAni();
-                int newheart = Integer.parseInt(heart.getText().toString()) + 1;
-                heart.setText(Integer.toString(newheart));
+                String newheart = Integer.toString(Integer.parseInt(heart.getText().toString()) + 1);
+                heart.setText(newheart);
                 break;
         }
     }
@@ -244,7 +232,8 @@ public class Replayer extends AppCompatActivity
                 for(int i=1; i<TL.size();i++){
                     if(TL.get(i).getTime() >= d){
                         nextTimeline = i;
-                        if(i>0) currTimeline.setText("현재 "+TL.get(i-1).getType()+"을(를) 판매 중입니다");
+                        String text = "현재 "+TL.get(i-1).getType()+"을(를) 판매 중입니다";
+                        currTimeline.setText(text);
                         break;
                     }
                 }
@@ -288,9 +277,9 @@ public class Replayer extends AppCompatActivity
                 }
                 break;
             case KeyEvent.KEYCODE_VOLUME_DOWN:
-                AudioManager mAlramMAnager = (AudioManager)context.getSystemService(context.AUDIO_SERVICE);
+                AudioManager mAlramMAnager = (AudioManager)context.getSystemService(AUDIO_SERVICE);
                 int currnet_volume = mAlramMAnager.getStreamVolume(STREAM_MUSIC);
-                if(currnet_volume > 0){
+                if (currnet_volume > 0) {
                     soundon = false;
                     soundbtn.setImageDrawable(getResources().getDrawable(R.drawable.soundoff_icon));
                 }
@@ -325,12 +314,12 @@ public class Replayer extends AppCompatActivity
         }
         c.End();
 
-        finalHeartNum = CL.get(CL.size()-3).getMsg();
-        finalViewNum = CL.get(CL.size()-2).getMsg();
-        USERID = CL.get(CL.size()-1).getMsg();
+        String finalHeartNum = CL.get(CL.size()-3).getMsg();
+        String finalViewNum = CL.get(CL.size()-2).getMsg();
+        String USERID = CL.get(CL.size()-1).getMsg();
         streamer_nickname.setText(USERID);
         heart.setText(finalHeartNum);
-        people = findViewById(R.id.peoplenum);
+        TextView people = findViewById(R.id.re_peoplenum);
         people.setText(finalViewNum);
 
         for(int i=1; i<TL.size(); i++){
@@ -419,7 +408,8 @@ public class Replayer extends AppCompatActivity
                                     }
                                     if(nextTimeline < TL.size()) {
                                         if (TL.get(nextTimeline).getTime() <= d) {
-                                            currTimeline.setText("현재 "+TL.get(nextTimeline).getType()+"을(를) 판매 중입니다");
+                                            String text = "현재 "+TL.get(nextTimeline).getType()+"을(를) 판매 중입니다";
+                                            currTimeline.setText(text);
                                             nextTimeline++;
                                         }
                                     }
