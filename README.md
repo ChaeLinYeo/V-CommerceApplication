@@ -173,3 +173,102 @@ Data 파일 관리
 Data.setAws Aws 접속
 
 StaticVariable 각종 권한, 계정 id, 채널 별 접속 url 및 id, aws 주소 저장
+
+# bambuser자체에서 각 방송의 영상 url을 받아오는 기능이 없으므로 채널을 임의로 10개 생성하여 mainchannel에서 방송 시작과 종료를 관리한다.
+# mainchannel은 단순히 메타 데이터에 key로 방송 방 번호, value로 방송 종료시 true, 시작시 sendbird url로 두어 방송이 가능한지를 판별한다.
+# sendbird에서 자신이 보낸 메세지는 자신이 받지 못한다.
+# sendbird api : https://docs.sendbird.com/ref/android/index.html
+
+
+.../rtmpstreamer/broadcaster/BroadcastMain
+
+* public void LikePlayer(){}
+  시청자들이 하트 버튼을 누를 때 마다 하트 애니메이션이 플레이 되고 100/200/300/... 순으로 채팅 위 영역에 형광 빨강으로 숫자 + 회 돌파라는 문구가 뜬다.
+* public void AlarmPlayer(String data, int type){}
+  이 함수를 호출 하면 받은 type별로 data를 textview에 settext한다.
+
+sendbirdListner
+  sendbird에 관련된 함수 관리
+  * public void getCtrlComplete();
+     방송 종료시 sendbird의 mainchannel에 끝났음을 알려줌.(메인 채널의 메타 데이터를 true로 업데이트)
+  * public vid updateUser(int inout);
+    시청자들이 나가거나 들어올 때마다 시청인원을 현재 시청인원 textview에 settext해준다.
+    sendbird의 userlist를 받아와 직접 확인한다.
+  * public getChannelComplete(boolean success);
+    방송 시작 성공시에만 방송자의 내부 저장소에 방송 텍스트 로그(채팅, 제목변경 등 방송 내용과 방송자가 시간마다 방송한 상품에 대한 타임라인. 총 2개 생성)가 생성된다.
+    실패시 방송이 불가하다는 토스트 메세지가 뜬다.
+  * public messageReceived(String cutomType, String data, long messagetime);
+    sendbird 메세지에 담긴 data영역을 customtype별로 보여준다.
+    chat일 경우 채팅창에 띄우는데, 방송자 쪽에서 로그를 저장해야 하므로 savechat()을 통해 저장한다. 채팅의 시간이 언제인지 정확히 알기위해 받았을 때를 기준으로 로그에 같이 저장한다.
+  * public metaCounterUpdated(int heart);
+    각 채널의 메타 카운터에 저장된 heart수를 불러와서 보여준다.
+  * public channelcreateComplete();
+    방송 시작을 위한 각 설정을 한다. 
+  * public getUserListComplete(String peopleNum);
+    유저 리스트를 받아와서 직접 센 후 시청인원을 현재 시청인원 textview에 settext해준다.
+AWSListner
+  방송의 로그를 AWS에 올리는 함수 관리
+  * public startUpload();
+    로딩 중 창을 띄워 현재 업로드 중임을 시각적으로 표시
+  * public uploadComplete
+    방송 영상, 방송 텍스트 로그를 올려야 하므로 총 3개가 올라간다. 3개가 모두 올라갔는지 확인해준다.
+
+.../rtpstreamer/server/LocalfileManager.java
+방송자 내부 저장소에 저장될 로그 파일들을 다루는 곳이다. 
+방송 내용은 시간 / 타입 / 내용이 기본적인 틀이다.
+like만 예외로 내용이 없다.
+savetimeline은 방송 타임라인만을 담는 로그 파일에 대한 것이다.
+방송 종료시 removeFile(String localPath);로 파일을 지운다.
+
+.../rtpstreamer/server/Pair.java
+방송 로그를 가지고 재방송시 쉽게 로그를 다루기위해 생성한 클래스이다.
+Pair는 각 로그 한줄에 대한 time과 data를 가진다.
+여기에서 Pair타입의 정보를 slice한다.
+
+.../rtpstreamer/server/SendbirdConnection.java
+sendbird에 대한 모든 것을 다룬다.
+
+  * setupSendbird(Context context, boolean isOperator1, SendbirdListner sendbirdListner1);
+    sendbird를 사용하기 위해 맨처음 하는 함수.
+    isOperator1로 방송자인지 확인한다. 방송자라면 그 방송의 채팅방에 operator로 넣어서 채팅 관리 권한을 얻는다.
+  * setUserId();
+    아직 로그인을 하지 못하므로 sendbird 자체 채팅 서버에 참여하기 위해 임의의 아이디를 생성한다.
+  * getCtrl();
+    mainchannel의 url을 받아온다.
+  * getBroadcastChannel();
+    mainchannel의 메타 데이터인 방번호화 방별 방송 가능 여부를 받아온다.
+    방송 시작시 이 함수가 호출되므로 그 방송자에게 그 시점에서 방송가능한 가장 작은 방 번호를 배정한다.
+  * getPlayChannel(int channelNum);
+    방송 시청을 원할때 부르는 함수
+    방 번호 버튼을 누를 시 그 번호에 맞는 sendbird url을 받아오고 enter하게 된다.
+    SendBird.addChannelHandler(StaticVariable.CHANNEL_HANDLER_ID, new SendBird.ChannelHandler());
+      sendbrid 서버와 정보를 주고 받기 위한 handler.
+      유저가 나가고 들어오는 것부터 하트의 갯수 증가를 알기위한 메타카운터 업데이트 함수등 여러 핸들러가 사용되었다. 그 방에서만 유효하도록 설계.
+  * increaseMetaCounters();
+    시청자가 하트 버튼을 누를시 호출된다.
+    그 방의 메타카운터에 저장된 하트 개수를 1씩 증가시킨다.
+  * getLiveChannelUrlList();
+    시청자가 방을 고를 때 들어갈 수 있는 여부를 따져준다.
+  * createChannel(String title);
+    방송자가 방을 만들고 있을 때 불린다.
+    방송자에 맞는 sendbird 서버와의 handler가 따로 존재한다.
+  * sendUserMessage(String text, String type);
+    sendbird의 api를 담고 있어서 이 함수를 호출시 방에 들어와있는 타인에게 메세지를 보낼 수 있다.
+  * getUserListFromServer();
+    방송자가 현재 시청하는 사람들의 목록을 새로고침 하였을 때 서버로부터 유저리스트를 받아오기 위한 함수이다.
+  * setUserList(List<User> userList);
+    방송자의 아이디는 제외한 유저리스트를 볼 수 있다.
+  * banUser(int position);
+    방송에 해를 끼치는 사용자를 무기한 뮤트한다. 하트는 누를수 있지만 애니메이션은 남에게 보이지 않고, 채팅에도 참여할 수 없다.
+  * unbanUser(int position);
+    뮤트된 사용자를 뮤트를 풀어줄 수 있다.
+  * loadInitialMessageList(int numMessages);
+    sendbird api를 통해 과거 방송의 채팅을 볼 수 있다. 나중에 들어오더라도 채팅의 내용을 확인할수 있기 위해 만들었다.
+  * ...Category(...); (add, remove, select)
+    방송자가 timeline을 남기기 위해 카테고리를 설정, 선택할 때 쓰이는 함수
+  * getAllMetaData();
+    각 방송 채팅방의 메타 데이터에는 카테고리만 저장되기 때문에 모든 메타데이터를 받아서 카테고리 리스트를 생성할 때 쓰인다.
+  * setCategory(Map<String, String> map);
+    시청자가 카테고리를 확인할 때 이미 방송이 끝난 상품, 현재 방송중인 상품, 방송 예정인 상품으로 나누어서 볼 수 있는데, 이를 위해 카테고리를 미리 리스트에 담아주는 함수이다.
+  * updateMetaData(OpenChannel openChannel, String key, String value);
+    카테고리의 value를 select로 update해 각 카테고리별 방송 여부를 확인하기 쉽게 한다.
