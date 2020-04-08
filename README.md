@@ -1,4 +1,4 @@
-app>java>com.pedro.rtpstreame>res>layout
+app>java>com.pedro.rtpstreame>res>layout  
 activity_main.xml
 		○ 앱 실행 시 가장 먼저 보이는 화면. 방송 촬영(Start Broadcast), 방송 시청(Watch Broadcast), 재방송 보기(Replay) 세 개의 버튼중 클릭하여 해당 기능의 화면으로 넘어간다.
 	- broadcast_main.xml
