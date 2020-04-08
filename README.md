@@ -24,8 +24,8 @@ app>java>com.pedro.rtpstreame>res>layout
 
 
 app>java>com.pedro.rtpstreamer>broadcaster>BroadcastMain  
-*onClick
-**imgButton
+* onClick
+** imgButton
 			§ 방송 중에 핸드폰의 로컬 갤러리에서 이미지를 선택하여 띄울 수 있음. 이미지는 하나만 선택 가능.
 		○ uriButton
 			§ 방송 중에 핸드폰의 로컬 갤러리에서 동영상을 선택하여 띄울 수 있음. 동영상은 하나만 선택 가능.
