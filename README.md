@@ -81,51 +81,129 @@
 
 
 ## app>java>com.pedro.rtpstreamer>broadcaster>BroadcastMain  
-* imgButton : 방송 중에 핸드폰의 로컬 갤러리에서 이미지를 선택하여 띄울 수 있음. 이미지는 하나만 선택 가능.
-* uriButton : 방송 중에 핸드폰의 로컬 갤러리에서 동영상을 선택하여 띄울 수 있음. 동영상은 하나만 선택 가능.
-* LikePlayer : 방송 화면에서 하트가 총 몇번 눌렸는지 보여준다. 하트 클릭 누적 횟수가 100회를 넘을 때마다 방송 화면의 각종 알림 부분의 배경을 holo_red_light색으로 바꾸며 하트 클릭 횟수를 알린다.
-* AlarmPlayer : 방송 화면의 각종 알림 부분에 표시되는 알림 종류에 따라 holo_blue_bright, holo_red
-* toggleSongLikeAnimation : 방송자가 보는 화면에서 하트 클릭 로티 애니메이션을 실행시킨다. ValueAnimator animator부분을 조절하여 로티 애니메이션의 시작시간, 종료시간, 애니메이션의 지속시간을 설정할 수 있다.
+   * imgButton
+  
+    방송 중에 핸드폰의 로컬 갤러리에서 이미지를 선택하여 띄울 수 있음. 이미지는 하나만 선택 가능.
+  
+   * uriButton
+  
+    방송 중에 핸드폰의 로컬 갤러리에서 동영상을 선택하여 띄울 수 있음. 동영상은 하나만 선택 가능.
+  
+   * LikePlayer
+  
+    방송 화면에서 하트가 총 몇번 눌렸는지 보여준다. 하트 클릭 누적 횟수가 100회를 넘을 때마다 방송 화면의 각종 알림 부분의 배경을 holo_red_light색으로 바꾸며 하트 클릭 횟수를 알린다.
+
+   * AlarmPlayer
+  
+    방송 화면의 각종 알림 부분에 표시되는 알림 종류에 따라 holo_blue_bright, holo_red
+  
+   * toggleSongLikeAnimation
+  
+    방송자가 보는 화면에서 하트 클릭 로티 애니메이션을 실행시킨다. ValueAnimator animator부분을 조절하여 로티 애니메이션의 시작시간, 종료시간, 애니메이션의 지속시간을 설정할 수 있다.
+  
 
 
 
 
+## app>java>com.pedro.rtpstreamer>player>Fragment_player  
+   * FollowButton.setOnClickListener
+  
+    시청자가 방송중에 팔로우 버튼을 누르면 팔로우 상태에 따라 팔로우 취소/팔로우 로 버튼의 텍스트가 바뀌며, 팔로우를 할 경우 방송 화면의 각종 알림 부분에 팔로우를 했다는 정보가 뜬다.
+  
+   * title.setOnClickListener
+  
+    시청자가 방송 중 제목을 클릭하면 제목을 제외한 모든 화면 구성 요소가 사라지고 화면에 제목과 방송자의 영상만 남음.
+  
+   * mVideoSurfaceView.setOnClickListener
+  
+    시청자가 방송 중 방송 화면을 클릭하면 방송자의 영상을 제외한 모든 화면 구성 요소가 사라진다.
+  
+   * toggleSongLikeAnimButton
+  
+    시청자가 보는 화면에서 하트 클릭 로티 애니메이션을 실행시킨다. ValueAnimator animator부분을 조절하여 로티 애니메이션의 시작시간, 종료시간, 애니메이션의 지속시간을 설정할 수 있다.
+  
+   * playStart
+  
+    방송을 시작한다
+  
+   * buy_button
+  
+    방송 화면에서 왼쪽 하단 쇼핑카트 이미지 버튼. 클릭 시 PopupManager.java의 btn_buy함수를 실행시킨다.
+  
+   * menu_share
+  
+    방송 화면에서 공유 이미지 버튼 클릭 시 PopupManager.java의 btn함수를 실행시킨다.
+  
+   * declare
+  
+    방송 화면에서 신고 버튼 클릭 시 PopupManager.java의 select_Declare함수를 실행시킨다.
+  
+   * btn_sound
+  
+    방송 화면에서 음소거 이미지 버튼 클릭 시 SoundOnOff함수를 호출하여 방송 소리가 음소거된다.
+  
+   * LikePlayer
+  
+    방송 화면에서 하트가 총 몇번 눌렸는지 보여준다. 하트 클릭 누적 횟수가 100회를 넘을 때마다 방송 화면의 각종 알림 부분의 배경을 holo_red_light색으로 바꾸며 하트 클릭 횟수를 알린다.
+  
+   * AlarmPlayer
+  
+    방송 화면의 각종 알림 부분에 표시되는 알림 종류에 따라 holo_blue_bright, holo_red_light, holo_green_light색으로 각종 알림의 배경색을 바꿔준다.
+  
+   * SoundOnOff
+  
+    핸드폰의 상태가 벨소리/진동/무음 모드일때를 구분하여 음소거/음소거 해제를 해준다.
+  
+   * setReadMore
+  
+    방송자가 공지사항을 길게 입력했을 경우, "더보기"라는 텍스트가 공지사항 뒤에 붙으며 "더보기"를 클릭시 전체 공지사항을 볼 수 있음
+  
 
-app>java>com.pedro.rtpstreamer>player>Fragment_player  
-* FollowButton.setOnClickListener : 시청자가 방송중에 팔로우 버튼을 누르면 팔로우 상태에 따라 팔로우 취소/팔로우 로 버튼의 텍스트가 바뀌며, 팔로우를 할 경우 방송 화면의 각종 알림 부분에 팔로우를 했다는 정보가 뜬다.
-* title.setOnClickListener : 시청자가 방송 중 제목을 클릭하면 제목을 제외한 모든 화면 구성 요소가 사라지고 화면에 제목과 방송자의 영상만 남음.
-* mVideoSurfaceView.setOnClickListener : 시청자가 방송 중 방송 화면을 클릭하면 방송자의 영상을 제외한 모든 화면 구성 요소가 사라진다.
-* toggleSongLikeAnimButton : 시청자가 보는 화면에서 하트 클릭 로티 애니메이션을 실행시킨다. ValueAnimator animator부분을 조절하여 로티 애니메이션의 시작시간, 종료시간, 애니메이션의 지속시간을 설정할 수 있다.
-* playStart : 방송을 시작한다
-* buy_button : 방송 화면에서 왼쪽 하단 쇼핑카트 이미지 버튼. 클릭 시 PopupManager.java의 btn_buy함수를 실행시킨다.
-* menu_share : 방송 화면에서 공유 이미지 버튼 클릭 시 PopupManager.java의 btn함수를 실행시킨다.
-* declare : 방송 화면에서 신고 버튼 클릭 시 PopupManager.java의 select_Declare함수를 실행시킨다.
-* btn_sound : 방송 화면에서 음소거 이미지 버튼 클릭 시 SoundOnOff함수를 호출하여 방송 소리가 음소거된다.
-* LikePlayer : 방송 화면에서 하트가 총 몇번 눌렸는지 보여준다. 하트 클릭 누적 횟수가 100회를 넘을 때마다 방송 화면의 각종 알림 부분의 배경을 holo_red_light색으로 바꾸며 하트 클릭 횟수를 알린다.
-* AlarmPlayer : 방송 화면의 각종 알림 부분에 표시되는 알림 종류에 따라 holo_blue_bright, holo_red_light, holo_green_light색으로 각종 알림의 배경색을 바꿔준다.
-* SoundOnOff : 핸드폰의 상태가 벨소리/진동/무음 모드일때를 구분하여 음소거/음소거 해제를 해준다.
-* setReadMore : 방송자가 공지사항을 길게 입력했을 경우, "더보기"라는 텍스트가 공지사항 뒤에 붙으며 "더보기"를 클릭시 전체 공지사항을 볼 수 있음
+
+
+
+## app>java>com.pedro.rtpstreamer>replayer>Replayer  
+   * title.setOnClickListener
+  
+    시청자가 방송 중 제목을 클릭하면 제목을 제외한 모든 화면 구성 요소가 사라지고 화면에 제목과 방송자의 영상만 남음.
+  
+   * surfaceView.setOnClickListener
+  
+    시청자가 방송 중 방송 화면을 클릭하면 방송자의 영상을 제외한 모든 화면 구성 요소가 사라진다. 
+  
+   * MuteAudio
+  
+    재방송의 소리를 음소거 시킨다.
+  
+   * UnMuteAudio
+  
+    재방송의 소리를 음소거 해제한다.
+  
+   * SoundOnOff
+  
+    재방송 화면에서 음소거 이미지 버튼을 클릭 시 음소거/음소거 해제 함수를 실행시키고 음소거 상태에 따른 버튼의 이미지를 바꾼다.
+  
+   * heartAni
+  
+    재방송 화면에서 하트 클릭 로티 애니메이션을 실행시킨다. ValueAnimator animator부분을 조절하여 로티 애니메이션의 시작시간, 종료시간, 애니메이션의 지속시간을 설정할 수 있다.
+  
+   * popTimeLine
+  
+    popup_timeline.xml을 띄운다. 생방송 때 방송되었던 상품들의 리스트를 보여준다. 상품 클릭 시 해당 상품이 방송되던 시점으로 넘어가며, 재방송 화면 하단에 어떤 상품이 판매중인지 뜬다. 
+  
+   * btn_follow
+  
+    재방송 시청 중 팔로우 버튼을 누르면 버튼 텍스트가 팔로우 상태에 따라 팔로우/팔로우 취소 로 바뀐다.
+  
 
 
 
 
-
-app>java>com.pedro.rtpstreamer>replayer>Replayer  
-* title.setOnClickListener : 시청자가 방송 중 제목을 클릭하면 제목을 제외한 모든 화면 구성 요소가 사라지고 화면에 제목과 방송자의 영상만 남음.
-* surfaceView.setOnClickListener : 시청자가 방송 중 방송 화면을 클릭하면 방송자의 영상을 제외한 모든 화면 구성 요소가 사라진다. 
-* MuteAudio : 재방송의 소리를 음소거 시킨다.
-* UnMuteAudio : 재방송의 소리를 음소거 해제한다.
-* SoundOnOff : 재방송 화면에서 음소거 이미지 버튼을 클릭 시 음소거/음소거 해제 함수를 실행시키고 음소거 상태에 따른 버튼의 이미지를 바꾼다.
-* heartAni : 재방송 화면에서 하트 클릭 로티 애니메이션을 실행시킨다. ValueAnimator animator부분을 조절하여 로티 애니메이션의 시작시간, 종료시간, 애니메이션의 지속시간을 설정할 수 있다.
-* popTimeLine : popup_timeline.xml을 띄운다. 생방송 때 방송되었던 상품들의 리스트를 보여준다. 상품 클릭 시 해당 상품이 방송되던 시점으로 넘어가며, 재방송 화면 하단에 어떤 상품이 판매중인지 뜬다. 
-* btn_follow : 재방송 시청 중 팔로우 버튼을 누르면 버튼 텍스트가 팔로우 상태에 따라 팔로우/팔로우 취소 로 바뀐다.
-
-
-
-
-
-app>java>com.pedro.rtpstreame>utils>PopupManager  
-* create_Category : popup_category.xml을 띄운다. 해당 방송에서 방송할 상품명들을 목록으로 작성할 수 있다. 방송중에 해당 상품을 선택하고 "방송품목설정"을 클릭 시 타임라인이 기록되고 방송 화면에서 현재 판매중인 품목이 바뀌었음을 "각종 알림"영역에 표시한다. 타임라인 기록은 추후 재방송 시청 시 해당 카테고리의 품목을 판매하는 장면을 즉각 선택하여 볼 수 있는 용도로 쓰인다.
+## app>java>com.pedro.rtpstreame>utils>PopupManager  
+   * create_Category
+  
+    popup_category.xml을 띄운다. 해당 방송에서 방송할 상품명들을 목록으로 작성할 수 있다. 방송중에 해당 상품을 선택하고 "방송품목설정"을 클릭 시 타임라인이 기록되고 방송 화면에서 현재 판매중인 품목이 바뀌었음을 "각종 알림"영역에 표시한다. 타임라인 기록은 추후 재방송 시청 시 해당 카테고리의 품목을 판매하는 장면을 즉각 선택하여 볼 수 있는 용도로 쓰인다.
+  
 * create_title : init_channel.xml을 띄운다. 방송 시작 시 첫 제목을 설정한다. 
 * btn_editPopUp : popup_custom_dialog.xml을 띄운다. 쿠폰 이벤트의 타이틀(제목), 쿠폰 이벤트의 상세 내용, 쿠폰 이벤트 팝업을 시청자들에게 보여줄 시간(시,분,초)를 설정할 수 있다. 해당 화면에서 "닫기"를 누르면 작성한 쿠폰 이벤트의 정보가 임시 저장된다. "적용"을 누르면 바로 쿠폰 이벤트가 실행되며 설정한 시간만큼만 쿠폰 이벤트 팝업창을 띄운다.
 * btn_showPopUp : popup_coupon.xml을 띄운다. 쿠폰 이벤트를 발생시켰을 때 방송자에게 보이는 쿠폰 이벤트 팝업을 띄워준다.
