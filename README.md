@@ -1,33 +1,86 @@
 ## app>java>com.pedro.rtpstreame>res>layout  
-* activity_main.xml
+   * activity_main.xml
   
-	앱 실행 시 가장 먼저 보이는 화면. 방송 촬영(Start Broadcast), 방송 시청(Watch Broadcast), 재방송 보기(Replay) 세 개의 버튼중 클릭하여 해당 기능의 화면으로 넘어간다.
-* broadcast_main.xml
+    앱 실행 시 가장 먼저 보이는 화면. 방송 촬영(Start Broadcast), 방송 시청(Watch Broadcast), 재방송 보기(Replay) 세 개의 버튼중 클릭하여 해당 기능의 화면으로 넘어간다.
   
-	송출부 화면(방송자용 화면)
-* buylist_popup,xml : fragment_player.xml(고객용 화면)의 화면에서 왼쪽 하단 쇼핑카트 이미지 버튼 클릭 시 나타나는 팝업
-* custom_dialog.xml : broadcast_main.xml(방송자용 화면)의 화면에서 제목을 터치하여 수정 시 나타나는 팝업
-* declare_popup01.xml : fragment_player.xml(고객용 화면)의 화면에서 신고버튼 클릭 시 나타나는 팝업. 신고 종류 선택
-* declare_popup02.xml : declare_popup01.xml의 화면에서 "다음"을 클릭 시 나타나는 팝업.신고 사유를 상세하게 입력
-* fragment_player.xml : 수신부 화면(고객용 화면)
-* init_channel.xml : broadcast_main.xml(방송자용 화면)의 화면에서 "start"버튼을 눌러 방송 시작 시 방송 제목을 설정하는 팝업창. 방송의 제목을 설정해야 방송 시작이 가능하다.
-* kakao_strings.xml : 카카오톡으로 공유하기 기능을 구현하기 위해 만들어둔 것. 현재는 파이어베이스 링크공유 방법으로 구현되어 쓰이지 않지만, 혹시라도 나중에 sns별로 공유방식을 각기 다르게 구현할 수 있을까봐 남겨둠.
-* notification_custom_dialog.xml : broadcast_main.xml(방송자용 화면)의 화면에서 공지사항 부분(각종 알림과 채팅창 아래)을 터치하면 나타나는 팝업
-* player_main.xml : 사용자가 앱을 켜서 방송을 시청할 경우 방송 채널을 선택하는 임시 화면
-* popup.xml : 방송자가 만든 쿠폰 이벤트가 띄워지는 팝업창. 고객의 방송 화면에 뜨는 팝업창
-* popup_category.xml : broadcast_main.xml(방송자용 화면)의 화면에서 "카테고리"버튼을 눌렀을 때 나타나는 팝업. 
-* popup_coupon.xml : 방송자가 만든 쿠폰 이벤트가 띄워지는 팝업창. 방송자의 방송 화면에 띄워지는 팝업창
-* popup_custom_dialog.xml : 방송자가 방송 중에 쿠폰 이벤트를 생성하는 팝업창. 시청자 목록(눈 이미지 버튼)>이벤트 생성 을 클릭하면 나타나는 팝업창. 시청자 목록에서 선택한 사용자들에게 보내질 쿠폰 이벤트를 설정할 수 있음.
-* popup_people.xml : broadcast_main.xml(방송자용 화면)의 화면에서 눈 이미지 버튼을 클릭 시 띄워지는 팝업. 시청자 목록을 보여줌. 
-* popup_timeline.xml : replayer.xml 재방송 화면에서 하단의 "타임라인"버튼을 클릭 시  나타나는 팝업. 생방송때 판매되었던 상품들의 목록이 뜨며, 상품 클릭 시 해당 상품이 판매되던 시간대로 넘어간다.
-* replayer.xml : 재방송을 시청하는 화면. 
-* broadcast_main.xml : (방송자용 화면)의 화면에서 "text"버튼을 클릭 시 나타나는 팝업. 방송 중간에 띄울 텍스를 입력하고 텍스트의 색을 선택하여 "적용하기"를 클릭 시 생방송 중 화면에 입력한 텍스트가 띄워짐.
+   * broadcast_main.xml
+  
+    송출부 화면(방송자용 화면)
+  
+   * buylist_popup,xml
+  
+    fragment_player.xml(고객용 화면)의 화면에서 왼쪽 하단 쇼핑카트 이미지 버튼 클릭 시 나타나는 팝업
+  
+   * custom_dialog.xml
+  
+    broadcast_main.xml(방송자용 화면)의 화면에서 제목을 터치하여 수정 시 나타나는 팝업
+  
+   * declare_popup01.xml 
+  
+    fragment_player.xml(고객용 화면)의 화면에서 신고버튼 클릭 시 나타나는 팝업. 신고 종류 선택
+  
+   * declare_popup02.xml
+  
+    declare_popup01.xml의 화면에서 "다음"을 클릭 시 나타나는 팝업.신고 사유를 상세하게 입력
+  
+   * fragment_player.xml
+  
+    수신부 화면(고객용 화면)
+  
+   * init_channel.xml
+  
+    broadcast_main.xml(방송자용 화면)의 화면에서 "start"버튼을 눌러 방송 시작 시 방송 제목을 설정하는 팝업창. 방송의 제목을 설정해야 방송 시작이 가능하다.
+  
+   * kakao_strings.xml
+  
+    카카오톡으로 공유하기 기능을 구현하기 위해 만들어둔 것. 현재는 파이어베이스 링크공유 방법으로 구현되어 쓰이지 않지만, 혹시라도 나중에 sns별로 공유방식을 각기 다르게 구현할 수 있을까봐 남겨둠.
+  
+   * notification_custom_dialog.xml
+  
+    broadcast_main.xml(방송자용 화면)의 화면에서 공지사항 부분(각종 알림과 채팅창 아래)을 터치하면 나타나는 팝업
+  
+   * player_main.xml
+  
+    사용자가 앱을 켜서 방송을 시청할 경우 방송 채널을 선택하는 임시 화면
+  
+   * popup.xml
+  
+    방송자가 만든 쿠폰 이벤트가 띄워지는 팝업창. 고객의 방송 화면에 뜨는 팝업창
+  
+   * popup_category.xml
+  
+    broadcast_main.xml(방송자용 화면)의 화면에서 "카테고리"버튼을 눌렀을 때 나타나는 팝업. 
+  
+   * popup_coupon.xml
+  
+    방송자가 만든 쿠폰 이벤트가 띄워지는 팝업창. 방송자의 방송 화면에 띄워지는 팝업창
+  
+   * popup_custom_dialog.xml
+  
+    방송자가 방송 중에 쿠폰 이벤트를 생성하는 팝업창. 시청자 목록(눈 이미지 버튼)>이벤트 생성 을 클릭하면 나타나는 팝업창. 시청자 목록에서 선택한 사용자들에게 보내질 쿠폰 이벤트를 설정할 수 있음.
+  
+   * popup_people.xml
+  
+    broadcast_main.xml(방송자용 화면)의 화면에서 눈 이미지 버튼을 클릭 시 띄워지는 팝업. 시청자 목록을 보여줌. 
+  
+   * popup_timeline.xml
+  
+    replayer.xml 재방송 화면에서 하단의 "타임라인"버튼을 클릭 시  나타나는 팝업. 생방송때 판매되었던 상품들의 목록이 뜨며, 상품 클릭 시 해당 상품이 판매되던 시간대로 넘어간다.
+  
+   * replayer.xml
+  
+    재방송을 시청하는 화면. 
+  
+   * broadcast_main.xml
+  
+    (방송자용 화면)의 화면에서 "text"버튼을 클릭 시 나타나는 팝업. 방송 중간에 띄울 텍스를 입력하고 텍스트의 색을 선택하여 "적용하기"를 클릭 시 생방송 중 화면에 입력한 텍스트가 띄워짐.
+  
+  
 
 
 
 
-
-app>java>com.pedro.rtpstreamer>broadcaster>BroadcastMain  
+## app>java>com.pedro.rtpstreamer>broadcaster>BroadcastMain  
 * imgButton : 방송 중에 핸드폰의 로컬 갤러리에서 이미지를 선택하여 띄울 수 있음. 이미지는 하나만 선택 가능.
 * uriButton : 방송 중에 핸드폰의 로컬 갤러리에서 동영상을 선택하여 띄울 수 있음. 동영상은 하나만 선택 가능.
 * LikePlayer : 방송 화면에서 하트가 총 몇번 눌렸는지 보여준다. 하트 클릭 누적 횟수가 100회를 넘을 때마다 방송 화면의 각종 알림 부분의 배경을 holo_red_light색으로 바꾸며 하트 클릭 횟수를 알린다.
