@@ -2,7 +2,9 @@
 * activity_main.xml
   
 	앱 실행 시 가장 먼저 보이는 화면. 방송 촬영(Start Broadcast), 방송 시청(Watch Broadcast), 재방송 보기(Replay) 세 개의 버튼중 클릭하여 해당 기능의 화면으로 넘어간다.
-* broadcast_main.xml : 송출부 화면(방송자용 화면)
+* broadcast_main.xml
+  
+	송출부 화면(방송자용 화면)
 * buylist_popup,xml : fragment_player.xml(고객용 화면)의 화면에서 왼쪽 하단 쇼핑카트 이미지 버튼 클릭 시 나타나는 팝업
 * custom_dialog.xml : broadcast_main.xml(방송자용 화면)의 화면에서 제목을 터치하여 수정 시 나타나는 팝업
 * declare_popup01.xml : fragment_player.xml(고객용 화면)의 화면에서 신고버튼 클릭 시 나타나는 팝업. 신고 종류 선택
