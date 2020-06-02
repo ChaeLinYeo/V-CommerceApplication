@@ -16,37 +16,39 @@ public class StaticVariable {
     //권한 리스트
     //[ref] https://developer.android.com/reference/android/Manifest.permission.html#ACCEPT_HANDOVER
     public static final String[] PERMISSIONS = {
-            Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
+            Manifest.permission.RECORD_AUDIO,
+            Manifest.permission.CAMERA,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
     };
     /////////////////////////////////////////////////////////////////////////////////
 
     public static final int numChannel = 10;
 
     public static final String[] broadcastAuthor = new String[]{
-            "9478bfc47a346c37321e735506d3c10f5f42dda8",
-            "9478bfc4dwa346ca7321e735506d3c10f5felakdf",
-            "9478bfc47a346c37321e735506d3c10f5felakdf",
-            "94214adc47a346c37321e735506d3c10f5felakdf",
-            "9478bfc47a346c3732alwekfjwehr329ds",
-            "9478bfc47a346cdagshe735506d3c10f5f42dda8",
-            "9478bsdkfjlfefwffjwehr329ds",
-            "9478bfc47a346alsdkjawaehr329ds",
-            "9478bfc4dalksdjflwf0f5felakdf",
-            "94daljdflafwfc10f5felakdf"
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10"
     };
 
     public static final String[] broadcastUrl = new String[]{
-            "9ps2NHuM3FlgvIfZQOBs4w",
-            "JXVa1xwGa2sPOLFRGgqkYg",
-            "xk87jakTO3ee6azCJZgbpw",
-            "5dX10WBLqNvBZiLzrn9EaA",
-            "tbGsBYNOjwPKOLFED3VH5Q",
-            "yYnbg9oyYqY2FiY00bAmrw",
-            "bDdg6d8EZoq47q4dEwLH2g",
-            "m1AYUqSTCfEXkdIrV6zjdg",
-            "vboOakEcKWdYE0K0wMLYMA",
-            "JZPrP7OrLMjZyAn4mfYb4Q"
+            "qOgnezRYeSLAzn0Pij29XA",
+            "QweU4yQDmXub7Tq0MzI0Eg",
+            "JjG6KPVr57cC2SroNF07xw",
+            "C8yyx20S2zJq72Jchw8S3A",
+            "ulCz6tYY438IF1ZBVg9RiQ",
+            "X6haZHegy5Bs8ptMKXYxmg",
+            "ksIcSWFKEc0gbQQ9UMUHuQ",
+            "927uVWfmaGxqcQ0DrDlpRQ",
+            "9araKWtthfNDlbk5Z9AtUA",
+            "wo4nQdvMhVxp8RieR544aQ"
     };
 
     public static final String bambuserDefaultUrl = "rtmp://ingest.bambuser.io/b-fme/";

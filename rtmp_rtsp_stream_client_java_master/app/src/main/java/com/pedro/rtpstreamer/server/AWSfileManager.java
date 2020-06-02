@@ -14,17 +14,17 @@ import java.util.StringTokenizer;
 public class AWSfileManager {
 
     private BufferedReader reader;
-    private String fileName;
 
-    public AWSfileManager(String filename){
+    public AWSfileManager(String inputFileName){
+        String fileName;
         try {
-            String foldername = Environment.getExternalStorageDirectory().getAbsolutePath() + "/chatDown";
-            fileName = foldername + "/" + filename+".txt";
+            String folderName = Environment.getExternalStorageDirectory().getAbsolutePath() + "/chatDown";
+            fileName = folderName + "/" + inputFileName+".txt";
             reader = new BufferedReader(new InputStreamReader(new FileInputStream(fileName),"UTF8"));
         } catch(FileNotFoundException e){
             Log.e("error",""+e.getMessage());
         } catch (UnsupportedEncodingException e) {
-            Log.e("error2", e.getMessage());
+            Log.e("error2", ""+e.getMessage());
             e.printStackTrace();
         }
     }
@@ -43,7 +43,7 @@ public class AWSfileManager {
         try {
             reader.close();
         } catch(IOException e){
-            Log.d("eror",""+e.getMessage());
+            Log.d("error",""+e.getMessage());
         }
     }
 

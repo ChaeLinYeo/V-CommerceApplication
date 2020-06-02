@@ -7,8 +7,8 @@
     <string name="replayer">Replay</string>
 
     <string name="default_rtmp_url">rtmp://ingest.bambuser.io/b-fme/</string>
-    <string name="application_id">c1YvmxQBiPHu63RaZ8GD8g</string>
-    <string name="application_key">6tyvnkccg1e0d1iplbgre0i5f</string>
+    <string name="application_id">XbSEN2nCLM7mWpJ4IM0PHg</string>
+    <string name="application_key">H1brGo4KeibNH498VCLrE6</string>
 
     <string name="sendbird_app_id">2651701A-6EE0-4519-A94D-F2286E7AAB01</string>
     <string name="sendbird_ctrlChannel">sendbird_Ctrl</string>
