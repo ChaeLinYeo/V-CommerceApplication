@@ -350,7 +350,7 @@ public class BroadcastMain extends AppCompatActivity
         }
     }
 
-    // 좋아요 로띠 애니메이션을 실행 시키는 메소드
+    // 좋아요 로티애니메이션을 실행 시키는 메소드
     private boolean toggleSongLikeAnimButton(){
         songLikeAnimButton.setVisibility(View.VISIBLE);
         ValueAnimator animator = ValueAnimator.ofFloat(0f, 0.6f).setDuration(500);

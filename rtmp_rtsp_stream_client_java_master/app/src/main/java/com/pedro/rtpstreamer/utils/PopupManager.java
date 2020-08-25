@@ -114,7 +114,7 @@ public class PopupManager {
         // ArrayAdapter 생성. 아이템 View를 선택(multiple choice)가능하도록 만듦.
         ArrayAdapter<String> adapter1 = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_multiple_choice, category_items) ;
 
-        // listview 생성 및 adapter 지정.
+        // listview 생성 및 adapter 지정
         ListView listView = mView_c.findViewById(R.id.listView) ;
         listView.setAdapter(adapter1);
         listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
